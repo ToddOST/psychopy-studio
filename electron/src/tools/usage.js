@@ -17,13 +17,13 @@ export class UsageReport {
     send() {
         fetch(
           this.url.toString()
-        ).catch(
-          // if it fails, take note, but don't error
-          err => logging.log("Failed to send usage statistics", this.asJSON(), err)
         ).then(
             resp => resp.text()
         ).then(
-            resp => logging.log("Sent usage statistics", this.asJSON())
+            _resp => logging.log("Sent usage statistics", this.asJSON())
+        ).catch(
+          // if it fails, take note, but don't error
+          err => logging.log("Failed to send usage statistics", this.asJSON(), err)
         )
     }
 
