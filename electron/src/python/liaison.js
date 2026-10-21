@@ -6,6 +6,9 @@ import path from "path";
 
 
 export class Liaison {
+    // addresses of all running Liaisons
+    static addresses = new Set()
+
     constructor(venv) {
         // store venv
         this.venv = venv
@@ -71,6 +74,13 @@ export class Liaison {
             // timeout after 1s
             setTimeout(reject, 10000)
         })
+        // add address to list of running Liaisons, removing it when the process exits (however it's stopped)
+        let address = this.address
+        Liaison.addresses.add(address)
+        this.process.on(
+            "exit", 
+            () => Liaison.addresses.delete(address)
+        )
         // create websocket connection
         this.socket = new WebSocket(`ws://${this.address}`);
         // resolve/reject on open/error
@@ -247,7 +257,7 @@ export class Liaison {
             // parse reply
             let data = JSON.parse(evt.data)
             // check ID
-            if (data.evt.id !== msgid) {
+            if (data.evt?.id !== msgid) {
                 return
             }
             // if ID matches, store and stop listening

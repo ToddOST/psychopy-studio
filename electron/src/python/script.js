@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { output } from "./utils.js";
+import { Liaison } from "./liaison.js";
 import proc from "child_process";
 import path from "path";
 
@@ -31,9 +32,16 @@ export class PythonScript {
         let file = path.basename(this.file)
         // execute asynchronously
         this.process = proc.spawn(
-            this.venv.executable, 
-            ["-u", file, ...this.args], 
-            {cwd: folder}
+            this.venv.executable,
+            ["-u", file, ...this.args],
+            {
+                cwd: folder, 
+                env: { 
+                    ...process.env,
+                    // give the script the addresses of all running Liaisons (comma-separated) so it can connect
+                    LIAISON_ADDRESS: [...Liaison.addresses].join(",")
+                }
+            }
         )
         // pass output to front end
         this.process.stdout.on("data", evt => output("stdout", evt))
