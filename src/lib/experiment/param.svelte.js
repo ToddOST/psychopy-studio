@@ -195,6 +195,28 @@ export class Param {
         return param;
     }
 
+    /**
+     * Does this Param match a given other Param or profile?
+     * 
+     * @param {Param|object} other Either a Param to compare against, or a JSON object obtained via Param.toJSON()
+     */
+    matches(other) {
+        // if type is wrong, it certainly doesn't match
+        if (typeof other !== "object" || other === null) {
+            return false
+        }
+        // if given a Param, serialize it
+        if (other instanceof Param) {
+            other = other.toJSON()
+        }
+        // serialize this object
+        let profile = this.toJSON()
+        // compare name, updates and val
+        return ["name", "updates", "val"].every(
+            key => profile[key] === other[key]
+        )
+    }
+
     copy() {
         // create new param
         let dupe = new Param(this.name);
@@ -309,7 +331,7 @@ export class HasParams {
         this.reset();
     }
 
-    restore = {
+    restore = $state({
         point: undefined,
         set: () => {
             // update history
@@ -327,7 +349,7 @@ export class HasParams {
                 this.exp.history.past.pop();
             }
         }
-    };
+    });
 
     /**
      * Reset this elements parameters to a template

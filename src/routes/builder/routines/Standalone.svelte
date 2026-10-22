@@ -15,6 +15,12 @@
             param => param.valid.value
         )
     )
+    // track whether this Routine has changes
+    let changed = $derived(!Object.entries(routine.params).every(
+        ([name, param]) => param.matches(
+            (routine.restore.point || routine).params[name]
+        )
+    ))
 
     // update reference in Experiment when this Routine is renamed
     $effect(() => {
@@ -35,18 +41,19 @@
     </div>
     <div class=standalone-routine-ctrls>
         <div class=ctrl-gap></div>
-        <Button
-            label={translate("Apply")}
-            primary
-            horizontal
-            disabled={!valid}
-            onclick={(evt) => routine.restore.set()} 
-        />
-        <Button
-            label={translate("Discard")}
-            horizontal
-            onclick={(evt) => routine.restore.apply()} 
-        />
+        {#if changed}
+            <Button
+                label={translate("Discard changes")}
+                tooltip={translate(
+                    "Undo any changes made since this Routine was {}"
+                    ).replace(
+                        "{}", 
+                        routine.restore.point ? translate("selected") : translate("created")
+                    )}
+                horizontal
+                onclick={(evt) => routine.restore.apply()} 
+            />
+        {/if}
     </div>
 </div>
 
