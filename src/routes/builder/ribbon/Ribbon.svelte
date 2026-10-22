@@ -95,13 +95,14 @@
             icon="/icons/btn-save.svg" 
             label={translate("Save file")} 
             onclick={file_save}
-            disabled={!current.experiment.history.past.length && current.experiment.file.file} 
+            disabled={!current.experiment.valid || (!current.experiment.history.past.length && current.experiment.file.file)}
             borderless
         />
-        <IconButton 
-            icon="/icons/btn-saveas.svg" 
+        <IconButton
+            icon="/icons/btn-saveas.svg"
             label={translate("Save file as")}
-            onclick={file_save_as} 
+            onclick={file_save_as}
+            disabled={!current.experiment.valid}
             borderless
         />
     </RibbonSection>
@@ -187,7 +188,7 @@
                 icon="/icons/btn-send{current.experiment.pilotMode ? "pilot" : "run"}.svg" 
                 label={translate("Send experiment to runner")} 
                 onclick={sendToRunner}
-                disabled={!current.experiment.file.file}
+                disabled={!current.experiment.valid || !current.experiment.file.file}
                 borderless
             /> 
         {/if}
@@ -200,6 +201,7 @@
                 label={translate("Write experiment as a .py file")} 
                 onclick={evt => compilePython()}
                 bind:awaiting={awaiting.compilepy}
+                disabled={!current.experiment.valid}
                 borderless
             /> 
             <IconButton 
@@ -208,6 +210,7 @@
                 onclick={evt => runPython()}
                 bind:awaiting={awaiting.runpy}
                 cancel={evt => stopPython()}
+                disabled={!current.experiment.valid}
                 borderless
             />
         </RibbonSection>
@@ -218,13 +221,14 @@
                     label={translate("Write experiment as a .js file")} 
                     onclick={(evt) => compileJS()}
                     bind:awaiting={awaiting.compilejs}
+                    disabled={!current.experiment.valid}
                     borderless
                 />
                 <IconButton 
                     icon="/icons/btn-{current.experiment.pilotMode ? "pilot" : "run"}js.svg" 
                     label={current.experiment.pilotMode ? translate("Pilot experiment in browser") : translate("Run experiment in browser")}
                     onclick={(evt) => runJS()}
-                    disabled={!current.experiment.pilotMode && !current.project}
+                    disabled={!current.experiment.valid || (!current.experiment.pilotMode && !current.project)}
                     bind:awaiting={awaiting.runjs}
                     borderless
                 />

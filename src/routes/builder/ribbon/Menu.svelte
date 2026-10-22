@@ -85,14 +85,15 @@
             icon="/icons/btn-save.svg" 
             label={translate("Save file")}
             shortcut="save"
-            onclick={file_save} 
-            disabled={!current.experiment.history.past.length} 
+            onclick={file_save}
+            disabled={!current.experiment.valid || !current.experiment.history.past.length}
         />
-        <MenuItem 
-            icon="/icons/btn-saveas.svg" 
+        <MenuItem
+            icon="/icons/btn-saveas.svg"
             label={translate("Save file as")}
             shortcut="saveAs"
-            onclick={file_save_as} 
+            onclick={file_save_as}
+            disabled={!current.experiment.valid}
         />
         <MenuItem
             label={translate("Reveal in file explorer")}
@@ -261,7 +262,7 @@
                 icon="/icons/btn-send{current.experiment.pilotMode ? "pilot" : "run"}.svg" 
                 onclick={sendToRunner}
                 shortcut="sendToRunner"
-                disabled={!current.experiment.file}
+                disabled={!current.experiment.valid || !current.experiment.file}
             />
 
             <MenuSeparator />
@@ -271,14 +272,14 @@
                 icon="/icons/btn-compilepy.svg" 
                 onclick={evt => compilePython()}
                 shortcut="compilePython"
-                disabled={current.experiment === null}
+                disabled={current.experiment === null || !current.experiment.valid}
             /> 
             <MenuItem 
                 label={current.experiment.pilotMode ? translate("Pilot in Python") : translate("Run in Python")}
                 icon="/icons/btn-{current.experiment.pilotMode ? "pilot" : "run"}py.svg" 
                 onclick={evt => runPython()}
                 shortcut="runPython"
-                disabled={current.experiment === null}
+                disabled={current.experiment === null || !current.experiment.valid}
             />
 
             <MenuSeparator />
@@ -288,14 +289,14 @@
                 icon="/icons/btn-compilejs.svg" 
                 onclick={(evt) => compileJS()}
                 shortcut="compileJS"
-                disabled={current.experiment === null}
+                disabled={current.experiment === null || !current.experiment.valid}
             />
             <MenuItem 
                 label={current.experiment.pilotMode ? "Pilot in browser" : "Run in browser"}
                 icon="/icons/btn-{current.experiment.pilotMode ? "pilot" : "run"}js.svg" 
                 onclick={(evt) => runJS()}
                 shortcut="runJS"
-                disabled={current.experiment === null}
+                disabled={current.experiment === null || !current.experiment.valid}
             />
         </SubMenu>
     {/if}
