@@ -266,6 +266,15 @@ export class HasParams {
     disabled = $derived(this.params['disabled'] && [true, "true", "True"].includes(this.params['disabled'].val));
 
     /**
+     * Whether all of this element's parameters are valid
+     */
+    valid = $derived(
+        Object.values(this.params).every(
+            param => param.valid.value
+        )
+    );
+
+    /**
      * This object's parameters, sorted by category
      */
     sortedParams = $derived.by(() => {

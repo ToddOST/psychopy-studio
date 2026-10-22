@@ -10,17 +10,12 @@
 
     onMount(
         () => {
-            if (valid) {
+            if (routine.valid) {
                 routine.restore.set()
             }
         }
     )
 
-    let valid = $derived(
-        Object.values(routine.params).every(
-            param => param.valid.value
-        )
-    )
     // track whether this Routine has changes
     let changed = $derived(!Object.entries(routine.params).every(
         ([name, param]) => param.matches(
@@ -30,7 +25,7 @@
 
     // update reference in Experiment when this Routine is renamed
     $effect(() => {
-        if (routine.exp && valid) {
+        if (routine.exp && routine.valid) {
             routine.exp.renameRoutine(
                 routine, 
                 $state.snapshot(routine.params['name'].val)

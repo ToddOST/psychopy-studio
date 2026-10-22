@@ -14,6 +14,12 @@ export class Experiment {
     version = "2026.1.0"
 
     routines = $state({})
+    // are all Routines in this experiment valid?
+    valid = $derived(
+        Object.values(this.routines).every(
+            routine => routine.valid
+        )
+    )
     file = $state(undefined)
     running = $state.raw(undefined)
 
