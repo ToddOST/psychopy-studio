@@ -332,7 +332,9 @@ export class Experiment {
             return true
         }
         // get all Components
-        let comps = Object.values(this.routines).reduce(
+        let comps = Object.values(this.routines).filter(
+            rt => rt instanceof Routine
+        ).reduce(
             (acc, rt) => {
                 acc.push(...rt.components)
                 return acc
