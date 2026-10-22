@@ -23,14 +23,14 @@
         current.experiment.history.update(`new Routine`)
         // create a new StandaloneRoutine
         let rt = new StandaloneRoutine(component['__name__'])
-        rt.exp = current.experiment;
         // add it to the experiment
-        current.experiment.routines[rt.name] = rt
+        current.experiment.addRoutine(rt)
         // navigate to it
         current.routine = rt
         // insert into the flow
         current.inserting = rt
     }
+
     
 </script>
 

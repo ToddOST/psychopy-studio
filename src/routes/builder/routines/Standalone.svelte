@@ -8,7 +8,13 @@
         routine
     } = $props();
 
-    onMount(() => routine.restore.set())
+    onMount(
+        () => {
+            if (valid) {
+                routine.restore.set()
+            }
+        }
+    )
 
     let valid = $derived(
         Object.values(routine.params).every(
@@ -21,10 +27,11 @@
             (routine.restore.point || routine).params[name]
         )
     ))
+    $inspect(changed)
 
     // update reference in Experiment when this Routine is renamed
     $effect(() => {
-        if (routine.exp) {
+        if (routine.exp && valid) {
             routine.exp.renameRoutine(
                 routine, 
                 $state.snapshot(routine.params['name'].val)
