@@ -27,7 +27,6 @@
             (routine.restore.point || routine).params[name]
         )
     ))
-    $inspect(changed)
 
     // update reference in Experiment when this Routine is renamed
     $effect(() => {
