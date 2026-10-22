@@ -44,7 +44,7 @@
                 {#if routine instanceof Routine}
                     <RoutineCanvas routine={routine} />
                 {:else if current.experiment.routines[name] instanceof StandaloneRoutine}
-                    <StandaloneRoutineCanvas component={routine} />
+                    <StandaloneRoutineCanvas routine={routine} />
                 {/if}
             </NotebookPage>
         {/each}

@@ -5,13 +5,13 @@
     import { translate } from "$lib/translation";
 
     let {
-        component
+        routine
     } = $props();
 
-    onMount(() => component.restore.set())
+    onMount(() => routine.restore.set())
 
     let valid = $derived(
-        Object.values(component.params).every(
+        Object.values(routine.params).every(
             param => param.valid.value
         )
     )
@@ -30,7 +30,7 @@
 <div class=standalone-routine-canvas>
     <div class=notebook-container>
         <ParamsNotebook 
-            bind:element={component}
+            bind:element={routine}
         />
     </div>
     <div class=standalone-routine-ctrls>
@@ -40,12 +40,12 @@
             primary
             horizontal
             disabled={!valid}
-            onclick={(evt) => component.restore.set()} 
+            onclick={(evt) => routine.restore.set()} 
         />
         <Button
             label={translate("Discard")}
             horizontal
-            onclick={(evt) => component.restore.apply()} 
+            onclick={(evt) => routine.restore.apply()} 
         />
     </div>
 </div>
