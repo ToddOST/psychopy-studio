@@ -19,7 +19,7 @@
             )
         )
         // if any params have changed, apply changes
-        if (changed.every(val => val)) {
+        if (changed.some(val => val)) {
             untrack(() => routine.restore.set())
         }
     })
