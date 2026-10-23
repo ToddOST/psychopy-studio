@@ -13,8 +13,8 @@
         // read the restore point without depending on it
         let restorePoint = untrack(() => $state.snapshot(routine.restore.point))
         // check each param for a change
-        let changed = !Object.entries(routine.params).map(
-            ([name, param]) => param.matches(
+        let changed = Object.entries(routine.params).map(
+            ([name, param]) => !param.matches(
                 (restorePoint || routine).params[name]
             )
         )
