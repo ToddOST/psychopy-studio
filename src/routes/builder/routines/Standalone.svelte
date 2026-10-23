@@ -9,11 +9,7 @@
     } = $props();
 
     onMount(
-        () => {
-            routine.restore.set()
-
-            return routine.restore.set
-        }
+        () => routine.restore.set()
     )
 
     // track whether this Routine has changes

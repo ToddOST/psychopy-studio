@@ -424,14 +424,21 @@ export class Experiment {
         // reset experiment
         this.reset(true, false)
         // set basic attributes
-        this.file = parsePath(node.filename);
+        if (node.filename) {
+            this.file = parsePath(node.filename);
+        }
         this.version = node.version;
         // copy settings
         this.settings.fromJSON(node.settings);
         // add each routine from JSON
         for (let [name, profile] of Object.entries(node.routines)) {
             // make a new routine
-            let rt = new Routine();
+            let rt
+            if (profile.tag === "Routine") {
+                rt = new Routine();
+            } else {
+                rt = new StandaloneRoutine();
+            }
             rt.exp = this;
             // populate it from JSON
             rt.fromJSON(profile)
