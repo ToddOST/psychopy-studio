@@ -1,4 +1,5 @@
 <script>
+    import callbacks from '../callbacks.svelte.js';
     import { getContext } from "svelte";
     import { Menu, MenuItem, MenuSeparator, SubMenu } from '$lib/utils/menu/frameMenu';
     import PrefsDialog from '$lib/dialogs/preferences/PrefsDialog.svelte';

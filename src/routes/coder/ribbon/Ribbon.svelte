@@ -1,4 +1,5 @@
 <script>
+    import callbacks from '../callbacks.svelte.js';
     
     import { Ribbon, RibbonSection, RibbonGap } from '$lib/utils/ribbon';
     import Menu from "./Menu.svelte";
