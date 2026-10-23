@@ -12,14 +12,14 @@
     $effect(() => {
         // read the restore point without depending on it
         let restorePoint = untrack(() => $state.snapshot(routine.restore.point))
-        // has there been a change?
-        let changed = !Object.entries(routine.params).every(
+        // check each param for a change
+        let changed = !Object.entries(routine.params).map(
             ([name, param]) => param.matches(
                 (restorePoint || routine).params[name]
             )
         )
-        // if so, apply it
-        if (changed) {
+        // if any params have changed, apply changes
+        if (changed.every(val => val)) {
             untrack(() => routine.restore.set())
         }
     })
