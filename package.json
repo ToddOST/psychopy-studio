@@ -148,7 +148,7 @@
 	},
 	"dependencies": {
 		"@electron-internal/extract-zip": "*",
-		"@lezer/javascript": "^1.5.4",
+		"@lezer/javascript": "^1.5.6",
 		"@lezer/markdown": "^1.8.0",
 		"@lezer/python": "^1.1.19",
 		"@monaco-editor/loader": "^1.5.0",
