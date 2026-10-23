@@ -153,7 +153,7 @@
 		"@lezer/python": "^1.1.19",
 		"@monaco-editor/loader": "^1.5.0",
 		"@unly/universal-language-detector": "^2.0.3",
-		"express": "^5.1.0",
+		"express": "^5.3.0",
 		"i18next": "^26.4.2",
 		"isomorphic-git": "^1.42.7",
 		"json-schema-default": "^1.0.2",
