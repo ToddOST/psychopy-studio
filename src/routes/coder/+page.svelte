@@ -3,8 +3,8 @@
     import { current } from "./globals.svelte";
     import Theme from "$lib/utils/Theme.svelte";
     import CoderRibbon from "./ribbon/Ribbon.svelte";
-    import Shortcuts from '$lib/utils/Shortcuts.svelte';
-    import { shortcuts } from "./callbacks.svelte";
+    import { Shortcuts } from '$lib/utils/shortcuts';
+    import callbacks from "./callbacks.svelte";
     import { CoderNotebook } from "./notebook";
     import Frame from "$lib/utils/Frame.svelte";
     import Panel from "$lib/utils/Panel.svelte";
@@ -137,7 +137,7 @@
     <Theme />
     <!-- this will setup keyboard shortcuts -->
     <Shortcuts
-        callbacks={shortcuts}
+        {callbacks}
     />
     <!-- this will setup a Python instance -->
     <SetupPython />

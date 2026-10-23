@@ -3,7 +3,7 @@
     import { Experiment } from "$lib/experiment";
     import { Icon } from "$lib/utils/icons";
     import { getContext } from "svelte";
-    import { fileOpen } from "../callbacks.svelte";
+    import callbacks from "../callbacks.svelte.js";
     import { translate } from "$lib/translation";
     
     let current = getContext("current");
@@ -35,7 +35,7 @@
         <Button 
             label={translate("Add file")}
             icon="/icons/btn-add.svg"
-            onclick={evt => fileOpen(false)}
+            onclick={evt => callbacks.open.fcn(false)}
             horizontal
         />
     </div>

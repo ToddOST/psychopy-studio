@@ -1,22 +1,5 @@
 <script>
-    import {
-        // file
-        fileNew,
-        fileOpen,
-        fileSave,
-        fileSaveAs,
-        // edit
-        undo,
-        redo,
-        find,
-        // experiment
-        sendToRunner,
-        // run
-        runPython,
-        stopPython,
-        // views
-        showWindow
-    } from '../callbacks.svelte.js'
+    import callbacks from '../callbacks.svelte.js';
     
     import { Ribbon, RibbonSection, RibbonGap } from '$lib/utils/ribbon';
     import Menu from "./Menu.svelte";
@@ -45,31 +28,28 @@
         <IconButton 
             icon="/icons/btn-new.svg" 
             label={translate("New file")} 
-            onclick={fileNew}
+            onclick={callbacks.new.fcn}
             borderless
         /> 
         <IconButton 
             icon="/icons/btn-open.svg" 
             label={translate("Open file")} 
-            onclick={fileOpen} 
+            onclick={callbacks.open.fcn} 
             borderless
         />
         <IconButton 
             icon="/icons/btn-save.svg" 
             label={translate("Save file")} 
-            onclick={fileSave}
+            onclick={callbacks.save.fcn}
             borderless
-            disabled={
-                Object.values(current.pages).length === 0 ||
-                (!current.pages[current.tab]?.canUndo && current.pages[current.tab]?.file?.file)
-            }
+            disabled={callbacks.save.disabled}
         />
         <IconButton 
             icon="/icons/btn-saveas.svg" 
             label={translate("Save file as")}
-            onclick={fileSaveAs} 
+            onclick={callbacks.saveAs.fcn} 
             borderless
-            disabled={Object.values(current.pages).length === 0}
+            disabled={callbacks.saveAs.disabled}
         />
     </RibbonSection>
 
@@ -77,22 +57,22 @@
         <IconButton 
             icon="/icons/btn-undo.svg" 
             label={translate("Undo")}
-            onclick={undo} 
-            disabled={!current.pages[current.tab]?.canUndo} 
+            onclick={callbacks.undo.fcn} 
+            disabled={callbacks.undo.disabled} 
             borderless
         />
         <IconButton 
             icon="/icons/btn-redo.svg" 
             label={translate("Redo")} 
-            onclick={redo} 
-            disabled={!current.pages[current.tab]?.canRedo} 
+            onclick={callbacks.redo.fcn} 
+            disabled={callbacks.redo.disabled} 
             borderless
         />
         <IconButton 
             icon="/icons/btn-find.svg" 
             label={translate("Find")} 
-            onclick={find}
-            disabled={!current.pages[current.tab]?.editor}
+            onclick={callbacks.find.fcn}
+            disabled={callbacks.find.disabled}
             borderless
         />
     </RibbonSection>
@@ -105,15 +85,15 @@
                 () => !current.pages[current.tab]?.pilotMode,
                 (value) => current.pages[current.tab].setPilotMode(!value)
             } 
-            disabled={!current.pages[current.tab]}
+            disabled={callbacks.togglePiloting.disabled}
         />
         
         {#if python?.ready}
             <IconButton 
                 icon="/icons/btn-send{current.pages[current.tab]?.pilotMode ? "pilot" : "run"}.svg" 
                 label={translate("Send experiment to runner")} 
-                onclick={sendToRunner}
-                disabled={!current.pages[current.tab]?.file?.file}
+                onclick={callbacks.sendToRunner.fcn}
+                disabled={callbacks.sendToRunner.disabled}
                 borderless
             /> 
         {/if}
@@ -123,14 +103,10 @@
             <IconButton 
                 icon="/icons/btn-{current.pages[current.tab]?.pilotMode ? "pilot" : "run"}py.svg" 
                 label={current.pages[current.tab]?.pilotMode ? translate("Pilot locally") : translate("Run locally")}
-                onclick={evt => runPython()}
-                disabled={
-                    !current.pages[current.tab]?.file?.file || 
-                    !current.pages[current.tab]?.file?.parent || 
-                    current.pages[current.tab]?.file?.ext !== ".py"
-                }
+                onclick={evt => callbacks.runPython.fcn()}
+                disabled={callbacks.runPython.disabled}
                 bind:awaiting={awaiting.runpy}
-                cancel={evt => stopPython()}
+                cancel={evt => callbacks.stopPython.fcn()}
                 borderless
             /> 
         </RibbonSection>
@@ -148,13 +124,13 @@
         <IconButton 
             icon="/icons/btn-builder.svg" 
             label={translate("Builder view")} 
-            onclick={(evt) => showWindow("builder")} 
+            onclick={callbacks.showBuilder.fcn} 
             borderless
         />
         <IconButton 
             icon="/icons/btn-coder.svg" 
             label={translate("Coder view")} 
-            onclick={(evt) => showWindow("coder")} 
+            onclick={callbacks.showCoder.fcn} 
             borderless
             disabled
         />
@@ -162,7 +138,7 @@
             <IconButton 
                 icon="/icons/btn-runner.svg" 
                 label={translate("Runner view")} 
-                onclick={(evt) => showWindow("runner")} 
+                onclick={callbacks.showRunner.fcn} 
                 borderless
             />
         {/if}

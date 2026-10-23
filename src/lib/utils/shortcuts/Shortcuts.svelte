@@ -19,8 +19,12 @@
         if (!held.includes(evt.key.toUpperCase())) {
             held.push(evt.key.toUpperCase())
         }
-        // does it match any shortcut?
-        for (let [name, param] of Object.entries(prefs.shortcuts)) {
+        // does it match the shortcut for any callback?
+        for (let callback of Object.values(callbacks)) {
+            let param = prefs.shortcuts[callback.shortcut]
+            if (param === undefined) {
+                continue
+            }
             if (param.val.every(val => held.includes(val.toUpperCase())) && held.every(val => param.val.includes(val.toUpperCase()))) {
                 // mark key as no longer held
                 if (held.includes(evt.key.toUpperCase())) {
@@ -28,8 +32,10 @@
                         held.indexOf(evt.key.toUpperCase())
                     )
                 }
-                // if so, execute method
-                callbacks[name]?.()
+                // if so, execute method (unless disabled)
+                if (!callback.disabled) {
+                    callback.fcn()
+                }
             }
         }
     }}

@@ -1,7 +1,7 @@
 <script>
     import { Button } from "$lib/utils/buttons";
     import { Menu, MenuItem} from '$lib/utils/menu';
-    import { pasteComponent } from "../callbacks.svelte";
+    import callbacks from "../callbacks.svelte.js";
     import Component from './Component.svelte';
     import TimelineHeader from './Timeline.svelte';
     import EntryPoint from './EntryPoint.svelte';
@@ -82,7 +82,7 @@
         <MenuItem
             icon="/icons/btn-paste.svg"
             label={translate("Paste Component")}
-            onclick={evt => pasteComponent(routine, 0)}
+            onclick={evt => callbacks.pasteComponent.fcn(routine, 0)}
         />
     </Menu>
 </div>

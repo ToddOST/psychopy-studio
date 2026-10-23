@@ -1,14 +1,16 @@
 import { electron, python } from '$lib/globals.svelte.js';
 import { browseFileOpen, browseFileSave } from "$lib/utils/files.js";
-import { openIn, showDevTools, focusNextPanel } from "$lib/utils/views.svelte"
+import { openIn, showDevTools, focusNextPanel, showBuilder, showCoder, showRunner } from "$lib/utils/views.svelte"
 import { current } from './globals.svelte.js';
 import { Script } from "$lib/experiment";
 import { translate } from "$lib/translation";
+import { Callback } from "$lib/utils/shortcuts";
+import { resetPrefs, openUserFolder, reinstallPython, gotoHomepage, gotoDocumentation, gotoForum } from "$lib/utils/callbacks.js"
 
 
 /* File */
 
-export function fileNew() {
+function fileNew() {
     // add new tab with blank file
     current.pages.push(
         new Script({
@@ -23,7 +25,7 @@ export function fileNew() {
     current.tab = $state.snapshot(current.pages.length) - 1
 }
 
-export async function fileOpen() {
+async function fileOpen() {
     let file = await browseFileOpen(
         [
             { description: translate("Python Scripts"), accept: {"text/x-python-code": [".py"]} },
@@ -40,7 +42,7 @@ export async function fileOpen() {
     current.openFile(file)
 }
 
-export async function folderOpen() {
+async function folderOpen() {
     // get folder path from electron dialog
     let folder = await electron.files.openDialog({
         properties: ["openDirectory"],
@@ -56,13 +58,13 @@ export async function folderOpen() {
     return folder[0]
 }
 
-export async function revealFolder() {
+async function revealFolder() {
     if (electron && current.pages[current.tab].file) {
         electron.files.showItemInFolder(current.pages[current.tab].file.file)
     }
 }
 
-export async function fileSave() {
+async function fileSave() {
     // if no file yet, save as instead
     if (!current.pages[current.tab]?.file?.file) {
         return fileSaveAs()
@@ -71,7 +73,7 @@ export async function fileSave() {
     current.pages[current.tab].toFile(current.pages[current.tab].file)    
 }
 
-export async function fileSaveAs() {
+async function fileSaveAs() {
     // open file browser
     let file = await browseFileSave(
         [
@@ -91,7 +93,7 @@ export async function fileSaveAs() {
     await fileSave()
 }
 
-export function quit() {
+function quit() {
     if (electron) {
         electron.quit()
     }
@@ -99,15 +101,15 @@ export function quit() {
 
 /* Edit */
 
-export function undo() {
+function undo() {
     current.pages[current.tab]?.editor?.getModel()?.undo()
 }
 
-export function redo() {
+function redo() {
     current.pages[current.tab]?.editor?.getModel()?.undo()
 }
 
-export function find() {
+function find() {
     current.pages[current.tab]?.editor?.trigger(
         "find", 
         "editor.actions.findWithArgs", 
@@ -121,18 +123,18 @@ export function find() {
 
 /* Run */
 
-export function togglePiloting() {
+function togglePiloting() {
     // toggle pilot mode
     if (current.pages[current.tab]) {
         current.pages[current.tab].pilotMode = !current.pages[current.tab].pilotMode
     }
 }
 
-export function sendToRunner() {
+function sendToRunner() {
     openIn(current.pages[current.tab]?.file?.file, "runner")
 }
 
-export async function runPython(version) {
+async function runPython(version) {
     if (!python) {
         return
     }
@@ -148,7 +150,7 @@ export async function runPython(version) {
     return true
 }
 
-export async function stopPython(version) {
+async function stopPython(version) {
     if (!python) {
         return
     }
@@ -161,7 +163,7 @@ export async function stopPython(version) {
 }
 
 
-export async function runJS() {
+async function runJS() {
     if (!python) {
         return
     }
@@ -171,26 +173,75 @@ export async function runJS() {
     }  
 }
 
-/* Views */
 
-export { newWindow, showWindow, showDevTools, focusNextPanel } from "$lib/utils/views.svelte";
+;
 
 
-export var shortcuts = {
-    new: fileNew,
-    open: fileOpen,
-    revealFolder: revealFolder,
-    save: fileSave,
-    saveAs: fileSaveAs,
-    close: close,
-    quit: quit,
-    undo: undo,
-    redo: redo,
-    togglePiloting: togglePiloting,
-    sendToRunner: sendToRunner,
-    runPython: runPython,
-    stopPython: stopPython,
-    runJS: runJS,
-    showDevTools: showDevTools,
-    focusNextPanel: focusNextPanel
+export default {
+    new: new Callback(fileNew, undefined, "new"),
+    open: new Callback(fileOpen, undefined, "open"),
+    revealFolder: new Callback(
+        revealFolder,
+        () => current.pages[current.tab]?.file?.parent === undefined,
+        "revealFolder"
+    ),
+    save: new Callback(
+        fileSave,
+        () => Object.values(current.pages).length === 0 ||
+            (!current.pages[current.tab]?.canUndo && current.pages[current.tab]?.file?.file),
+        "save"
+    ),
+    saveAs: new Callback(
+        fileSaveAs,
+        () => Object.values(current.pages).length === 0,
+        "saveAs"
+    ),
+    close: new Callback(close, undefined, "close"),
+    quit: new Callback(quit, undefined, "quit"),
+    undo: new Callback(
+        undo,
+        () => !current.pages[current.tab]?.canUndo,
+        "undo"
+    ),
+    redo: new Callback(
+        redo,
+        () => !current.pages[current.tab]?.canRedo,
+        "redo"
+    ),
+    find: new Callback(
+        find,
+        () => !current.pages[current.tab]?.editor,
+        "find"
+    ),
+    togglePiloting: new Callback(
+        togglePiloting,
+        () => !current.pages[current.tab],
+        "togglePiloting"
+    ),
+    sendToRunner: new Callback(
+        sendToRunner,
+        () => !current.pages[current.tab]?.file?.file,
+        "sendToRunner"
+    ),
+    runPython: new Callback(
+        runPython,
+        () => !current.pages[current.tab]?.file?.file ||
+            !current.pages[current.tab]?.file?.parent ||
+            current.pages[current.tab]?.file?.ext !== ".py",
+        "runPython"
+    ),
+    stopPython: new Callback(stopPython, undefined, "stopPython"),
+    runJS: new Callback(runJS, undefined, "runJS"),
+    showDevTools: new Callback(showDevTools, undefined, "showDevTools"),
+    focusNextPanel: new Callback(focusNextPanel, undefined, "focusNextPanel"),
+    folderOpen: new Callback(folderOpen),
+    showBuilder: new Callback(showBuilder),
+    showRunner: new Callback(showRunner),
+    resetPrefs: new Callback(resetPrefs),
+    openUserFolder: new Callback(openUserFolder),
+    reinstallPython: new Callback(reinstallPython),
+    gotoHomepage: new Callback(gotoHomepage),
+    gotoDocumentation: new Callback(gotoDocumentation),
+    gotoForum: new Callback(gotoForum),
+    showCoder: new Callback(showCoder)
 }

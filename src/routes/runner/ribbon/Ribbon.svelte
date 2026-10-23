@@ -1,13 +1,5 @@
 <script>
-    import {
-        // file
-        fileNew,
-        fileOpen,
-        fileSave,
-        fileSaveAs,
-        // view
-        showWindow,
-    } from '../callbacks.svelte.js'
+    import callbacks from '../callbacks.svelte.js';
     
     import Menu from "./Menu.svelte";
     import { Ribbon, RibbonSection, RibbonGap } from '$lib/utils/ribbon';
@@ -15,8 +7,6 @@
     import { electron, python } from "$lib/globals.svelte.js";
     import { IconButton, SwitchButton } from '$lib/utils/buttons';
     import { UserCtrl } from '$lib/pavlovia';
-    import { Experiment } from "$lib/experiment";
-    import { openIn } from "$lib/utils/views.svelte";
     import { translate } from "$lib/translation";
 
     let current = getContext("current");
@@ -42,25 +32,29 @@
         <IconButton 
             icon="/icons/btn-new.svg" 
             label={translate("New configuration")} 
-            onclick={(evt) => fileNew()} 
+            onclick={callbacks.new.fcn}
+            disabled={callbacks.new.disabled}
             borderless
         />
         <IconButton 
             icon="/icons/btn-open.svg" 
             label={translate("Open configuration")} 
-            onclick={(evt) => fileOpen(true).catch(err => console.error(err))} 
+            onclick={callbacks.openConfiguration.fcn}
+            disabled={callbacks.open.disabled}
             borderless
         />
         <IconButton 
             icon="/icons/btn-save.svg" 
             label={translate("Save configuration")} 
-            onclick={fileSave}
+            onclick={callbacks.save.fcn}
+            disabled={callbacks.save.disabled}
             borderless
         />
         <IconButton 
             icon="/icons/btn-saveas.svg" 
             label={translate("Save configuration as")}
-            onclick={fileSaveAs} 
+            onclick={callbacks.saveAs.fcn} 
+            disabled={callbacks.saveAs.disabled}
             borderless
         />
     </RibbonSection>
@@ -73,17 +67,14 @@
                 () => !current.runlist[current.selection]?.pilotMode,
                 (value) => current.runlist[current.selection]?.setPilotMode(!value)
             } 
-            disabled={current.selection === undefined}
+            disabled={callbacks.togglePiloting.disabled}
         />
         <IconButton 
             icon="/icons/btn-send{current.runlist[current.selection]?.file.ext === ".psyexp" ? "builder" : "coder"}.svg" 
             label={current.runlist[current.selection]?.file.ext === ".psyexp" ? translate("Open selection in Builder") : translate("Open selection in Coder")}
-            onclick={evt => openIn(
-                current.runlist[current.selection]?.file.file, 
-                current.runlist[current.selection]?.file.ext === ".psyexp" ? "builder" : "coder"
-            )} 
+            onclick={callbacks.openSelection.fcn}
             borderless
-            disabled={!current.runlist[current.selection]}
+            disabled={callbacks.openSelection.disabled}
         />
     </RibbonSection>
 
@@ -92,17 +83,17 @@
             <IconButton 
                 icon="/icons/btn-{current.runlist[current.selection]?.pilotMode ? "pilot" : "run"}py.svg" 
                 label={current.runlist[current.selection]?.pilotMode ? translate("Pilot experiment locally") : translate("Run experiment locally")}
-                onclick={evt => current.runlist[current.selection]?.runPython()}
-                disabled={current.selection === undefined}
+                onclick={callbacks.runPython.fcn}
+                disabled={callbacks.runPython.disabled}
                 bind:awaiting={current.awaiting.runpy}
-                cancel={evt => current.runlist[current.selection]?.stopPython()}
+                cancel={callbacks.stopPython.fcn}
                 borderless
             />
             <IconButton 
                 icon="/icons/btn-{current.runlist[current.selection]?.pilotMode ? "pilot" : "run"}js.svg" 
                 label={current.runlist[current.selection]?.pilotMode ? translate("Pilot experiment in browser") : translate("Run experiment in browser")} 
-                onclick={(evt) => current.runlist[current.selection]?.runJS()}
-                disabled={current.selection === undefined || !(current.runlist[current.selection] instanceof Experiment)}
+                onclick={callbacks.runJS.fcn}
+                disabled={callbacks.runJS.disabled}
                 bind:awaiting={current.awaiting.runjs}
                 borderless
             />
@@ -121,20 +112,20 @@
         <IconButton 
             icon="/icons/btn-builder.svg" 
             label={translate("Builder view")} 
-            onclick={(evt) => showWindow("builder")} 
+            onclick={callbacks.showBuilder.fcn} 
             borderless
         />
         <IconButton 
             icon="/icons/btn-coder.svg" 
             label={translate("Coder view")} 
-            onclick={(evt) => showWindow("coder")} 
+            onclick={callbacks.showCoder.fcn} 
             borderless
         />
         {#if electron}
             <IconButton 
                 icon="/icons/btn-runner.svg" 
                 label={translate("Runner view")} 
-                onclick={(evt) => showWindow("runner")} 
+                onclick={callbacks.showRunner.fcn} 
                 borderless
                 disabled
             />

@@ -14,10 +14,9 @@
     import PavloviaOutput from "./outputs/PavloviaOutput.svelte";
     import { electron, python, git } from "$lib/globals.svelte";
     import SetupPython from "../../lib/python/SetupPython.svelte";
-    import { addFile } from "./callbacks.svelte";
     import Ribbon from "./ribbon/Ribbon.svelte";
-    import Shortcuts from '$lib/utils/Shortcuts.svelte';
-    import { shortcuts } from "./callbacks.svelte";
+    import { Shortcuts } from '$lib/utils/shortcuts';
+    import callbacks from "./callbacks.svelte";
     import TipsDialog from '$lib/dialogs/tips/TipsDialog.svelte';
     import KeyboardAccessPrompt from '$lib/dialogs/keyboardAccess/KeyboardAccessPrompt.svelte';
     import { translate } from "$lib/translation";
@@ -30,14 +29,14 @@
     // if given a file to open, open it
     if (params.get("fileOpen")) {
         params.get("fileOpen").split(",").forEach(
-            item => addFile(item)
+            item => callbacks.addFile.fcn(item)
         )
     }
     
     // listen for messages from other windows
     if (electron) {
         // for opening files via another window
-        electron.windows.listen("fileOpen", (evt, file) => addFile(file))
+        electron.windows.listen("fileOpen", (evt, file) => callbacks.addFile.fcn(file))
         // mark ready
         electron.windows.emit("ready", true)
     }
@@ -105,7 +104,7 @@
     <title>{translate("PsychoPy Runner")}</title>
 {/if}
 <Frame
-    onFileDrop={(evt, file) => addFile(file)}
+    onFileDrop={(evt, file) => callbacks.addFile.fcn(file)}
 >
     {#snippet ribbon()}
         <Ribbon />
@@ -183,7 +182,7 @@
     <Theme />
     <!-- this will setup keyboard shortcuts -->
     <Shortcuts
-        callbacks={shortcuts}
+        {callbacks}
     />
     <!-- this will setup a Python instance -->
     <SetupPython />

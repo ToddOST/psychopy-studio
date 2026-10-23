@@ -64,6 +64,27 @@ export async function showWindow(target, focus=true) {
 }
 
 /**
+ * Show the first Builder window, or open one if none are open
+ */
+export function showBuilder() {
+    return showWindow("builder")
+}
+
+/**
+ * Show the first Coder window, or open one if none are open
+ */
+export function showCoder() {
+    return showWindow("coder")
+}
+
+/**
+ * Show the first Runner window, or open one if none are open
+ */
+export function showRunner() {
+    return showWindow("runner")
+}
+
+/**
  * Show the devtools panel in the current window
  */
 export function showDevTools() {

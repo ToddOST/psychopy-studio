@@ -2,20 +2,22 @@ import { electron, python } from '$lib/globals.svelte.js';
 import { current } from './globals.svelte.js';
 
 import path from "path-browserify";
-import { newWindow, openIn, showDevTools, focusNextPanel } from "$lib/utils/views.svelte"
+import { newWindow, openIn, showDevTools, focusNextPanel, showBuilder, showCoder, showRunner } from "$lib/utils/views.svelte"
 import { browseFileOpen, browseFileSave, parsePath } from "$lib/utils/files.js";
 import { Routine, StandaloneRoutine, Component, HasParams } from "$lib/experiment"
 import { prefs } from "$lib/preferences.svelte";
 import { translate } from "$lib/translation";
+import { Callback } from "$lib/utils/shortcuts";
+import { resetPrefs, openUserFolder, reinstallPython, gotoHomepage, gotoDocumentation, gotoForum } from "$lib/utils/callbacks.js"
 
 
 /* File */
 
-export function file_new() {
+function file_new() {
     newWindow("builder")
 }
 
-export async function file_open() {
+async function file_open() {
     // open file browser
     let file = await browseFileOpen(
         [
@@ -31,7 +33,7 @@ export async function file_open() {
     await openFile(file)
 }
 
-export async function openFile(file) {
+async function openFile(file) {
     // construct an Experiment object from the file
     await current.experiment.fromFile(file);
     // choose current routine
@@ -55,14 +57,14 @@ export async function openFile(file) {
 }
 
 
-export async function revealFolder() {
+async function revealFolder() {
     if (electron && current.experiment.file) {
         electron.files.showItemInFolder(current.experiment.file.file)
     }
 }
 
 
-export async function file_save() {
+async function file_save() {
     // diverge here based on whether there is a current file...
     if (current.experiment.file.file) {
         current.experiment.toFile(
@@ -75,7 +77,7 @@ export async function file_save() {
     }
 }
 
-export async function file_save_as() {
+async function file_save_as() {
     // open file browser
     let file = await browseFileSave(
         [
@@ -95,18 +97,18 @@ export async function file_save_as() {
     return current.experiment.file
 }
 
-export function close() {
+function close() {
     window.close()
 }
 
-export function quit() {
+function quit() {
     if (electron) {
         electron.quit()
     }
 }
 
 /* Edit */
-export function undo() {
+function undo() {
     current.experiment.history.undo();
     // restore focus to tab if possible
     if (current.routine && current.routine.name in current.experiment.routines) {
@@ -114,7 +116,7 @@ export function undo() {
     }
 }
 
-export function redo() {
+function redo() {
     current.experiment.history.redo();
     // restore focus to tab if possible
     if (current.routine && current.routine.name in current.experiment.routines) {
@@ -124,7 +126,7 @@ export function redo() {
 
 /* Experiment */
 
-export async function findReadme() {
+async function findReadme() {
     if (electron && current.experiment.file?.parent) {
         // iterate through siblings in folder
         for (let sibling of await electron.files.scandir(current.experiment.file.parent)) {
@@ -138,7 +140,7 @@ export async function findReadme() {
     }
 }
 
-export async function showReadme() {
+async function showReadme() {
     // find readme file
     let readme = await findReadme()
     // if there is one, load it
@@ -158,7 +160,7 @@ export async function showReadme() {
     current.readme.shown = true
 }
 
-export function copyRoutine(routine=undefined) {
+function copyRoutine(routine=undefined) {
     // use current routine if none given
     if (!routine) {
         routine = current.routine
@@ -167,7 +169,7 @@ export function copyRoutine(routine=undefined) {
     current.clipboard.set(routine.toJSON())
 }
 
-export async function pasteRoutine() {
+async function pasteRoutine() {
     let clipboard = await current.clipboard.get()
     // abort if nothing is in the clipboard
     if (!clipboard) {
@@ -198,7 +200,7 @@ export async function pasteRoutine() {
  * 
  * @param {HasParams} component Component to copy
  */
-export function copyComponent(component) {
+function copyComponent(component) {
     // store JSON representation in clipboard
     current.clipboard.set(component.toJSON())
 }
@@ -209,7 +211,7 @@ export function copyComponent(component) {
  * @param {Routine} routine Routine to paste into
  * @param {integer} index Index in the Routine to insert the Component
  */
-export async function pasteComponent(routine, index) {
+async function pasteComponent(routine, index) {
     let clipboard = await current.clipboard.get()
     // abort if nothing is in the clipboard
     if (!clipboard) {
@@ -231,7 +233,7 @@ export async function pasteComponent(routine, index) {
 /* Run */
 
 
-export function togglePiloting() {
+function togglePiloting() {
     // update history
     current.experiment.history.update(`toggle pilot mode`)
     // toggle pilot mode
@@ -239,7 +241,7 @@ export function togglePiloting() {
 }
 
 
-export async function sendToRunner() {
+async function sendToRunner() {
     await openIn(current.experiment.file.file, "runner")
 }
 
@@ -248,7 +250,7 @@ export async function sendToRunner() {
  * 
  * @param {boolean} focus Focus Coder afterwards
  */
-export async function compilePython(focus=true) {
+async function compilePython(focus=true) {
     // if no file, save as
     if (current.experiment.file?.file === undefined) {
         await file_save_as()
@@ -270,7 +272,7 @@ export async function compilePython(focus=true) {
  * 
  * @param {boolean} focus Focus Coder afterwards
  */
-export async function compileJS(focus=true) {
+async function compileJS(focus=true) {
     // if no file, save as
     if (current.experiment.file?.file === undefined) {
         await file_save_as()
@@ -287,7 +289,7 @@ export async function compileJS(focus=true) {
     return target
 }
 
-export async function runPython() {
+async function runPython() {
     if (!python) {
         return
     }
@@ -313,14 +315,14 @@ export async function runPython() {
     return true
 }
 
-export async function stopPython(executable) {
+async function stopPython(executable) {
     // cancel running
     await current.experiment.stopPython()
     // re-enable error popups
     current.errorPopups = true
 }
 
-export async function runJS() {
+async function runJS() {
     if (!python) {
         return
     }
@@ -342,27 +344,83 @@ export async function runJS() {
     }
 }
 
-/** Views */
-export { newWindow, showWindow, showDevTools, focusNextPanel } from "$lib/utils/views.svelte"
 
-
-export var shortcuts = {
-    new: file_new,
-    open: file_open,
-    revealFolder: revealFolder,
-    save: file_save,
-    saveAs: file_save_as,
-    close: close,
-    quit: quit,
-    undo: undo,
-    redo: redo,
-    togglePiloting: togglePiloting,
-    sendToRunner: sendToRunner,
-    compilePython: compilePython,
-    runPython: runPython,
-    stopPython: stopPython,
-    compileJS: compileJS,
-    runJS: runJS,
-    showDevTools: showDevTools,
-    focusNextPanel: focusNextPanel
+export default {
+    new: new Callback(file_new, undefined, "new"),
+    open: new Callback(file_open, undefined, "open"),
+    revealFolder: new Callback(
+        revealFolder,
+        () => current.experiment.file?.parent === undefined,
+        "revealFolder"
+    ),
+    save: new Callback(
+        file_save,
+        () => !current.experiment.valid || (!current.experiment.history.past.length && current.experiment.file.file),
+        "save"
+    ),
+    saveAs: new Callback(
+        file_save_as,
+        () => !current.experiment.valid,
+        "saveAs"
+    ),
+    close: new Callback(close, undefined, "close"),
+    quit: new Callback(quit, undefined, "quit"),
+    undo: new Callback(
+        undo,
+        () => !current.experiment.history.past.length,
+        "undo"
+    ),
+    redo: new Callback(
+        redo,
+        () => !current.experiment.history.future.length,
+        "redo"
+    ),
+    togglePiloting: new Callback(
+        togglePiloting,
+        () => current.experiment === null,
+        "togglePiloting"
+    ),
+    sendToRunner: new Callback(
+        sendToRunner,
+        () => !current.experiment.valid || !current.experiment.file.file,
+        "sendToRunner"
+    ),
+    compilePython: new Callback(
+        compilePython,
+        () => !current.experiment.valid,
+        "compilePython"
+    ),
+    runPython: new Callback(
+        runPython,
+        () => !current.experiment.valid,
+        "runPython"
+    ),
+    stopPython: new Callback(stopPython, undefined, "stopPython"),
+    compileJS: new Callback(
+        compileJS,
+        () => !current.experiment.valid,
+        "compileJS"
+    ),
+    runJS: new Callback(
+        runJS,
+        () => !current.experiment.valid || (!current.experiment.pilotMode && !current.project),
+        "runJS"
+    ),
+    showDevTools: new Callback(showDevTools, undefined, "showDevTools"),
+    focusNextPanel: new Callback(focusNextPanel, undefined, "focusNextPanel"),
+    openFile: new Callback(openFile),
+    pasteRoutine: new Callback(pasteRoutine),
+    copyRoutine: new Callback(copyRoutine),
+    showCoder: new Callback(showCoder),
+    showRunner: new Callback(showRunner),
+    showReadme: new Callback(showReadme),
+    resetPrefs: new Callback(resetPrefs),
+    openUserFolder: new Callback(openUserFolder),
+    reinstallPython: new Callback(reinstallPython),
+    gotoHomepage: new Callback(gotoHomepage),
+    gotoDocumentation: new Callback(gotoDocumentation),
+    gotoForum: new Callback(gotoForum),
+    showBuilder: new Callback(showBuilder),
+    pasteComponent: new Callback(pasteComponent),
+    copyComponent: new Callback(copyComponent)
 }
