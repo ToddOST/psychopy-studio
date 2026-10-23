@@ -347,6 +347,10 @@ export class HasParams {
             if (this.exp) {
                 this.exp.history.update(`edit ${this.name}`);
             }
+            // abort here if changes aren't valid
+            if (!this.valid) {
+                return
+            }
             // set restore point
             this.restore.point = this.toJSON();
         },

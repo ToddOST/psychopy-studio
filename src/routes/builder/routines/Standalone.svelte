@@ -10,9 +10,9 @@
 
     onMount(
         () => {
-            if (routine.valid) {
-                routine.restore.set()
-            }
+            routine.restore.set()
+
+            return routine.restore.set
         }
     )
 

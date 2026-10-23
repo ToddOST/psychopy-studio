@@ -112,14 +112,14 @@
             icon="/icons/btn-undo.svg" 
             label={translate("Undo")} 
             onclick={undo} 
-            disabled={!current.experiment.file.file || !current.experiment.history.past.length} 
+            disabled={!current.experiment.history.past.length} 
             borderless
         />
         <IconButton 
             icon="/icons/btn-redo.svg" 
             label={translate("Redo")} 
             onclick={redo} 
-            disabled={!current.experiment.file.file || !current.experiment.history.future.length} 
+            disabled={!current.experiment.history.future.length} 
             borderless
         />
         <IconButton 
