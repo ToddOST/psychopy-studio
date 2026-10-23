@@ -1,8 +1,9 @@
 <script>
     import { electron } from "$lib/globals.svelte";
-    import { getContext } from "svelte";
     import { MenuItem } from "..";
+    import { addToTemplate, removeFromTemplate } from "./utils";
     import { prefs } from "$lib/preferences.svelte";
+    import { getContext, onMount } from "svelte";
 
     let {
         /** @prop @type {string} Label for this menu item */
@@ -53,14 +54,16 @@
         return profile
     }
 
-    
-    // add self to template
+    // get template
     let template = getContext("template");
-    template.push(
-        getProfile()
-    )
-    // take note of the index at which self was added
-    let index = template.length - 1
+    // construct template entry for this item
+    let entry = $state(getProfile())
+    // add self to template on mount, and remove on unmount
+    onMount(() => {
+        addToTemplate(template, entry)
+
+        return () => removeFromTemplate(template, entry)
+    })
     // listen for calls from backend
     electron.windows.listen(`menu:${id}`, evt => {
         // execute front-end onclick function
@@ -68,7 +71,7 @@
     })
     // keep the template up to date as this item's values change
     $effect(() => Object.assign(
-        template[index] || {}, 
+        entry,
         getProfile()
     ))
 </script>
