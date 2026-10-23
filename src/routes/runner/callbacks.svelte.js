@@ -1,14 +1,16 @@
 import path from "path-browserify";
 import { browseFileOpen, browseFileSave, parsePath } from "$lib/utils/files.js";
-import { showDevTools, focusNextPanel } from "$lib/utils/views.svelte"
+import { showDevTools, focusNextPanel, openIn, showBuilder, showCoder, showRunner } from "$lib/utils/views.svelte"
 import { Experiment } from "$lib/experiment";
 import { Script } from "$lib/experiment/script.svelte";
 import { electron } from "$lib/globals.svelte";
 import { current } from './globals.svelte.js';
 import { translate } from "$lib/translation";
+import { Callback } from "$lib/utils/shortcuts";
+import { resetPrefs, openUserFolder, reinstallPython, gotoHomepage, gotoDocumentation, gotoForum } from "$lib/utils/callbacks.js"
 
 
-export async function addFile(file, pilotMode=undefined) {
+async function addFile(file, pilotMode=undefined) {
     let item
     // parse file if needed
     if (typeof file === "string") {
@@ -53,7 +55,7 @@ export async function addFile(file, pilotMode=undefined) {
     current.selection = current.runlist.length
 }
 
-export async function loadPsyrun(file) {
+async function loadPsyrun(file) {
     // load JSON file
     let content = await electron.files.load(file.file)
     // convert paths to file objects with details
@@ -70,7 +72,7 @@ export async function loadPsyrun(file) {
     return output
 }
 
-export function fileNew() {
+function fileNew() {
     // clear current files
     current.runlist.length = 0
     // clear current file info
@@ -83,7 +85,7 @@ export function fileNew() {
  * @param {object} current Current Runner setup (from getContext)
  * @param {boolean} replace If true, then replace existing files with ones selected
  */
-export async function fileOpen(replace=false) {
+async function fileOpen(replace=false) {
     // work out allowed files
     let allowedFiles
     if (replace) {
@@ -117,7 +119,14 @@ export async function fileOpen(replace=false) {
     await addFile(file)
 }
 
-export async function fileSave() {
+/**
+ * Open a .psyrun file, replacing the current configuration
+ */
+async function openConfiguration() {
+    return fileOpen(true).catch(err => console.error(err))
+}
+
+async function fileSave() {
     // diverge here based on whether there is a current file...
     if (current.file) {
         // construct serializable object
@@ -149,7 +158,7 @@ export async function fileSave() {
     }
 }
 
-export async function fileSaveAs() {
+async function fileSaveAs() {
     // open file browser
     let file = await browseFileSave(
         [
@@ -169,30 +178,84 @@ export async function fileSaveAs() {
     return current.file
 }
 
-export function quit() {
+function quit() {
     if (electron) {
         electron.quit()
     }
 }
 
-export function togglePiloting() {
+function togglePiloting() {
     if (current.runlist[current.selection]) {
         current.runlist[current.selection].pilotMode = !current.runlist[current.selection]?.pilotMode
     }
 }
 
+/**
+ * Open the selected file in Builder (if it's a .psyexp) or Coder (otherwise)
+ */
+function openSelection() {
+    let file = current.runlist[current.selection]?.file
+    return openIn(
+        file?.file,
+        file?.ext === ".psyexp" ? "builder" : "coder"
+    )
+}
 
-export { newWindow, showWindow, focusNextPanel } from "$lib/utils/views.svelte"
+function runPython() {
+    current.awaiting.runpy = current.runlist[current.selection]?.runPython()
+
+    return current.awaiting.runpy
+}
+
+function stopPython() {
+    return current.runlist[current.selection]?.stopPython()
+}
+
+function runJS() {
+    current.awaiting.runjs = current.runlist[current.selection]?.runJS()
+
+    return current.awaiting.runjs
+}
 
 
-export var shortcuts = {
-    new: fileNew,
-    open: fileOpen,
-    save: fileSave,
-    saveAs: fileSaveAs,
-    close: close,
-    quit: quit,
-    togglePiloting: togglePiloting,
-    showDevTools: showDevTools,
-    focusNextPanel: focusNextPanel
+export default {
+    new: new Callback(fileNew, undefined, "new"),
+    open: new Callback(fileOpen, undefined, "open"),
+    save: new Callback(fileSave, undefined, "save"),
+    saveAs: new Callback(fileSaveAs, undefined, "saveAs"),
+    close: new Callback(close, undefined, "close"),
+    quit: new Callback(quit, undefined, "quit"),
+    togglePiloting: new Callback(
+        togglePiloting,
+        () => current.selection === undefined,
+        "togglePiloting"
+    ),
+    openSelection: new Callback(
+        openSelection,
+        () => !current.runlist[current.selection]
+    ),
+    runPython: new Callback(
+        runPython,
+        () => current.selection === undefined,
+        "runPython"
+    ),
+    stopPython: new Callback(stopPython, undefined, "stopPython"),
+    runJS: new Callback(
+        runJS,
+        () => current.selection === undefined || !(current.runlist[current.selection] instanceof Experiment),
+        "runJS"
+    ),
+    showDevTools: new Callback(showDevTools, undefined, "showDevTools"),
+    focusNextPanel: new Callback(focusNextPanel, undefined, "focusNextPanel"),
+    addFile: new Callback(addFile),
+    showBuilder: new Callback(showBuilder),
+    showCoder: new Callback(showCoder),
+    resetPrefs: new Callback(resetPrefs),
+    openUserFolder: new Callback(openUserFolder),
+    reinstallPython: new Callback(reinstallPython),
+    gotoHomepage: new Callback(gotoHomepage),
+    gotoDocumentation: new Callback(gotoDocumentation),
+    gotoForum: new Callback(gotoForum),
+    showRunner: new Callback(showRunner),
+    openConfiguration: new Callback(openConfiguration)
 }

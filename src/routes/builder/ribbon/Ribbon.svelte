@@ -1,22 +1,4 @@
 <script>
-    import {
-        // file
-        file_new,
-        file_open,
-        file_save,
-        file_save_as,
-        // edit
-        undo,
-        redo,
-        // experiment
-        sendToRunner,
-        compilePython,
-        compileJS,
-        runPython,
-        showWindow,
-        runJS,
-        stopPython,
-    } from '../callbacks.svelte.js'
     
     import Menu from "./Menu.svelte";
     import { Ribbon, RibbonSection, RibbonGap } from '$lib/utils/ribbon';
@@ -79,7 +61,7 @@
         />
         <SavePrompt
             bind:shown={prompts.NEW}
-            action={file_new}
+            action={callbacks.new.fcn}
         />  
         <IconButton 
             icon="/icons/btn-open.svg" 
@@ -89,20 +71,20 @@
         />
         <SavePrompt
             bind:shown={prompts.OPEN}
-            action={file_open}
+            action={callbacks.open.fcn}
         />
         <IconButton 
             icon="/icons/btn-save.svg" 
             label={translate("Save file")} 
-            onclick={file_save}
-            disabled={!current.experiment.valid || (!current.experiment.history.past.length && current.experiment.file.file)}
+            onclick={callbacks.save.fcn}
+            disabled={callbacks.save.disabled}
             borderless
         />
         <IconButton
             icon="/icons/btn-saveas.svg"
             label={translate("Save file as")}
-            onclick={file_save_as}
-            disabled={!current.experiment.valid}
+            onclick={callbacks.saveAs.fcn}
+            disabled={callbacks.saveAs.disabled}
             borderless
         />
     </RibbonSection>
@@ -111,15 +93,15 @@
         <IconButton 
             icon="/icons/btn-undo.svg" 
             label={translate("Undo")} 
-            onclick={undo} 
-            disabled={!current.experiment.history.past.length} 
+            onclick={callbacks.undo.fcn} 
+            disabled={callbacks.undo.disabled} 
             borderless
         />
         <IconButton 
             icon="/icons/btn-redo.svg" 
             label={translate("Redo")} 
-            onclick={redo} 
-            disabled={!current.experiment.history.future.length} 
+            onclick={callbacks.redo.fcn} 
+            disabled={callbacks.redo.disabled} 
             borderless
         />
         <IconButton 
@@ -130,7 +112,7 @@
         />
         <FindDialog
             bind:shown={show.findDlg}
-        ></FindDialog>
+        />
     </RibbonSection>
     
     <RibbonSection label={translate("Experiment")} icon="/icons/rbn-experiment.svg">
@@ -140,7 +122,7 @@
                 label={translate("Open the monitor center")}
                 onclick={(evt) => show.monitorCenterDlg = true}
                 borderless
-            ></IconButton>
+            />
             <MonitorCenterDlg
                 bind:shown={show.monitorCenterDlg}
             />
@@ -149,7 +131,7 @@
                 label={translate("Open the device manager")}
                 onclick={(evt) => show.deviceMgrDlg = true}
                 borderless
-            ></IconButton>
+            />
             <DeviceManagerDialog
                 bind:shown={show.deviceMgrDlg}
             />
@@ -180,15 +162,15 @@
                     current.experiment.setPilotMode(!value);
                 }
             } 
-            disabled={current.experiment === null}
+            disabled={callbacks.togglePiloting.disabled}
         />  
         
         {#if python?.ready}
             <IconButton 
                 icon="/icons/btn-send{current.experiment.pilotMode ? "pilot" : "run"}.svg" 
                 label={translate("Send experiment to runner")} 
-                onclick={sendToRunner}
-                disabled={!current.experiment.valid || !current.experiment.file.file}
+                onclick={callbacks.sendToRunner.fcn}
+                disabled={callbacks.sendToRunner.disabled}
                 borderless
             /> 
         {/if}
@@ -199,18 +181,18 @@
             <IconButton 
                 icon="/icons/btn-compilepy.svg" 
                 label={translate("Write experiment as a .py file")} 
-                onclick={evt => compilePython()}
+                onclick={evt => callbacks.compilePython.fcn()}
                 bind:awaiting={awaiting.compilepy}
-                disabled={!current.experiment.valid}
+                disabled={callbacks.compilePython.disabled}
                 borderless
             /> 
             <IconButton 
                 icon="/icons/btn-{current.experiment.pilotMode ? "pilot" : "run"}py.svg" 
                 label={current.experiment.pilotMode ? translate("Pilot experiment locally") : translate("Run experiment locally")}
-                onclick={evt => runPython()}
+                onclick={evt => callbacks.runPython.fcn()}
                 bind:awaiting={awaiting.runpy}
-                cancel={evt => stopPython()}
-                disabled={!current.experiment.valid}
+                cancel={evt => callbacks.stopPython.fcn()}
+                disabled={callbacks.runPython.disabled}
                 borderless
             />
         </RibbonSection>
@@ -219,16 +201,16 @@
             <IconButton 
                     icon="/icons/btn-compilejs.svg" 
                     label={translate("Write experiment as a .js file")} 
-                    onclick={(evt) => compileJS()}
+                    onclick={(evt) => callbacks.compileJS.fcn()}
                     bind:awaiting={awaiting.compilejs}
-                    disabled={!current.experiment.valid}
+                    disabled={callbacks.compileJS.disabled}
                     borderless
                 />
                 <IconButton 
                     icon="/icons/btn-{current.experiment.pilotMode ? "pilot" : "run"}js.svg" 
                     label={current.experiment.pilotMode ? translate("Pilot experiment in browser") : translate("Run experiment in browser")}
-                    onclick={(evt) => runJS()}
-                    disabled={!current.experiment.valid || (!current.experiment.pilotMode && !current.project)}
+                    onclick={(evt) => callbacks.runJS.fcn()}
+                    disabled={callbacks.runJS.disabled}
                     bind:awaiting={awaiting.runjs}
                     borderless
                 />
@@ -274,21 +256,21 @@
         <IconButton 
             icon="/icons/btn-builder.svg" 
             label={translate("Builder view")} 
-            onclick={(evt) => showWindow("builder")} 
+            onclick={callbacks.showBuilder.fcn} 
             borderless
             disabled
         />
         <IconButton 
             icon="/icons/btn-coder.svg" 
             label={translate("Coder view")} 
-            onclick={(evt) => showWindow("coder")} 
+            onclick={callbacks.showCoder.fcn} 
             borderless
         />
         {#if electron}
             <IconButton 
                 icon="/icons/btn-runner.svg" 
                 label={translate("Runner view")} 
-                onclick={(evt) => showWindow("runner")} 
+                onclick={callbacks.showRunner.fcn} 
                 borderless
             />
         {/if}

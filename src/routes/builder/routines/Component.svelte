@@ -7,7 +7,7 @@
     import { Icon } from "$lib/utils/icons";
     import { prefs } from "$lib/preferences.svelte";
     import { translate } from "$lib/translation";
-    import { copyComponent, pasteComponent } from "../callbacks.svelte";
+    import callbacks from "../callbacks.svelte.js";
     
     let current = getContext("current");
 
@@ -167,7 +167,7 @@
     <MenuItem 
         icon="/icons/btn-copy.svg"
         label={translate("Copy Component")}
-        onclick={evt => copyComponent(component)}
+        onclick={evt => callbacks.copyComponent.fcn(component)}
     />
     <SubMenu
         icon="/icons/btn-paste.svg"
@@ -176,12 +176,12 @@
         <MenuItem
             icon="/icons/sym-arrow-up.svg"
             label={translate("Above")}
-            onclick={evt => pasteComponent(current.routine, component.index)}
+            onclick={evt => callbacks.pasteComponent.fcn(current.routine, component.index)}
         />
         <MenuItem
             icon="/icons/sym-arrow-down.svg"
             label={translate("Below")}
-            onclick={evt => pasteComponent(current.routine, component.index + 1)}
+            onclick={evt => callbacks.pasteComponent.fcn(current.routine, component.index + 1)}
         />
     </SubMenu>
     <MenuItem 

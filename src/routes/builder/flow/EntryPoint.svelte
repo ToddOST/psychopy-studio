@@ -1,6 +1,6 @@
 <script>
     import { LoopInitiator, LoopTerminator, Routine, StandaloneRoutine } from '$lib/experiment';
-    import { pasteRoutine } from "../callbacks.svelte";
+    import callbacks from "../callbacks.svelte.js";
     import { Menu, MenuItem } from '$lib/utils/menu';
     import { getContext } from "svelte";
     import { translate } from "$lib/translation";
@@ -129,7 +129,7 @@
         icon="/icons/btn-paste.svg"
         label={translate("Paste Routine")}
         onclick={evt => {
-            pasteRoutine().then(
+            callbacks.pasteRoutine.fcn().then(
                 routine => {
                     current.inserting = routine
                     insertHere()

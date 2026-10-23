@@ -3,7 +3,7 @@
     import { Menu, MenuItem, SubMenu } from '$lib/utils/menu';
     import Tooltip from '$lib/utils/tooltip/Tooltip.svelte';
     import { getContext } from "svelte";
-    import { copyRoutine } from "../callbacks.svelte";
+    import callbacks from "../callbacks.svelte.js";
     import ParamsDialog from "$lib/paramCtrls/ParamsDialog.svelte";
     import { translate } from "$lib/translation";
     
@@ -113,7 +113,7 @@
     <MenuItem 
         icon="/icons/btn-copy.svg"
         label={translate("Copy Routine")}
-        onclick={evt => copyRoutine(element)}
+        onclick={evt => callbacks.copyRoutine.fcn(element)}
     />
     <MenuItem 
         icon="/icons/btn-delete.svg"

@@ -4,7 +4,7 @@
     import path from "path-browserify";
     import { getContext } from "svelte";
     import { translate } from "$lib/translation";
-    import { folderOpen } from "../callbacks.svelte.js";
+    import callbacks from "../callbacks.svelte.js";
 
     let {
         value=$bindable(),
@@ -28,7 +28,7 @@
         tooltip={translate("Open folder...")}
         onclick={async evt => {
             // open using standard callback
-            let value = folderOpen()
+            let value = callbacks.folderOpen.fcn()
             // execute onchange function
             onchange(value)
         }}

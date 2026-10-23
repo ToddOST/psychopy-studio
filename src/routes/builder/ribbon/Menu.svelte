@@ -5,43 +5,14 @@
     import ParamsDialog from "$lib/paramCtrls/ParamsDialog.svelte";
     import { FindDialog } from "$lib/dialogs/find";
     import { BugReportDlg } from "$lib/dialogs/bugReport";
-    import { prefs } from "$lib/preferences.svelte"; 
     import { electron, python, git } from "$lib/globals.svelte";
     import { DeviceManagerDialog } from "$lib/dialogs/deviceManager/index.js";
     import { PluginManagerDlg, PsychoPyBranchDlg } from "$lib/dialogs/pluginManager";
     import BrowseDemosDlg from "$lib/pavlovia/browseProjects/BrowseDemosDlg.svelte";
     import { projectsLoaded, openProject } from "$lib/pavlovia/utils.svelte";
-    import { setupPython } from "$lib/python";
     import semver from "semver";
     import { translate } from "$lib/translation";
 
-    import {
-        // file
-        file_new,
-        file_open,
-        file_save,
-        file_save_as,
-        revealFolder,
-        close,
-        // edit
-        undo,
-        redo,
-        // view
-        newWindow,
-        showWindow,
-        showDevTools,
-        // experiment
-        showReadme,
-        copyRoutine,
-        pasteRoutine,
-        // run
-        togglePiloting,
-        sendToRunner,
-        compilePython,
-        compileJS,
-        runPython,
-        runJS
-    } from '../callbacks.svelte.js';
 
     let current = getContext("current");
 
@@ -73,33 +44,35 @@
             icon="/icons/btn-new.svg" 
             label={translate("New file")}
             shortcut="new"
-            onclick={file_new}
+            onclick={callbacks.new.fcn}
+            disabled={callbacks.new.disabled}
         />
         <MenuItem 
             icon="/icons/btn-open.svg" 
             label={translate("Open file")} 
             shortcut="open"
-            onclick={file_open} 
+            onclick={callbacks.open.fcn} 
+            disabled={callbacks.open.disabled}
         />
         <MenuItem 
             icon="/icons/btn-save.svg" 
             label={translate("Save file")}
             shortcut="save"
-            onclick={file_save}
-            disabled={!current.experiment.valid || !current.experiment.history.past.length}
+            onclick={callbacks.save.fcn} 
+            disabled={callbacks.save.disabled}
         />
         <MenuItem
             icon="/icons/btn-saveas.svg"
             label={translate("Save file as")}
             shortcut="saveAs"
-            onclick={file_save_as}
-            disabled={!current.experiment.valid}
+            onclick={callbacks.saveAs.fcn} 
+            disabled={callbacks.saveAs.disabled}
         />
         <MenuItem
             label={translate("Reveal in file explorer")}
-            onclick={revealFolder}
+            onclick={callbacks.revealFolder.fcn}
+            disabled={callbacks.revealFolder.disabled}
             shortcut="revealFolder"
-            disabled={current.experiment.file?.parent === undefined}
         />
 
         <MenuSeparator />
@@ -111,7 +84,7 @@
         />
         <MenuItem
             label={translate("Reset preferences")}
-            onclick={evt => prefs.reset()}
+            onclick={callbacks.resetPrefs.fcn}
         />
 
         <MenuSeparator />
@@ -136,15 +109,15 @@
         <MenuItem 
             label={translate("Undo")}
             icon="/icons/btn-undo.svg"
-            disabled={current.experiment.file === null || !current.experiment.history.past.length}
-            onclick={undo}
+            onclick={callbacks.undo.fcn}
+            disabled={callbacks.undo.disabled}
             shortcut="undo"
         />
         <MenuItem 
             label={translate("Redo")}
             icon="/icons/btn-redo.svg"
-            onclick={redo}
-            disabled={current.experiment.file === null || !current.experiment.history.future.length}
+            onclick={callbacks.redo.fcn}
+            disabled={callbacks.redo.disabled}
             shortcut="redo"
         />
         
@@ -205,18 +178,19 @@
 
         <MenuItem 
             label={translate("Show Coder")}
-            onclick={evt => showWindow("coder")}
+            onclick={callbacks.showCoder.fcn}
         />
         <MenuItem 
             label={translate("Show Runner")}
-            onclick={evt => showWindow("runner")}
+            onclick={callbacks.showRunner.fcn}
         />
 
         <MenuSeparator />
 
         <MenuItem 
             label={translate("Show developer tools")}
-            onclick={showDevTools}
+            onclick={callbacks.showDevTools.fcn}
+            disabled={callbacks.showDevTools.disabled}
             shortcut="showDevTools"
             role="toggleDevTools"
         />
@@ -232,7 +206,7 @@
         <MenuItem 
             label={translate("Show readme")}
             icon="/icons/btn-new.svg"
-            onclick={evt => showReadme()}
+            onclick={evt => callbacks.showReadme.fcn()}
         />
 
         <MenuSeparator />
@@ -240,13 +214,13 @@
         <MenuItem 
             label={translate("Copy current Routine")}
             icon="/icons/btn-copy.svg"
-            onclick={evt => copyRoutine()}
+            onclick={evt => callbacks.copyRoutine.fcn()}
         />
 
         <MenuItem 
             label={translate("Paste Routine")}
             icon="/icons/btn-paste.svg"
-            onclick={evt => pasteRoutine()}
+            onclick={evt => callbacks.pasteRoutine.fcn()}
         />
     </SubMenu>
 
@@ -254,15 +228,16 @@
         <SubMenu label={translate("Run")} icon="/icons/btn-runpy.svg">
             <MenuItem 
                 label={translate("Toggle pilot mode")}
-                onclick={togglePiloting}
+                onclick={callbacks.togglePiloting.fcn}
+                disabled={callbacks.togglePiloting.disabled}
                 shortcut="togglePilot"
             />
             <MenuItem 
                 label={translate("Send to Runner")}
                 icon="/icons/btn-send{current.experiment.pilotMode ? "pilot" : "run"}.svg" 
-                onclick={sendToRunner}
+                onclick={callbacks.sendToRunner.fcn}
+                disabled={callbacks.sendToRunner.disabled}
                 shortcut="sendToRunner"
-                disabled={!current.experiment.valid || !current.experiment.file}
             />
 
             <MenuSeparator />
@@ -270,16 +245,16 @@
             <MenuItem 
                 label={translate("Compile Python")}
                 icon="/icons/btn-compilepy.svg" 
-                onclick={evt => compilePython()}
+                onclick={evt => callbacks.compilePython.fcn()}
+                disabled={callbacks.compilePython.disabled}
                 shortcut="compilePython"
-                disabled={current.experiment === null || !current.experiment.valid}
             /> 
             <MenuItem 
                 label={current.experiment.pilotMode ? translate("Pilot in Python") : translate("Run in Python")}
                 icon="/icons/btn-{current.experiment.pilotMode ? "pilot" : "run"}py.svg" 
-                onclick={evt => runPython()}
+                onclick={evt => callbacks.runPython.fcn()}
+                disabled={callbacks.runPython.disabled}
                 shortcut="runPython"
-                disabled={current.experiment === null || !current.experiment.valid}
             />
 
             <MenuSeparator />
@@ -287,16 +262,16 @@
             <MenuItem 
                 label={translate("Compile JS")} 
                 icon="/icons/btn-compilejs.svg" 
-                onclick={(evt) => compileJS()}
+                onclick={(evt) => callbacks.compileJS.fcn()}
+                disabled={callbacks.compileJS.disabled}
                 shortcut="compileJS"
-                disabled={current.experiment === null || !current.experiment.valid}
             />
             <MenuItem 
                 label={current.experiment.pilotMode ? "Pilot in browser" : "Run in browser"}
                 icon="/icons/btn-{current.experiment.pilotMode ? "pilot" : "run"}js.svg" 
-                onclick={(evt) => runJS()}
+                onclick={(evt) => callbacks.runJS.fcn()}
+                disabled={callbacks.runJS.disabled}
                 shortcut="runJS"
-                disabled={current.experiment === null || !current.experiment.valid}
             />
         </SubMenu>
     {/if}
@@ -337,15 +312,13 @@
 
             <MenuItem 
                 label={translate("Open PsychoPy user folder")}
-                onclick={evt => electron.paths.user().then(
-                    folder => electron.files.openPath(folder)
-                )}
+                onclick={callbacks.openUserFolder.fcn}
             />
         {/if}
         {#if python}
             <MenuItem 
                 label={translate("Reinstall Python")}
-                onclick={evt => setupPython("app", true)}
+                onclick={callbacks.reinstallPython.fcn}
             />
             <MenuItem
                 label="Install PsychoPy from Git"
@@ -361,15 +334,15 @@
         />
         <MenuItem 
             label={translate("PsychoPy Homepage")}
-            onclick={evt => open("https://www.psychopy.org/")}
+            onclick={callbacks.gotoHomepage.fcn}
         />
         <MenuItem 
             label={translate("Documentation")}
-            onclick={evt => open("https://www.psychopy.org/documentation")}
+            onclick={callbacks.gotoDocumentation.fcn}
         />
         <MenuItem 
             label={translate("Help Forum")}
-            onclick={evt => open("https://discourse.psychopy.org/")}
+            onclick={callbacks.gotoForum.fcn}
         />
         <MenuSeparator />
         {#if electron}

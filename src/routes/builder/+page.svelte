@@ -3,8 +3,8 @@
     import Frame from '$lib/utils/Frame.svelte';
     import { PaneGroup, Pane, PaneResizer } from "paneforge";
     import Theme from "$lib/utils/Theme.svelte";
-    import Shortcuts from '$lib/utils/Shortcuts.svelte';
-    import { shortcuts } from "./callbacks.svelte";
+    import { Shortcuts } from '$lib/utils/shortcuts';
+    import callbacks from "./callbacks.svelte";
     import Ribbon from './ribbon/Ribbon.svelte';
     import RoutinesNotebook from './routines/Notebook.svelte';
     import ComponentsPanel from './components/Panel.svelte';
@@ -15,9 +15,6 @@
     import { SetupPython, PythonErrors } from '$lib/python';
     import ReadMe from '$lib/dialogs/readme/ReadMe.svelte';
     import KeyboardAccessPrompt from '$lib/dialogs/keyboardAccess/KeyboardAccessPrompt.svelte';
-    import {
-        openFile
-    } from "./callbacks.svelte";
     import { python } from "$lib/globals.svelte";
     import TipsDialog from '$lib/dialogs/tips/TipsDialog.svelte';
     import { translate } from "$lib/translation";
@@ -27,7 +24,7 @@
     // if given a file to open, open it
     if (params.get("fileOpen")) {
         params.get("fileOpen").split(",").forEach(
-            item => openFile(item)
+            item => callbacks.openFile.fcn(item)
         )
     }
 
@@ -36,7 +33,7 @@
     // listen for messages from other windows
     if (electron) {
         // for opening files via another window
-        electron.windows.listen("fileOpen", (evt, file) => openFile(file))
+        electron.windows.listen("fileOpen", (evt, file) => callbacks.openFile.fcn(file))
         // mark ready
         electron.windows.emit("ready", true)
     }
@@ -61,7 +58,7 @@
 {/if}
 
 <Frame
-    onFileDrop={(evt, file) => openFile(file)}
+    onFileDrop={(evt, file) => callbacks.openFile.fcn(file)}
 >
     {#snippet ribbon()}
         <Ribbon />
@@ -117,7 +114,7 @@
     <Theme />
     <!-- this will setup keyboard shortcuts -->
     <Shortcuts
-        callbacks={shortcuts}
+        {callbacks}
     />
     <!-- this will setup a Python instance -->
     {#if python}
