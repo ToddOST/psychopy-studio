@@ -64,6 +64,13 @@ export class Routine {
      */
     disabled = $derived(this.settings.disabled);
 
+    // are this Routine's settings and all of its Components valid?
+    valid = $derived(
+        this.settings.valid && this.components.every(
+            comp => comp.valid
+        )
+    );
+
 
     constructor() {
         this.tag = "Routine";

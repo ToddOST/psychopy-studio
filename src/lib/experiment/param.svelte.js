@@ -195,6 +195,28 @@ export class Param {
         return param;
     }
 
+    /**
+     * Does this Param match a given other Param or profile?
+     * 
+     * @param {Param|object} other Either a Param to compare against, or a JSON object obtained via Param.toJSON()
+     */
+    matches(other) {
+        // if type is wrong, it certainly doesn't match
+        if (typeof other !== "object" || other === null) {
+            return false
+        }
+        // if given a Param, serialize it
+        if (other instanceof Param) {
+            other = other.toJSON()
+        }
+        // serialize this object
+        let profile = this.toJSON()
+        // compare name, updates and val
+        return ["name", "updates", "val"].every(
+            key => profile[key] === other[key]
+        )
+    }
+
     copy() {
         // create new param
         let dupe = new Param(this.name);
@@ -242,6 +264,15 @@ export class HasParams {
      * Whether this element is disabled
      */
     disabled = $derived(this.params['disabled'] && [true, "true", "True"].includes(this.params['disabled'].val));
+
+    /**
+     * Whether all of this element's parameters are valid
+     */
+    valid = $derived(
+        Object.values(this.params).every(
+            param => param.valid.value
+        )
+    );
 
     /**
      * This object's parameters, sorted by category
@@ -309,12 +340,16 @@ export class HasParams {
         this.reset();
     }
 
-    restore = {
+    restore = $state({
         point: undefined,
         set: () => {
             // update history
             if (this.exp) {
                 this.exp.history.update(`edit ${this.name}`);
+            }
+            // abort here if changes aren't valid
+            if (!this.valid) {
+                return
             }
             // set restore point
             this.restore.point = this.toJSON();
@@ -327,7 +362,7 @@ export class HasParams {
                 this.exp.history.past.pop();
             }
         }
-    };
+    });
 
     /**
      * Reset this elements parameters to a template

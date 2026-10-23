@@ -14,6 +14,12 @@ export class Experiment {
     version = "2026.1.0"
 
     routines = $state({})
+    // are all Routines in this experiment valid?
+    valid = $derived(
+        Object.values(this.routines).every(
+            routine => routine.valid
+        )
+    )
     file = $state(undefined)
     running = $state.raw(undefined)
 
@@ -332,7 +338,9 @@ export class Experiment {
             return true
         }
         // get all Components
-        let comps = Object.values(this.routines).reduce(
+        let comps = Object.values(this.routines).filter(
+            rt => rt instanceof Routine
+        ).reduce(
             (acc, rt) => {
                 acc.push(...rt.components)
                 return acc
@@ -416,14 +424,21 @@ export class Experiment {
         // reset experiment
         this.reset(true, false)
         // set basic attributes
-        this.file = parsePath(node.filename);
+        if (node.filename) {
+            this.file = parsePath(node.filename);
+        }
         this.version = node.version;
         // copy settings
         this.settings.fromJSON(node.settings);
         // add each routine from JSON
         for (let [name, profile] of Object.entries(node.routines)) {
             // make a new routine
-            let rt = new Routine();
+            let rt
+            if (profile.tag === "Routine") {
+                rt = new Routine();
+            } else {
+                rt = new StandaloneRoutine();
+            }
             rt.exp = this;
             // populate it from JSON
             rt.fromJSON(profile)

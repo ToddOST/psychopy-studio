@@ -32,7 +32,7 @@
 
 {#snippet button(status)}
     <button
-        disabled={disabled} 
+        disabled={disabled && status === "ready"} 
         onclick={{
             // if completed/not started, execute method
             ready: evt => awaiting = onclick(evt),

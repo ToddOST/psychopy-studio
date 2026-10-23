@@ -1,24 +1,32 @@
 <script>
     import { ParamsNotebook } from "$lib/paramCtrls";
-    import { Button } from '$lib/utils/buttons';
-    import { onMount } from "svelte";
-    import { translate } from "$lib/translation";
+    import { onMount, untrack } from "svelte";
 
     let {
-        component
+        routine
     } = $props();
 
-    onMount(() => component.restore.set())
+    onMount(() => routine.restore.set())
 
-    let valid = $derived(
-        Object.values(component.params).every(
-            param => param.valid.value
+    // update history when Routine has changes
+    $effect(() => {
+        // read the restore point without depending on it
+        let restorePoint = untrack(() => $state.snapshot(routine.restore.point))
+        // check each param for a change
+        let changed = Object.entries(routine.params).map(
+            ([name, param]) => !param.matches(
+                (restorePoint || routine).params[name]
+            )
         )
-    )
+        // if any params have changed, apply changes
+        if (changed.some(val => val)) {
+            untrack(() => routine.restore.set())
+        }
+    })
 
     // update reference in Experiment when this Routine is renamed
     $effect(() => {
-        if (routine.exp) {
+        if (routine.exp && routine.valid) {
             routine.exp.renameRoutine(
                 routine, 
                 $state.snapshot(routine.params['name'].val)
@@ -30,22 +38,7 @@
 <div class=standalone-routine-canvas>
     <div class=notebook-container>
         <ParamsNotebook 
-            bind:element={component}
-        />
-    </div>
-    <div class=standalone-routine-ctrls>
-        <div class=ctrl-gap></div>
-        <Button
-            label={translate("Apply")}
-            primary
-            horizontal
-            disabled={!valid}
-            onclick={(evt) => component.restore.set()} 
-        />
-        <Button
-            label={translate("Discard")}
-            horizontal
-            onclick={(evt) => component.restore.apply()} 
+            bind:element={routine}
         />
     </div>
 </div>
@@ -60,20 +53,8 @@
         height: 100%;
         box-sizing: border-box;
     }
-    .standalone-routine-ctrls {
-        display: flex;
-        flex-direction: row;
-        grid-row-start: ctrls;
-        gap: 1rem;
-        align-items: end;
-        padding-bottom: 2rem;
-    }
 
     .notebook-container {
         max-width: 55rem;
-    }
-
-    .ctrl-gap {
-        flex-grow: 1;
     }
 </style>
