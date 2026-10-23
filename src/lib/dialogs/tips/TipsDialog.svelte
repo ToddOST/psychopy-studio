@@ -1,7 +1,7 @@
 <script>
     import { MessageDialog } from "$lib/utils/dialog";
     import { electron } from "$lib/globals.svelte";
-    import tips from "./tips.json";
+    import tips from "./tips.svelte.js";
     import { Icon } from "$lib/utils/icons";
     import { prefs } from "$lib/preferences.svelte";
     import { marked } from "marked";
