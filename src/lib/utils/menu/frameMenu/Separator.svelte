@@ -1,12 +1,20 @@
 <script>
-import { electron } from "$lib/globals.svelte";
-    import { getContext } from "svelte";
+    import { electron } from "$lib/globals.svelte";
+    import { getContext, onMount } from "svelte";
     import { MenuSeparator } from "..";
+    import { addToTemplate, removeFromTemplate } from "./utils";
 
-    // add separator to backend
-    let template = getContext("template")
-    template.push({
+    // get template
+    let template = getContext("template");
+    // construct template entry for this separator
+    let entry = $state({
         type: "separator"
+    })
+    // add self to template on mount, and remove on unmount
+    onMount(() => {
+        addToTemplate(template, entry)
+
+        return () => removeFromTemplate(template, entry)
     })
 
 </script>

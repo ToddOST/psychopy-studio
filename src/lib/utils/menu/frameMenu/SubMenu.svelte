@@ -1,7 +1,8 @@
 <script>
     import { electron } from "$lib/globals.svelte";
-    import { getContext, setContext, untrack } from "svelte";
+    import { getContext, setContext, onMount, untrack } from "svelte";
     import { SubMenu } from "..";
+    import { addToTemplate, removeFromTemplate } from "./utils";
 
     let {
         /** @prop @type {string} Label for this menu item */
@@ -15,14 +16,21 @@
         children
     } = $props()
 
-    // add self to template
+    // get template
     let template = getContext("template");
-    template.push({
+    // create own entry as state, so the same proxy ends up in the template
+    let entry = $state({
         label: untrack(() => label),
         submenu: []
     })
-    // set own submenu as new template
-    setContext("template", template[template.length - 1].submenu)
+    // add self to template on mount, and remove on unmount
+    onMount(() => {
+        addToTemplate(template, entry)
+
+        return () => removeFromTemplate(template, entry)
+    })
+    // set own submenu as new template (has to happen during init)
+    setContext("template", entry.submenu)
 </script>
 
 {#if !electron}
