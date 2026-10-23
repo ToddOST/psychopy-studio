@@ -1,23 +1,28 @@
 <script>
     import { ParamsNotebook } from "$lib/paramCtrls";
-    import { Button } from '$lib/utils/buttons';
-    import { onMount } from "svelte";
-    import { translate } from "$lib/translation";
+    import { onMount, untrack } from "svelte";
 
     let {
         routine
     } = $props();
 
-    onMount(
-        () => routine.restore.set()
-    )
+    onMount(() => routine.restore.set())
 
-    // track whether this Routine has changes
-    let changed = $derived(!Object.entries(routine.params).every(
-        ([name, param]) => param.matches(
-            (routine.restore.point || routine).params[name]
+    // update history when Routine has changes
+    $effect(() => {
+        // read the restore point without depending on it
+        let restorePoint = untrack(() => $state.snapshot(routine.restore.point))
+        // has there been a change?
+        let changed = !Object.entries(routine.params).every(
+            ([name, param]) => param.matches(
+                (restorePoint || routine).params[name]
+            )
         )
-    ))
+        // if so, apply it
+        if (changed) {
+            untrack(() => routine.restore.set())
+        }
+    })
 
     // update reference in Experiment when this Routine is renamed
     $effect(() => {
@@ -36,22 +41,6 @@
             bind:element={routine}
         />
     </div>
-    <div class=standalone-routine-ctrls>
-        <div class=ctrl-gap></div>
-        {#if changed}
-            <Button
-                label={translate("Discard changes")}
-                tooltip={translate(
-                    "Undo any changes made since this Routine was {}"
-                    ).replace(
-                        "{}", 
-                        routine.restore.point ? translate("selected") : translate("created")
-                    )}
-                horizontal
-                onclick={(evt) => routine.restore.apply()} 
-            />
-        {/if}
-    </div>
 </div>
 
 <style>
@@ -64,20 +53,8 @@
         height: 100%;
         box-sizing: border-box;
     }
-    .standalone-routine-ctrls {
-        display: flex;
-        flex-direction: row;
-        grid-row-start: ctrls;
-        gap: 1rem;
-        align-items: end;
-        padding-bottom: 2rem;
-    }
 
     .notebook-container {
         max-width: 55rem;
-    }
-
-    .ctrl-gap {
-        flex-grow: 1;
     }
 </style>
