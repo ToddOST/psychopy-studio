@@ -62,7 +62,7 @@
                         data={demo}
                         bind:selected={
                             () => selection === demo.pathWithNamespace,
-                            (value) => selection = demo.pathWithNamespace
+                            (value) => selection = value && demo.pathWithNamespace
                         }
                     >
                         {#snippet label()}

@@ -1,5 +1,5 @@
 <script>
-    import { getContext, setContext } from "svelte";
+    import { getContext, setContext, onMount } from "svelte";
 
     let {
         /** @prop @type {string} Label for this category */
