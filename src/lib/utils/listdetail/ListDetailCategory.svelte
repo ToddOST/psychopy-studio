@@ -16,12 +16,25 @@
     setContext("categ", index)
     // add to array of categories
     let siblings = getContext("siblings")
-    $effect(() => {
+    onMount(() => {
+        // register this category, using getters and setters to stay reactive
         siblings.categories[index] = {
-            open: open,
-            label: label
+            get open() {
+                return open
+            },
+            set open(value) {
+                open = value
+            },
+            get label() {
+                return label
+            }
+        }
+        // remove on unmount
+        return () => {
+            delete siblings.categories[index]
         }
     })
+
 </script>
 
 {@render children?.()}
