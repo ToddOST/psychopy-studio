@@ -18,39 +18,33 @@
             )
         }
     })
-
-    let searchterm = $state.raw("");
-
-    function matches(term, profile) {
-        return (
-            profile.name.toLowerCase().includes(term.toLowerCase()) ||
-            profile.pipname.toLowerCase().includes(term.toLowerCase()) ||
-            profile.description.toLowerCase().includes(term.toLowerCase()) ||
-            profile.keywords.includes(term) ||
-            term === ""
-        )
-    }
-
 </script>
 
 
 <ListDetail
-    search={matches}
-    bind:searchTerm={searchterm}
+    search={(term, data) => (
+        data.name.toLowerCase().includes(term.toLowerCase()) ||
+        data.pipname.toLowerCase().includes(term.toLowerCase()) ||
+        data.description.toLowerCase().includes(term.toLowerCase()) ||
+        data.keywords.includes(term) ||
+        term === ""
+    )}
 >
     {#await fetch("/api/plugins").then(resp => resp.json())}
         {translate("Getting plugins...")}
     {:then allPlugins}
         {#each [
-            [true, allPlugins.filter(plugin => plugin.pipname in installed)],
-            [false, allPlugins.filter(plugin => !(plugin.pipname in installed))]
+            [true, allPlugins.filter(plugin => installed[plugin.pipname])],
+            [false, allPlugins.filter(plugin => !installed[plugin.pipname])]
         ] as [isInstalled, plugins]}
             <ListDetailCategory
                 label={isInstalled ? translate("Installed") : translate("Not installed")}
                 open
             >
                 {#each plugins as plugin}
-                    <ListDetailItem>
+                    <ListDetailItem
+                        data={plugin}
+                    >
                         {#snippet label()}
                             <div class=plugin-label>
                                 <img

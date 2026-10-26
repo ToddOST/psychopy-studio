@@ -8,7 +8,7 @@
 
     let {
         pipname,
-        installed,
+        installed=$bindable(),
         venv="app"
     } = $props()
 
