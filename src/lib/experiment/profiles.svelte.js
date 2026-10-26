@@ -9,8 +9,6 @@ function trackPromise() {
     // start off unresolved and unrejected
     pending.resolved = false
     pending.rejected = false
-    // this will become true if call fails but we have a fallback
-    pending.fallback = false
     // get original resolve and reject functions
     let { resolve, reject } = pending
     // on resolution, mark resolved
@@ -80,6 +78,9 @@ export async function refresh(key, timeout=undefined, force=false) {
     if (force || profiles[key].pending.rejected || profiles[key].isFallback) {
         profiles[key].pending = trackPromise()
     }
+    // get the relevant promise now, in case it's overwritten mid-function
+    let pending = profiles[key].pending
+    // get profiles from Python
     let data
     try {
         data = await python.liaison.send("app", {
@@ -91,13 +92,13 @@ export async function refresh(key, timeout=undefined, force=false) {
         let saved = electron?.state.getProfiles()?.[key]
         // if there are none, mark as rejected
         if (!saved) {
-            profiles[key].pending.reject(err)
+            pending.reject(err)
             throw err
         }
         // otherwise, fall back on last saved profiles
         console.error(`Failed to get ${key} profiles from Python, using last saved profiles.`, err)
         profiles[key].value = saved
-        profiles[key].pending.resolve(profiles[key].value)
+        pending.resolve(profiles[key].value)
         profiles[key].isFallback = true
 
         return profiles[key].value
@@ -106,7 +107,7 @@ export async function refresh(key, timeout=undefined, force=false) {
     electron?.state.setProfiles(key, data)
     // replace profiles
     profiles[key].value = data
-    profiles[key].pending.resolve(profiles[key].value)
+    pending.resolve(profiles[key].value)
     profiles[key].isFallback = false
 
     return profiles[key].value
