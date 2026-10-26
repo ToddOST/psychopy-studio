@@ -60,9 +60,12 @@
 
 {#snippet itemButton()}
     <button 
+        id="{index}-tab"
         class=item-button
         class:selected={siblings.selected === index}
         role="tab"
+        aria-selected={siblings.selected === index}
+        tabindex={0}
         onclick={evt => siblings.selected = index}
     >
         {#if typeof label === "function"}
@@ -81,6 +84,9 @@
     {#if siblings.selected === index}
         <div
             class=item-details
+            role="tabpanel"
+            aria-labelledby="{index}-tab"
+            tabindex=0
         >
             {@render children?.()}
         </div>
