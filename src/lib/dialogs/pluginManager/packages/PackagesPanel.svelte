@@ -33,7 +33,7 @@
 </script>
 
 <ListDetail
-    search={(term, data) => data.name.includes(term.toLowerCase()) || term === ""}
+    search={(term, data) => data.name.toLowerCase().includes(term.toLowerCase()) || term === ""}
     bind:searchTerm={searchTerm}
 >
     <ListDetailCategory
