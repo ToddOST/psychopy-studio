@@ -69,7 +69,8 @@
             </ListDetailCategory>
         {/each}
     {:catch err}
-        {""}
+        {translate("Failed to get plugins")}
+        <pre>{err}</pre>
     {/await}
 </ListDetail>
 

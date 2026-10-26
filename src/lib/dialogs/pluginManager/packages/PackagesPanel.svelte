@@ -84,7 +84,8 @@
                     </ListDetailItem>
                 {/if}
             {:catch err}
-                {""}
+                {translate("Failed to get packages")}
+                <pre>{err}</pre>
             {/await}
         {/if}
     </ListDetailCategory>
