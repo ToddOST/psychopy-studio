@@ -107,7 +107,7 @@ export async function refresh(key, timeout=undefined, force=false) {
     // replace profiles
     profiles[key].value = data
     profiles[key].pending.resolve(profiles[key].value)
-    profiles[key].isFallback = true
+    profiles[key].isFallback = false
 
     return profiles[key].value
 }
