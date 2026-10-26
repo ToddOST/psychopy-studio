@@ -25,7 +25,7 @@
         let item = {
             index: index,
             categ: categ,
-            data: data,
+            get data() { return data },
             button: itemButton,
             details: itemDetails,
             shown: true
