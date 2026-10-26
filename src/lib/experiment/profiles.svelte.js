@@ -9,6 +9,8 @@ function trackPromise() {
     // start off unresolved and unrejected
     pending.resolved = false
     pending.rejected = false
+    // this will become true if call fails but we have a fallback
+    pending.fallback = false
     // get original resolve and reject functions
     let { resolve, reject } = pending
     // on resolution, mark resolved
@@ -29,28 +31,34 @@ function trackPromise() {
 /**
  * Each set of profiles has:
  * - value: the profiles themselves
- * - pending: resolvers for a promise which resolves once profiles are available
+ * - pending: resolvers for a promise which resolves once profiles are available (with `fallback`
+ *   set to the error if Python failed and last saved profiles were used instead)
+ * - isFallback: Whether or not the resolved values are a fallback (e.g. from last load)
  * - getter: import string for the Python function which gets the profiles
  */
 export var profiles = $state({
     components: {
         value: {},
         pending: trackPromise(),
+        isFallback: undefined,
         getter: "psychopy.experiment:getElementProfiles"
     },
     loops: {
         value: {},
         pending: trackPromise(),
+        isFallback: undefined,
         getter: "psychopy.experiment:getLoopProfiles"
     },
     devices: {
         value: {},
         pending: trackPromise(),
+        isFallback: undefined,
         getter: "psychopy.experiment:getDeviceProfiles"
     },
     preferences: {
         value: FallbackPreferencesProfile,
         pending: trackPromise(),
+        isFallback: undefined,
         getter: undefined
     }
 })
@@ -63,12 +71,13 @@ export var profiles = $state({
  * @param {number} timeout How long to wait for Python to respond (ms)
  * @param {boolean} force If true, replace the pending promise even if it's already resolved (so
  * anything awaiting it shows as loading again)
- * @returns {Promise<object>} Promise which resolves to the received profiles, or rejects (also
- * rejecting the pending promise) if Python fails to get them
+ * @returns {Promise<object>} Promise which resolves to the received profiles (or the last saved
+ * profiles, if Python fails to get them), or rejects (also rejecting the pending promise) if
+ * Python fails to get them and there are no saved profiles to fall back on
  */
 export async function refresh(key, timeout=undefined, force=false) {
-    // refresh a previously rejected promise (or any promise, if forced)
-    if (force || profiles[key].pending.rejected) {
+    // refresh a previously rejected or fallen back promise (or any promise, if forced)
+    if (force || profiles[key].pending.rejected || profiles[key].isFallback) {
         profiles[key].pending = trackPromise()
     }
     let data
@@ -78,15 +87,27 @@ export async function refresh(key, timeout=undefined, force=false) {
             args: [profiles[key].getter]
         }, timeout)
     } catch (err) {
-        // mark as rejected
-        profiles[key].pending.reject(err)
-        throw err
+        // get last saved profiles
+        let saved = electron?.state.getProfiles()?.[key]
+        // if there are none, mark as rejected
+        if (!saved) {
+            profiles[key].pending.reject(err)
+            throw err
+        }
+        // otherwise, fall back on last saved profiles
+        console.error(`Failed to get ${key} profiles from Python, using last saved profiles.`, err)
+        profiles[key].value = saved
+        profiles[key].pending.resolve(profiles[key].value)
+        profiles[key].isFallback = true
+
+        return profiles[key].value
     }
     // store as last received, to use next time before Python is ready
     electron?.state.setProfiles(key, data)
     // replace profiles
     profiles[key].value = data
     profiles[key].pending.resolve(profiles[key].value)
+    profiles[key].isFallback = true
 
     return profiles[key].value
 }
@@ -115,6 +136,7 @@ for (let [key, value] of Object.entries(electron?.state.getProfiles() || {})) {
     if (profiles[key]?.getter && value) {
         profiles[key].value = value
         profiles[key].pending.resolve(profiles[key].value)
+        profiles[key].isFallback = true
     }
 }
 
