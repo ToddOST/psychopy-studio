@@ -352,8 +352,10 @@ export class Experiment {
     }
 
     async needsKeyboardAccess() {
-        // wait for settings
-        await this.ready
+        // wait for settings, if not yet available
+        if (!this.settings) {
+            await this.ready
+        }
         // we always need this for ioHub or ptb
         if (
             this.settings.params['useLegacyKeyboard']?.val 
