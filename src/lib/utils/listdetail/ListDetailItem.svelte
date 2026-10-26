@@ -67,8 +67,10 @@
     >
         {#if typeof label === "function"}
             {@render label()}
-        {:else if typeof label === "string"}
+        {:else if typeof label === "string" && label.includes("\n")}
             {@html marked(label)}
+        {:else if typeof label === "string"}
+            {@html marked.parseInline(label)}
         {:else}
             {label}
         {/if}

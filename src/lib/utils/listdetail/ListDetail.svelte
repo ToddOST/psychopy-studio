@@ -25,7 +25,7 @@
         if (search) {
             // set each item's shown state according to results of search function
             for (let i in items.items) {
-                items.items[i].shown = search(searchTerm, items.items[i].data)
+                items.items[i].shown = search(searchTerm || "", items.items[i].data)
             }
         }
     })
@@ -62,7 +62,6 @@
                 bind:value={searchTerm}
             />
         {/if}
-        {@render children?.()}
         <div class=items-list>
             {#each sortByCateg(
                 items.items.filter(item => item.shown)
@@ -84,6 +83,8 @@
                     {/each}
                 {/if}
             {/each}
+            <!-- render any other children at the bottom -->
+            {@render children?.()}
         </div>
     </div>
     <div class=details-panel>
@@ -121,6 +122,7 @@
         background-color: var(--base);
         border: 1px solid var(--overlay);
         border-radius: .5rem;
+        overflow: auto;
         width: 50rem;
     }
 </style>
