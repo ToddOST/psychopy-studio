@@ -202,6 +202,10 @@ export class Experiment {
             profiles.loops.pending.promise,
             profiles.devices.pending.promise
         ]).then(() => {
+            // if another attempt has already initialised this experiment, don't recreate settings
+            if (this.initialised) {
+                return
+            }
             this.settings = new Component("SettingsComponent")
             this.settings.exp = this
             // add a default Routine, if nothing has been added in the meantime
