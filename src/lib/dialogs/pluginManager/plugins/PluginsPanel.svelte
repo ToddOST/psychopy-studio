@@ -1,24 +1,20 @@
 <script>
     import PluginItem from "./PluginItem.svelte";
-    import { electron, python } from "$lib/globals.svelte";
-    import { onMount, setContext, untrack } from "svelte";
+    import { ListDetail, ListDetailCategory, ListDetailItem } from "$lib/utils/listdetail";
+    import { python } from "$lib/globals.svelte";
     import { translate } from "$lib/translation";
 
     let {
         venv=$bindable()
     } = $props()
 
-    let children = $state({
-        selected: undefined,
-        installed: {},
-        all: []
-    });
-    setContext("siblings", children)
+    // packages installed in the current venv, by pipname
+    let installed = $state({})
 
     $effect(() => {
         if (venv) {
             python.venv.getPackages(venv).then(
-                resp => children.installed = resp
+                resp => installed = resp
             )
         }
     })
@@ -28,8 +24,8 @@
     function matches(term, profile) {
         return (
             profile.name.toLowerCase().includes(term.toLowerCase()) ||
-            profile.pipname.toLowerCase().includes(term.toLowerCase()) || 
-            profile.description.toLowerCase().includes(term.toLowerCase()) || 
+            profile.pipname.toLowerCase().includes(term.toLowerCase()) ||
+            profile.description.toLowerCase().includes(term.toLowerCase()) ||
             profile.keywords.includes(term) ||
             term === ""
         )
@@ -38,69 +34,62 @@
 </script>
 
 
-    <div class=plugins-ctrl>
-        <div class=plugin-list-ctrl>
-            <input type=search bind:value={searchterm} />
-            <div class=plugins-list>
-                {#await fetch("/api/plugins").then(resp => resp.json())}
-                    <div class=message>{translate("Getting plugins...")}</div>
-                {:then plugins}
-                    {#each plugins.sort(
-                        // installed packages at the top
-                        (x, y) => +Object.keys(children.installed).includes(y.pipname) - +Object.keys(children.installed).includes(x.pipname)
-                    ) as profile}
-                        {#if matches(searchterm, profile)}
-                            <PluginItem 
-                                plugin={profile} 
-                                bind:venv={venv} 
-                            />
-                        {/if}
-                    {/each}
-                {:catch err}
-                    <div class=message>
-                        {translate("Failed to get plugins")}
-                    </div>
-                    <pre>{err}</pre>
-                {/await}
-            </div>
-        </div>
-        <div class=selected-plugin>
-            {@render children.selected?.()}
-        </div>
-    </div>
+<ListDetail
+    search={matches}
+    bind:searchTerm={searchterm}
+>
+    {#await fetch("/api/plugins").then(resp => resp.json())}
+        {translate("Getting plugins...")}
+    {:then allPlugins}
+        {#each [
+            [true, allPlugins.filter(plugin => plugin.pipname in installed)],
+            [false, allPlugins.filter(plugin => !(plugin.pipname in installed))]
+        ] as [isInstalled, plugins]}
+            <ListDetailCategory
+                label={isInstalled ? translate("Installed") : translate("Not installed")}
+                open
+            >
+                {#each plugins as plugin}
+                    <ListDetailItem>
+                        {#snippet label()}
+                            <div class=plugin-label>
+                                <img
+                                    class=avatar
+                                    src={plugin.icon}
+                                    alt={plugin.pipname}
+                                />
+                                <div>
+                                    <h4>{plugin.name}</h4>
+                                    <code>{plugin.pipname}</code>
+                                </div>
+                            </div>
+                        {/snippet}
+
+                        <PluginItem
+                            plugin={plugin}
+                            bind:installed={installed[plugin.pipname]}
+                            bind:venv={venv}
+                        />
+                    </ListDetailItem>
+                {/each}
+            </ListDetailCategory>
+        {/each}
+    {:catch err}
+        {""}
+    {/await}
+</ListDetail>
 
 
 <style>
-    .message {
-        width: 45rem;
-        padding: 1rem;
-    }
-
-    .plugins-ctrl {
-        position: relative;
+    .plugin-label {
         display: flex;
         flex-direction: row;
-        height: 100%;
         gap: 1rem;
-        padding: 1rem;
-        box-sizing: border-box;
+        align-items: center;
     }
 
-    .plugin-list-ctrl {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        width: 30rem;
-    }
-
-    .plugins-list, .selected-plugin {
-        padding: .5rem;
-        overflow-y: auto;
-    }
-
-    .plugins-list {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
+    .plugin-label .avatar {
+        border-radius: .5rem;
+        width: 5rem;
     }
 </style>
