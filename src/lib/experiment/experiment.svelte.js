@@ -454,8 +454,10 @@ export class Experiment {
             this.file = parsePath(node.filename);
         }
         this.version = node.version;
-        // copy settings
-        this.settings.fromJSON(node.settings);
+        // copy settings (use defaults if snapshot has no settings)
+        if (node.settings) {
+            this.settings.fromJSON(node.settings);
+        }
         // add each routine from JSON
         for (let [name, profile] of Object.entries(node.routines)) {
             // make a new routine
