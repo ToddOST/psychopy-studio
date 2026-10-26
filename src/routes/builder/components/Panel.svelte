@@ -93,11 +93,13 @@
             <PluginManagerDlg 
                 bind:shown={showPluginMgr}
             />
-            <CompactButton
-                icon="/icons/btn-refresh.svg"
-                tooltip={translate("Reload Components")}
-                onclick={refreshProfiles}
-            />
+            {#await allProfiles.components.pending.promise then ready}
+                <CompactButton
+                    icon="/icons/btn-refresh.svg"
+                    tooltip={translate("Reload Components")}
+                    onclick={refreshProfiles}
+                />
+            {/await}
         {/if}
         <CompactButton
             icon="/icons/btn-filter.svg"
