@@ -2,7 +2,7 @@
     import ComponentButton from './ComponentButton.svelte';
     import ComponentSection from './Section.svelte';
 
-    import { profiles as allProfiles, pending as profilesPending } from '$lib/experiment/profiles.svelte';
+    import { profiles as allProfiles, refresh } from '$lib/experiment/profiles.svelte';
     import RoutineButton from './RoutineButton.svelte';
     import FilterDialog from './FilterDialog.svelte';
     import { CompactButton } from "$lib/utils/buttons";
@@ -74,14 +74,7 @@
      */
     async function refreshProfiles() {
         if (await python?.ready) {
-            profilesPending.components.resolve(
-                python.liaison.send("app", {
-                    command: "run",
-                    args: ["psychopy.experiment:getElementProfiles"]
-                }, 100000).then(
-                    data => Object.assign(allProfiles.components, data)
-                )
-            )
+            await refresh("components", 100000, true)
         }
     }
 
@@ -104,6 +97,7 @@
                 icon="/icons/btn-refresh.svg"
                 tooltip={translate("Reload Components")}
                 onclick={refreshProfiles}
+                disabled={!allProfiles.components.pending.resolved && !allProfiles.components.pending.rejected}
             />
         {/if}
         <CompactButton
@@ -118,12 +112,12 @@
     </div>
     <div class=components>
         {#await python?.ready then ready}
-            {#await profilesPending.components.promise}
+            {#await allProfiles.components.pending.promise}
                 <div class=message>
                     {translate("Loading Components...")}
                 </div>
             {:then}
-                {#each sortProfiles(allProfiles.components) as [categ, categProfiles]}
+                {#each sortProfiles(allProfiles.components.value) as [categ, categProfiles]}
                     {#if filterProfiles(categProfiles).length}
                         <ComponentSection label={categ}>
                             {#each filterProfiles(categProfiles) as profile}
@@ -143,11 +137,8 @@
             {:catch err}
                 <div class="message error">
                     <div>
-                        {translate("Failed to load Components.")}
+                        {translate("Failed to load Components, see Python error for details.")}
                     </div>
-                    <pre>
-{err.error?.join?.("\n")}
-                    </pre>
                 </div>
             {/await}
         {/await}
@@ -171,17 +162,5 @@
     }
     .error {
         color: var(--red);
-    }
-
-    pre {
-        white-space: wrap;
-        word-break: break-all;
-        border: 1px solid var(--crust);
-        background: var(--base);
-        border-radius: .5rem;
-        padding: 1rem;
-        display: flex;
-        flex-direction: column;
-        gap: .5rem;
     }
 </style>

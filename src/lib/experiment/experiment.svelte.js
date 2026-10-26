@@ -7,6 +7,7 @@ import { Routine, StandaloneRoutine } from "./routine.svelte";
 import { Component } from "./component.svelte";
 import { Flow, LoopInitiator } from "./flow.svelte";
 import { setupPython } from "$lib/python";
+import { profiles } from "./profiles.svelte";
 
 
 export class Experiment {
@@ -20,7 +21,11 @@ export class Experiment {
             routine => routine.valid
         )
     )
+    /** experiment settings, undefined until profiles are available (see `ready`) */
+    settings = $state.raw(undefined)
     file = $state(undefined)
+    /** file currently being loaded into this experiment (if any) */
+    loading = $state.raw(undefined)
     running = $state.raw(undefined)
 
     /** keep track of any prompts which have already been prompted for this experiment */
@@ -166,8 +171,6 @@ export class Experiment {
      */
     constructor(filename) {
         // create attributes
-        this.settings = new Component("SettingsComponent")
-        this.settings.exp = this
         this.flow = new Flow(this);
         // starting defaults
         this.reset()
@@ -175,6 +178,58 @@ export class Experiment {
         if (filename) {
             this.file = parsePath(filename);
         }
+        // start waiting for profiles
+        this.ready
+    }
+
+    /**
+     * promise from the attempt which successfully initialised this experiment (if any); not
+     * reactive, so that marking as initialised doesn't create a new (and so pending) promise
+     */
+    initialised = undefined
+    /**
+     * Resolves once profiles are available and settings have been created (until then, follows
+     * any retries if getting profiles fails)
+     */
+    ready = $derived.by(() => {
+        // once initialised, stay ready (even if profiles are reloaded later)
+        if (this.initialised) {
+            return this.initialised
+        }
+        // wait for all profiles needed to create an Experiment
+        let promise = Promise.all([
+            profiles.components.pending.promise,
+            profiles.loops.pending.promise,
+            profiles.devices.pending.promise
+        ]).then(() => {
+            // if another attempt has already initialised this experiment, don't recreate settings
+            if (this.initialised) {
+                return
+            }
+            this.settings = new Component("SettingsComponent")
+            this.settings.exp = this
+            // add a default Routine, if nothing has been added in the meantime
+            if (!Object.keys(this.routines).length) {
+                this.addDefaultRoutine()
+            }
+            // mark as initialised, so later profile reloads don't recreate settings
+            this.initialised = promise
+        })
+        // silence errors getting profiles (they're already logged elsewhere)
+        promise.catch(err => {})
+
+        return promise
+    })
+
+    /**
+     * Add a blank Routine called "trial" to this Experiment and its flow (requires profiles to 
+     * be available)
+     */
+    addDefaultRoutine() {
+        this.routines['trial'] = new Routine();
+        this.routines['trial'].exp = this;
+        this.routines['trial'].settings.params['name'].val = "trial";
+        this.flow.flat.push(this.routines['trial'])
     }
 
     /**
@@ -283,18 +338,15 @@ export class Experiment {
         if (!keepHistory) {
             this.history.clear()
         }
-        // reset settings
-        this.settings.reset()
+        // reset settings (if they've been created yet)
+        this.settings?.reset()
         // remove all routines
         Object.keys(this.routines).forEach((key) => delete this.routines[key])
         // clear the flow
         this.flow.clear()
-        // add a default routine
-        if (defaultRoutine) {
-            this.routines['trial'] = new Routine();
-            this.routines['trial'].exp = this;
-            this.routines['trial'].settings.params['name'].val = "trial";
-            this.flow.flat.push(this.routines['trial'])
+        // add a default routine (if profiles are available, otherwise it's added once they are)
+        if (defaultRoutine && this.settings) {
+            this.addDefaultRoutine()
         }
     }
 
@@ -323,13 +375,17 @@ export class Experiment {
         }
         // search settings
         results.push(
-            ...this.settings.search()
+            ...(this.settings?.search() || [])
         )
 
         return results
     }
 
     async needsKeyboardAccess() {
+        // wait for settings, if not yet available
+        if (!this.settings) {
+            await this.ready
+        }
         // we always need this for ioHub or ptb
         if (
             this.settings.params['useLegacyKeyboard']?.val 
@@ -361,7 +417,7 @@ export class Experiment {
         return false
     }
 
-    pilotMode = $derived(![true, "true", "True", 1, "1"].includes(this.settings.params['runMode']?.val))
+    pilotMode = $derived(![true, "true", "True", 1, "1"].includes(this.settings?.params['runMode']?.val))
 
     getPilotMode() {
         return this.settings.params['runMode'].val
@@ -377,7 +433,7 @@ export class Experiment {
     }
 
     useVersion = $derived(
-        this.settings.params['Use version'].val || "app"
+        this.settings?.params['Use version'].val || "app"
     )
 
     /**
@@ -403,7 +459,7 @@ export class Experiment {
         let node = {
             filename: this.file.file,
             version: this.version,
-            settings: this.settings.toJSON(),
+            settings: this.settings?.toJSON(),
             routines: {},
             flow: this.flow.toJSON(),
         };
@@ -428,8 +484,10 @@ export class Experiment {
             this.file = parsePath(node.filename);
         }
         this.version = node.version;
-        // copy settings
-        this.settings.fromJSON(node.settings);
+        // copy settings (use defaults if snapshot has no settings)
+        if (node.settings) {
+            this.settings.fromJSON(node.settings);
+        }
         // add each routine from JSON
         for (let [name, profile] of Object.entries(node.routines)) {
             // make a new routine
@@ -532,21 +590,32 @@ export class Experiment {
         if (typeof file === "string") {
             file = parsePath(file)
         }
-        // read text content from file
-        let content
-        if (electron) {
-            content = await electron.files.load(file.file)
-        } else {
-            // without electron, file needs to have a handle (from a UI interaction)
-            content = await file.handle.text()
+        // mark as loading
+        this.loading = file
+        try {
+            // read text content from file
+            let content
+            if (electron) {
+                content = await electron.files.load(file.file)
+            } else {
+                // without electron, file needs to have a handle (from a UI interaction)
+                content = await file.handle.text()
+            }
+            // wait for settings
+            await this.ready
+            // load from content
+            this.fromXML(content)
+            // store file
+            this.file = file
+        } finally {
+            // mark as no longer loading
+            this.loading = undefined
         }
-        // load from content
-        this.fromXML(content)
-        // store file
-        this.file = file
     }
 
     async toFile(file) {
+        // wait for settings
+        await this.ready
         // get experiment as xml
         let node = this.toXML()
         // convert to an xml string
@@ -749,6 +818,8 @@ export class Experiment {
      * @param {boolean} compile If true, compile the experiment to JS before running
      */
     async runJS(compile=true) {
+        // wait for settings
+        await this.ready
         // compile first if requested
         let target
         if (compile) {
