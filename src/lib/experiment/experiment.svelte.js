@@ -179,7 +179,7 @@ export class Experiment {
             this.file = parsePath(filename);
         }
         // resolves once profiles are available and settings have been created
-        this.ready = profilesReady.then(() => {
+        this.ready = profilesReady.promise.then(() => {
             this.settings = new Component("SettingsComponent")
             this.settings.exp = this
             // add a default Routine, if nothing has been added in the meantime

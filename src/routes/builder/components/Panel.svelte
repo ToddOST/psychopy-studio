@@ -74,7 +74,7 @@
      */
     async function refreshProfiles() {
         if (await python?.ready) {
-            await refresh("components", 100000)
+            await refresh("components", 100000, true)
         }
     }
 
