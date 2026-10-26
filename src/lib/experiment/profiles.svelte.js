@@ -112,25 +112,6 @@ export async function refresh(key, timeout=undefined, force=false) {
     return profiles[key].value
 }
 
-// resolves once all profiles needed to create an Experiment are available
-let readyPromise = $derived.by(() => {
-    // create a combined promise for all element profiles
-    let pending = Promise.all([
-        profiles.components.pending.promise,
-        profiles.loops.pending.promise,
-        profiles.devices.pending.promise
-    ])
-    // failure to get profiles is logged below, so just mark as handled here
-    pending.catch(err => {})
-
-    return pending
-})
-export const ready = {
-    get promise() {
-        return readyPromise
-    }
-}
-
 // use last received profiles until we receive new ones
 for (let [key, value] of Object.entries(electron?.state.getProfiles() || {})) {
     if (profiles[key]?.getter && value) {

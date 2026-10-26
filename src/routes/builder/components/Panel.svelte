@@ -164,16 +164,4 @@
     .error {
         color: var(--red);
     }
-
-    pre {
-        white-space: wrap;
-        word-break: break-all;
-        border: 1px solid var(--crust);
-        background: var(--base);
-        border-radius: .5rem;
-        padding: 1rem;
-        display: flex;
-        flex-direction: column;
-        gap: .5rem;
-    }
 </style>

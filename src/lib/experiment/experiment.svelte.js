@@ -7,7 +7,7 @@ import { Routine, StandaloneRoutine } from "./routine.svelte";
 import { Component } from "./component.svelte";
 import { Flow, LoopInitiator } from "./flow.svelte";
 import { setupPython } from "$lib/python";
-import { ready as profilesReady } from "./profiles.svelte";
+import { profiles } from "./profiles.svelte";
 
 
 export class Experiment {
@@ -178,18 +178,44 @@ export class Experiment {
         if (filename) {
             this.file = parsePath(filename);
         }
-        // resolves once profiles are available and settings have been created
-        this.ready = profilesReady.promise.then(() => {
+        // start waiting for profiles
+        this.ready
+    }
+
+    /**
+     * promise from the attempt which successfully initialised this experiment (if any); not
+     * reactive, so that marking as initialised doesn't create a new (and so pending) promise
+     */
+    initialised = undefined
+    /**
+     * Resolves once profiles are available and settings have been created (until then, follows
+     * any retries if getting profiles fails)
+     */
+    ready = $derived.by(() => {
+        // once initialised, stay ready (even if profiles are reloaded later)
+        if (this.initialised) {
+            return this.initialised
+        }
+        // wait for all profiles needed to create an Experiment
+        let promise = Promise.all([
+            profiles.components.pending.promise,
+            profiles.loops.pending.promise,
+            profiles.devices.pending.promise
+        ]).then(() => {
             this.settings = new Component("SettingsComponent")
             this.settings.exp = this
             // add a default Routine, if nothing has been added in the meantime
             if (!Object.keys(this.routines).length) {
                 this.addDefaultRoutine()
             }
+            // mark as initialised, so later profile reloads don't recreate settings
+            this.initialised = promise
         })
-        // failure to get profiles is already logged, so just mark as handled here
-        this.ready.catch(err => {})
-    }
+        // silence errors getting profiles (they're already logged elsewhere)
+        promise.catch(err => {})
+
+        return promise
+    })
 
     /**
      * Add a blank Routine called "trial" to this Experiment and its flow (requires profiles to 
