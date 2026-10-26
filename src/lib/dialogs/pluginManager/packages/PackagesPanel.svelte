@@ -40,7 +40,7 @@
         label={translate("Installed")}
         open
     >
-        {#each Object.keys(installed) as name}
+        {#each Object.keys(installed).filter(key => installed[key]) as name}
             <ListDetailItem
                 label={name}
                 data={{
@@ -62,7 +62,9 @@
         label={translate("Not installed")}
         open
     >
-        {#if searchTerm && !Object.keys(installed).includes(searchTerm)}
+        {#if searchTerm && !Object.entries(installed).some(
+            ([key, val]) => val && key.toLowerCase() === searchTerm.toLowerCase()
+        )}
             {#await checkPyPi(searchTerm).then(resp => resp)}
                 {translate("Searching PyPi...")}
             {:then profile}
