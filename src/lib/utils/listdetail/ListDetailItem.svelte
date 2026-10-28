@@ -47,14 +47,15 @@
         }
     })
 
-    // continuously update selected (for parents binding to this)
+    // when selected changes, update siblings.selected
     $effect(() => {
         if (selected) {
-            siblings.selected === index
+            siblings.selected = index
         }
-        if (siblings.selected === index) {
-            selected = true
-        }
+    })
+    // if siblings.selected is set to this item's index, update selected
+    $effect(() => {
+        selected = siblings.selected === index
     })
 </script>
 
