@@ -40,7 +40,7 @@
         label={translate("Installed")}
         open
     >
-        {#each Object.keys(installed).filter(key => installed[key]) as name}
+        {#each Object.keys(installed).filter(key => installed[key]) as name (name)}
             <ListDetailItem
                 label={name}
                 data={{
