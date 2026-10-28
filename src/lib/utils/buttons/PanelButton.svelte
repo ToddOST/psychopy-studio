@@ -18,6 +18,7 @@
 <button
     class=panel-button
     class:active={open}
+    aria-expanded={Boolean(open)}
     onclick={() => open = !open}
 >
     {#if tooltip}
