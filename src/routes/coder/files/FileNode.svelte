@@ -1,6 +1,6 @@
 <script>
-    import { Menu, MenuItem } from "$lib/utils/menu";
-    import { TreeNode } from "$lib/utils/tree";
+    import { Menu, MenuItem } from "$lib/ui/menu";
+    import { TreeNode } from "$lib/ui/tree";
     import { parsePath } from "$lib/utils/files";
     import path from "path-browserify";
     import { electron } from "$lib/globals.svelte";

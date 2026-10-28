@@ -1,6 +1,6 @@
 <script>
-    import Panel from '$lib/utils/Panel.svelte';
-    import Frame from '$lib/utils/Frame.svelte';
+    import Panel from '$lib/ui/Panel.svelte';
+    import Frame from '$lib/ui/Frame.svelte';
     import { PaneGroup, Pane, PaneResizer } from "paneforge";
     import Theme from "$lib/utils/Theme.svelte";
     import { Shortcuts } from '$lib/utils/shortcuts';

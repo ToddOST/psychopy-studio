@@ -4,7 +4,7 @@
     import RoutineNode from './Routine.svelte';
     import EntryPoint from './EntryPoint.svelte';
     import { getContext } from "svelte";
-    import { Icon } from "$lib/utils/icons";
+    import { Icon } from "$lib/ui/icon";
     
     let current = getContext("current");
 

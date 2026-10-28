@@ -1,5 +1,5 @@
 <script>
-    import PanelButton from '$lib/utils/buttons/PanelButton.svelte';
+    import PanelButton from '$lib/ui/button/PanelButton.svelte';
 
     let {
         label,

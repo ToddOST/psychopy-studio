@@ -1,7 +1,7 @@
 <script>
-    import { Dialog, MessageDialog } from "$lib/utils/dialog";
+    import { Dialog, MessageDialog } from "$lib/ui/dialog";
     import { browseFileSave, writeFile } from "$lib/utils/files.js"
-    import { Button } from "$lib/utils/buttons";
+    import { Button } from "$lib/ui/button";
     import { Experiment } from "$lib/experiment";
     import { electron } from "$lib/globals.svelte";
     import path from "path-browserify";

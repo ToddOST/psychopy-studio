@@ -1,7 +1,7 @@
 <script>
     import { Component } from "$lib/experiment";
     import { getContext } from "svelte";
-    import { Icon } from "$lib/utils/icons";
+    import { Icon } from "$lib/ui/icon";
     
     let current = getContext("current");
     

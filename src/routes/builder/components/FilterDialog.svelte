@@ -1,5 +1,5 @@
 <script>
-    import { Dialog } from "$lib/utils/dialog";
+    import { Dialog } from "$lib/ui/dialog";
     import { translate } from "$lib/translation";
 
     let {

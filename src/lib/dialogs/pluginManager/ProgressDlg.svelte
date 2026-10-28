@@ -1,6 +1,6 @@
 <script>
-    import { CodeOutput } from "$lib/utils/code";
-    import { MessageDialog } from "$lib/utils/dialog";
+    import { CodeOutput } from "$lib/ui/code";
+    import { MessageDialog } from "$lib/ui/dialog";
     import { python, electron } from "$lib/globals.svelte";
     import { translate } from "$lib/translation";
     import { untrack } from "svelte";

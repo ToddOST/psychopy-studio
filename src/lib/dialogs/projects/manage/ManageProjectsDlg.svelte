@@ -1,6 +1,6 @@
 <script>
-    import { Button } from "$lib/utils/buttons";
-    import { Dialog } from "$lib/utils/dialog";
+    import { Button } from "$lib/ui/button";
+    import { Dialog } from "$lib/ui/dialog";
     import Project from "./Project.svelte";
     import { projects } from "$lib/globals.svelte";
     import { translate } from "$lib/translation";

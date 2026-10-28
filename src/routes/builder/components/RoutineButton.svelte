@@ -1,6 +1,6 @@
 <script>
     import { StandaloneRoutine, Routine, Component } from '$lib/experiment';
-    import { Button } from '$lib/utils/buttons';
+    import { Button } from '$lib/ui/button';
     import { getContext } from "svelte";
 
     let current = getContext("current");

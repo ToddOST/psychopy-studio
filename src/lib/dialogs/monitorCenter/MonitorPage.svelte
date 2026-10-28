@@ -1,5 +1,5 @@
 <script>
-    import { Listbook, Notebook, NotebookPage, ButtonTab } from "$lib/utils/notebook";
+    import { Listbook, Notebook, NotebookPage, ButtonTab } from "$lib/ui/notebook";
     import { getContext } from "svelte";
     import { python } from "$lib/globals.svelte";
     import MonitorConfigurationPanel from "./MonitorConfiguration.svelte";

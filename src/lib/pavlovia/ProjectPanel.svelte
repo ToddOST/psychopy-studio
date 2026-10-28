@@ -1,8 +1,8 @@
 <script>
     import { electron, git } from "$lib/globals.svelte";
-    import { MessageDialog } from "$lib/utils/dialog";
+    import { MessageDialog } from "$lib/ui/dialog";
     import { projectsLoaded, openProject, cloneProject, forkProject, downloadProject } from "./utils.svelte"
-    import { Button } from "$lib/utils/buttons";
+    import { Button } from "$lib/ui/button";
     import { parsePath } from "$lib/utils/files";
     import { openIn } from "$lib/utils/views.svelte";
     import { getContext } from "svelte";

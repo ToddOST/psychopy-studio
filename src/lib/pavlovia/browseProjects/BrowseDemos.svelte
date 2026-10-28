@@ -1,6 +1,6 @@
 <script>
     import ProjectPanel from "../ProjectPanel.svelte";
-    import { ListDetail, ListDetailItem, ListDetailCategory } from "$lib/utils/listdetail";
+    import { ListDetail, ListDetailItem, ListDetailCategory } from "$lib/ui/listdetail";
     import { translate } from "$lib/translation";
 
     let {

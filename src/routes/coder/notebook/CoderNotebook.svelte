@@ -1,7 +1,7 @@
 <script>
     import { getContext, onMount } from "svelte";
-    import { ButtonTab, Notebook, NotebookPage } from "$lib/utils/notebook";
-    import { CodeEditor } from "$lib/utils/code";
+    import { ButtonTab, Notebook, NotebookPage } from "$lib/ui/notebook";
+    import { CodeEditor } from "$lib/ui/code";
     import { prefs } from "$lib/preferences.svelte";
     import { Script } from "$lib/experiment";
     import { translate } from "$lib/translation";

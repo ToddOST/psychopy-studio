@@ -1,5 +1,5 @@
 <script>
-    import { RadioButton } from "$lib/utils/buttons";
+    import { RadioButton } from "$lib/ui/button";
 
     let {
         value=$bindable(),

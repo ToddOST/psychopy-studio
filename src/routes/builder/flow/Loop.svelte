@@ -1,13 +1,13 @@
 <script>
-    import Dialog from '$lib/utils/dialog/Dialog.svelte';
-    import { Menu, MenuItem } from "$lib/utils/menu"
-    import { ParamsNotebook } from '$lib/paramCtrls/index.js';
+    import Dialog from '$lib/ui/dialog/Dialog.svelte';
+    import { Menu, MenuItem } from "$lib/ui/menu"
+    import { ParamsNotebook } from '$lib/ui/paramCtrls/index.js';
     import { FlowLoop } from "$lib/experiment/flow.svelte.js";
     import Loop from "./Loop.svelte"
     import RoutineNode from './Routine.svelte';
     import EntryPoint from './EntryPoint.svelte'
     import { getContext } from "svelte";
-    import { Icon } from "$lib/utils/icons";
+    import { Icon } from "$lib/ui/icon";
     
     let current = getContext("current");
 

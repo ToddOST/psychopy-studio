@@ -1,6 +1,6 @@
 <script>
-    import { Button } from "$lib/utils/buttons";
-    import { CodeOutput } from "$lib/utils/code";
+    import { Button } from "$lib/ui/button";
+    import { CodeOutput } from "$lib/ui/code";
     import { getContext } from "svelte";
     import { translate } from "$lib/translation";
 

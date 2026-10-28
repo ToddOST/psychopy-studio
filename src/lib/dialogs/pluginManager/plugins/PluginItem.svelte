@@ -1,5 +1,5 @@
 <script>
-    import { ListDetailItem } from "$lib/utils/listdetail";
+    import { ListDetailItem } from "$lib/ui/listdetail";
     import VersionCtrl from "../VersionCtrl.svelte";
 
     let {

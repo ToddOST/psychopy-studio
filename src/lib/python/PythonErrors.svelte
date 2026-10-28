@@ -1,7 +1,7 @@
 <script>
-    import { MessageArray, Message } from "$lib/utils/message";
-    import { MessageDialog } from "$lib/utils/dialog";
-    import { CodeOutput } from "$lib/utils/code";
+    import { MessageArray, Message } from "$lib/ui/message";
+    import { MessageDialog } from "$lib/ui/dialog";
+    import { CodeOutput } from "$lib/ui/code";
     import { python } from "$lib/globals.svelte.js";
     import { translate } from "$lib/translation";
 

@@ -1,11 +1,11 @@
 <script>
-    import { Button } from "$lib/utils/buttons";
-    import { Menu, MenuItem} from '$lib/utils/menu';
+    import { Button } from "$lib/ui/button";
+    import { Menu, MenuItem} from '$lib/ui/menu';
     import callbacks from "../callbacks.svelte.js";
     import Component from './Component.svelte';
     import TimelineHeader from './Timeline.svelte';
     import EntryPoint from './EntryPoint.svelte';
-    import ParamsDialog from "$lib/paramCtrls/ParamsDialog.svelte";
+    import ParamsDialog from "$lib/ui/paramCtrls/ParamsDialog.svelte";
     import { translate } from "$lib/translation";
 
     let {

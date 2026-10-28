@@ -1,7 +1,7 @@
 <script>
     import { getContext } from "svelte";
     import OutlineNode from "./OutlineNode.svelte";
-    import TreeRoot from "$lib/utils/tree/TreeRoot.svelte";
+    import TreeRoot from "$lib/ui/tree/TreeRoot.svelte";
     import { translate } from "$lib/translation";
     
     let current = getContext("current");

@@ -1,6 +1,6 @@
 <script>
-    import { ParamCtrl } from "$lib/paramCtrls"
-    import { Dialog } from "$lib/utils/dialog";
+    import { ParamCtrl } from "$lib/ui/paramCtrls"
+    import { Dialog } from "$lib/ui/dialog";
     import { CalibrationSetup } from "./configuration.svelte";
     import { python } from "$lib/globals.svelte";
     import { translate } from "$lib/translation";

@@ -1,5 +1,5 @@
 <script>
-    import { Notebook, NotebookPage, ButtonTab } from "$lib/utils/notebook";
+    import { Notebook, NotebookPage, ButtonTab } from "$lib/ui/notebook";
     import { python } from "$lib/globals.svelte";
     import Shell from "./Shell.svelte";
     import StdoutOutput from "./StdoutOutput.svelte";

@@ -1,6 +1,6 @@
 <script>
-    import { Dialog } from "$lib/utils/dialog";
-    import { Listbook, Notebook, NotebookPage, ButtonTab } from "$lib/utils/notebook";
+    import { Dialog } from "$lib/ui/dialog";
+    import { Listbook, Notebook, NotebookPage, ButtonTab } from "$lib/ui/notebook";
     import { python } from "$lib/globals.svelte";
     import { MonitorConfiguration } from "./configuration.svelte";
     import { translate } from "$lib/translation";

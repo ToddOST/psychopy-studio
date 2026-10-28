@@ -1,5 +1,5 @@
 <script>
-    import { Dialog } from "$lib/utils/dialog";
+    import { Dialog } from "$lib/ui/dialog";
     import { getContext } from "svelte";
     import ProjectPanel from "$lib/pavlovia/ProjectPanel.svelte";
 

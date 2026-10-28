@@ -1,7 +1,7 @@
 <script>
     import { python } from "$lib/globals.svelte.js";
-    import { Button } from "$lib/utils/buttons";
-    import { CodeOutput, CodeInput } from "$lib/utils/code";
+    import { Button } from "$lib/ui/button";
+    import { CodeOutput, CodeInput } from "$lib/ui/code";
     import { translate } from "$lib/translation";
 
     let {

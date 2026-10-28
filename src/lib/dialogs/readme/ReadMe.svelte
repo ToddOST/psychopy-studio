@@ -1,6 +1,6 @@
 <script>
     import { marked } from "marked";
-    import { Dialog } from "$lib/utils/dialog";
+    import { Dialog } from "$lib/ui/dialog";
     import { openIn } from "$lib/utils/views.svelte";
 
     let {

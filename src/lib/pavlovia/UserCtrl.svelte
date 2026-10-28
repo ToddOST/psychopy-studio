@@ -1,9 +1,9 @@
 <script>
-    import { DropdownButton } from "$lib/utils/buttons";
-    import { MessageDialog } from "$lib/utils/dialog"
+    import { DropdownButton } from "$lib/ui/button";
+    import { MessageDialog } from "$lib/ui/dialog"
     import { marked } from "marked";
     import { getContext, onMount } from "svelte";
-    import { MenuItem, MenuSeparator, SubMenu } from "$lib/utils/menu";
+    import { MenuItem, MenuSeparator, SubMenu } from "$lib/ui/menu";
     import { git } from "$lib/globals.svelte";
     import { translate } from "$lib/translation";
 

@@ -1,8 +1,8 @@
 <script>
     import { electron, python } from "$lib/globals.svelte";
     import { newWindow } from "$lib/utils/views.svelte";
-    import { Button } from "$lib/utils/buttons";
-    import { Icon } from "$lib/utils/icons";
+    import { Button } from "$lib/ui/button";
+    import { Icon } from "$lib/ui/icon";
     import { asset } from "$app/paths";
     import Theme from "$lib/utils/Theme.svelte";
     import { translate } from "$lib/translation";

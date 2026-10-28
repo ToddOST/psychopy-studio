@@ -1,9 +1,9 @@
 <script>
     import { StandaloneRoutine, Routine, Component } from '$lib/experiment';
-    import { Button } from '$lib/utils/buttons';
+    import { Button } from '$lib/ui/button';
     import { getContext, untrack } from "svelte";
-    import Dialog from "$lib/utils/dialog/Dialog.svelte";
-    import { ParamsNotebook } from "$lib/paramCtrls";
+    import Dialog from "$lib/ui/dialog/Dialog.svelte";
+    import { ParamsNotebook } from "$lib/ui/paramCtrls";
     import { translate } from "$lib/translation";
     
     let current = getContext("current");

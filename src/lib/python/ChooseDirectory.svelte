@@ -1,5 +1,5 @@
 <script>
-    import { Dialog } from "$lib/utils/dialog";
+    import { Dialog } from "$lib/ui/dialog";
     import { prefs } from "$lib/preferences.svelte.js";
 
     let selected = $state.raw("user")

@@ -1,7 +1,7 @@
 <script>
-    import { Dialog } from "$lib/utils/dialog";
+    import { Dialog } from "$lib/ui/dialog";
     import DeviceDetails from "./DeviceDetails.svelte";
-    import { ButtonTab, Listbook, NotebookPage } from "$lib/utils/notebook";
+    import { ButtonTab, Listbook, NotebookPage } from "$lib/ui/notebook";
     import { Device } from "$lib/experiment";
     import { devices, electron } from "$lib/globals.svelte";
     import AddDeviceDialog from "./addDevice/AddDeviceDialog.svelte";

@@ -1,5 +1,5 @@
 <script>
-    import { Button } from "$lib/utils/buttons";
+    import { Button } from "$lib/ui/button";
     import { projects } from "$lib/globals.svelte";
     import { translate } from "$lib/translation";
 

@@ -1,9 +1,9 @@
 <script>
     import { Routine } from "$lib/experiment"
-    import { Menu, MenuItem } from '$lib/utils/menu';
-    import Dialog from '$lib/utils/dialog/Dialog.svelte';
-    import { ParamsNotebook } from '$lib/paramCtrls/index.js';
-    import { Button } from '$lib/utils/buttons';
+    import { Menu, MenuItem } from '$lib/ui/menu';
+    import Dialog from '$lib/ui/dialog/Dialog.svelte';
+    import { ParamsNotebook } from '$lib/ui/paramCtrls/index.js';
+    import { Button } from '$lib/ui/button';
     import { getContext } from "svelte";
     import { translate } from "$lib/translation";
     
