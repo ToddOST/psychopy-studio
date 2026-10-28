@@ -1,5 +1,5 @@
 <script>
-    import { CompactButton } from "$lib/utils/buttons";
+    import { Button } from "$lib/utils/buttons";
     import { translate } from "$lib/translation";
 
     let {
@@ -55,7 +55,7 @@
 <div class=param-text-input-multi>
     {#if ["md", "html"].includes(param.siblings?.['formattingSyntax']?.val)}
         <div class=ctrls>
-            <CompactButton 
+            <Button
                 tooltip={translate("Bold")}
                 onclick={evt => applyFormat(
                     {md: "**", html: "<b>"},
@@ -65,8 +65,9 @@
                     selection.start === undefined || selection.end === selection.start
                 }
                 icon="/icons/btn-bold.svg"
+                small
             />
-            <CompactButton 
+            <Button
                 tooltip={translate("Italic")}
                 onclick={evt => applyFormat(
                     {md: "*", html: "<i>"},
@@ -76,6 +77,7 @@
                     selection.start === undefined || selection.end === selection.start
                 }
                 icon="/icons/btn-italic.svg"
+                small
             />
         </div>
     {/if}

@@ -3,7 +3,7 @@
     import { python } from "$lib/globals.svelte";
     import path from "path-browserify";
     import { getContext } from "svelte";
-    import { CompactButton } from "$lib/utils/buttons";
+    import { Button } from "$lib/utils/buttons";
     import { FontManager, FontManagerDialog} from "$lib/dialogs/fontManager";
     import { translate } from "$lib/translation";
 
@@ -66,11 +66,12 @@
     {...attachments}
 />
 {#if python?.ready}
-    <CompactButton 
+    <Button
         icon="/icons/btn-case.svg"
         tooltip={translate("Open font manager")}
         awaiting={FontManager.all.scanning}
         onclick={evt => show.dialog = true}
+        small
     />
     <!-- font manager dialog -->
     <FontManagerDialog 

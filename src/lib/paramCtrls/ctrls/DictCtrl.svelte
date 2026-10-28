@@ -1,6 +1,6 @@
 <script>
     import { translate } from "$lib/translation";
-    import { CompactButton } from "$lib/utils/buttons";
+    import { Button } from "$lib/utils/buttons";
     import { iterateName } from "./utils.svelte.js";
     import { sanitizeJSON } from "$lib/utils/transpiler"
 
@@ -114,13 +114,14 @@
                 class:code={param.isCode} 
                 aria-label={translate("Starting value of {key} in {param}").replace("{key}", key).replace("{param}", param.label)}
             />
-            <CompactButton
+            <Button
                 icon="/icons/btn-delete.svg"
                 onclick={(evt) => {
                     delete param.val[key]
                 }}
                 disabled={disabled}
                 tooltip={translate("Remove item")}
+                small
             />
         {/each}
     {/if}
@@ -128,7 +129,7 @@
     <div class=gap></div>
     <div class=gap></div>
     <div class=gap></div>
-    <CompactButton
+    <Button
         icon="/icons/btn-add.svg"
         onclick={(evt) => {
             // enumerate field name to avoid duplication
@@ -141,6 +142,7 @@
         }}
         tooltip={translate("Add item")}
         disabled={disabled}
+        small
     />
 </div>
 

@@ -1,5 +1,5 @@
 <script>
-    import { CompactButton } from "$lib/utils/buttons";
+    import { Button } from "$lib/utils/buttons";
     import { CodeOutput } from "$lib/utils/code";
     import { getContext } from "svelte";
     import { translate } from "$lib/translation";
@@ -12,10 +12,11 @@
 
 <CodeOutput bind:value={current.output.pavlovia}>
     {#snippet ctrls()}
-        <CompactButton
+        <Button
             icon="/icons/btn-clear.svg"
             onclick={evt => current.output.pavlovia = ""}
             tooltip={translate("Clear pavlovia output")}
+            small
         />
     {/snippet}
 </CodeOutput>

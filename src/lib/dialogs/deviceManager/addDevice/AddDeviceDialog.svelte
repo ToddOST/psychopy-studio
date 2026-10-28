@@ -1,7 +1,7 @@
 <script>
     import { Dialog } from "$lib/utils/dialog";
     
-    import { CompactButton, PanelButton } from "$lib/utils/buttons";
+    import { Button, PanelButton } from "$lib/utils/buttons";
     import { sanitizeImportString } from "$lib/utils/tools/imports.js";
     import DeviceListItem from "./DeviceListItem.svelte";
     import { ParamCtrl } from "$lib/paramCtrls";
@@ -65,10 +65,11 @@
             style:margin-bottom="-.5rem"
         >
             <span style:flex-grow={1}>Available devices</span>
-            <CompactButton
+            <Button
                 icon="/icons/btn-refresh.svg"
                 tooltip={translate("Refresh")}
                 onclick={evt => refresh("devices")}
+                small
             />
         </div>
         <div class=devices-list>
@@ -118,10 +119,11 @@
                                         style:flex-grow={1}
                                         bind:value={timeout} 
                                     />
-                                    <CompactButton
+                                    <Button
                                         icon="/icons/btn-refresh.svg"
                                         tooltip={translate("Retry")}
                                         onclick={evt => refresh("devices")}
+                                        small
                                     />
                                 </div>
                             </div>

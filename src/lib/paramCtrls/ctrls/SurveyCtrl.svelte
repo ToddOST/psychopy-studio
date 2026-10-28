@@ -1,6 +1,6 @@
 <script>
     import SingleLineCtrl from "./SingleLineCtrl.svelte"
-    import { CompactButton, RadioButton } from "$lib/utils/buttons"
+    import { Button, RadioButton } from "$lib/utils/buttons"
     import { getContext } from "svelte";
     import { git } from "$lib/globals.svelte";
     import Dialog from "$lib/utils/dialog/Dialog.svelte";
@@ -33,11 +33,13 @@
     {...attachments}
 />
 
-<CompactButton 
+<Button
     icon="/icons/btn-find.svg"
     tooltip={translate("Browse your projects on Pavlovia")}
     onclick={(evt) => showSurveysDlg = true}
     disabled={disabled || current.user === undefined}
+
+    small
 />
 
 <Dialog

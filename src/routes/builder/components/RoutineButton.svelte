@@ -35,10 +35,11 @@
 </script>
 
 {#if !component.hidden}
-<Button 
-    label={titleCase(component['__name__'])}
-    icon={component.iconSVG}
-    vertical
-    onclick={newRoutine}
-/>
+    <Button 
+        label={titleCase(component['__name__'])}
+        icon={component.iconSVG}
+        onclick={newRoutine}
+        vertical
+        large
+    />
 {/if}

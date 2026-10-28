@@ -3,7 +3,7 @@
     import { onMount, setContext } from "svelte";
     import { Menu } from "..";
     import { RibbonSection } from '$lib/utils/ribbon';
-    import { IconButton } from '$lib/utils/buttons';
+    import { Button } from '$lib/utils/buttons';
     import { translate } from "$lib/translation";
 
     let {
@@ -37,11 +37,11 @@
 
 {#if !electron}
     <RibbonSection>
-        <IconButton 
+        <Button 
             icon="/icons/btn-hamburger.svg"
-            label={translate("Menu")}
+            tooltip={translate("Menu")}
             onclick={() => shown = true} 
-            borderless
+            ghost
         />
         <Menu 
             bind:shown={shown}

@@ -50,11 +50,13 @@
                 bind:value={useRegex} 
                 icon="/icons/btn-regex.svg"
                 tooltip={translate("Use RegEx syntax")}
+                small
             />
             <ToggleButton 
                 bind:value={caseSensitive} 
                 icon="/icons/btn-case.svg"
                 tooltip={translate("Use case-sensitive searching")}
+                small
             />
         </div>
         <div class=results-list>

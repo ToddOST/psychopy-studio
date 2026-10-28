@@ -41,7 +41,7 @@
         onclick={() => showMenu = true}
         disabled={current.inserting}
         horizontal
-    ></Button>
+    />
 
     <!-- menu for choosing new loop type -->
     <Menu 

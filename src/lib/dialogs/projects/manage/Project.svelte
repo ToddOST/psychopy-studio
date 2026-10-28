@@ -1,5 +1,5 @@
 <script>
-    import { CompactButton } from "$lib/utils/buttons";
+    import { Button } from "$lib/utils/buttons";
     import { projects } from "$lib/globals.svelte";
     import { translate } from "$lib/translation";
 
@@ -13,9 +13,10 @@
 >
     <div class=project-header>  
         <h3>{project.id}</h3>
-        <CompactButton
+        <Button
             icon="/icons/btn-delete.svg"
             onclick={(evt) => delete projects[project.id]}
+            small
         />
     </div>  
     <div>{translate("Local folder:")}</div>

@@ -1,6 +1,6 @@
 <script>
     import { getContext } from "svelte";
-    import { CompactButton } from "$lib/utils/buttons";
+    import { Button } from "$lib/utils/buttons";
     import FileCtrl from "./FileCtrl.svelte";
     import { electron, python } from "$lib/globals.svelte";
     import { MessageDialog } from "$lib/utils/dialog"; 
@@ -56,11 +56,12 @@
     {...attachments}
 ></FileCtrl>
 {#if electron}
-    <CompactButton
+    <Button
         icon="/icons/btn-{param.val ? "" : "new-"}table.svg"
         tooltip={param.val ? translate("Open table") : translate("Create table")}
         onclick={param.val ? openTable : newTable}
         disabled={disabled || param.isCode}
+        small
     />
 
     <MessageDialog

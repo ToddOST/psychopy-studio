@@ -1,6 +1,6 @@
 <script>
     import { electron } from "$lib/globals.svelte";
-    import { CompactButton } from "$lib/utils/buttons";
+    import { Button } from "$lib/utils/buttons";
     import path from "path-browserify";
     import { getContext } from "svelte";
     import { translate } from "$lib/translation";
@@ -23,7 +23,7 @@
         aria-label={translate("Current file path")}
         disabled 
     />
-    <CompactButton 
+    <Button
         icon="/icons/btn-open.svg"
         tooltip={translate("Open folder...")}
         onclick={async evt => {
@@ -32,8 +32,9 @@
             // execute onchange function
             onchange(value)
         }}
+        small
     />
-    <CompactButton 
+    <Button
         icon="/icons/btn-dirup.svg"
         tooltip={translate("Up to parent directory")}
         onclick={evt => {
@@ -41,8 +42,9 @@
             value = path.dirname(value)
             onchange($state.snapshot(value))
         }}
+        small
     />
-    <CompactButton 
+    <Button
         icon="/icons/btn-target.svg"
         tooltip={translate("Navigate to current file")}
         onclick={evt => {
@@ -51,6 +53,7 @@
             onchange($state.snapshot(value))
         }}
         disabled={current.pages[current.tab] === undefined}
+        small
     />
 </div>
 

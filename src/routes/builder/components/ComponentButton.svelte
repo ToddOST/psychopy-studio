@@ -50,9 +50,10 @@
 <Button 
     label={titleCase(component['__name__'])}
     icon={component.iconSVG}
-    vertical
     disabled={!(current.routine instanceof Routine)}
     onclick={newComponent}
+    vertical
+    large
 />
 
 <Dialog 

@@ -5,7 +5,7 @@
     import { profiles as allProfiles, refresh } from '$lib/experiment/profiles.svelte';
     import RoutineButton from './RoutineButton.svelte';
     import FilterDialog from './FilterDialog.svelte';
-    import { CompactButton } from "$lib/utils/buttons";
+    import { Button } from "$lib/utils/buttons";
     import { PluginManagerDlg } from "$lib/dialogs/pluginManager"
     import { electron, python } from "$lib/globals.svelte";
     import { translate } from "$lib/translation";
@@ -85,25 +85,28 @@
 <div id="components">
     <div class=ctrls>
         {#if python?.ready}
-            <CompactButton
+            <Button
                 icon="/icons/btn-add.svg"
                 tooltip={translate("Get more...")}
                 onclick={evt => showPluginMgr = true}
+                small
             />
             <PluginManagerDlg 
                 bind:shown={showPluginMgr}
             />
-            <CompactButton
+            <Button
                 icon="/icons/btn-refresh.svg"
                 tooltip={translate("Reload Components")}
                 onclick={refreshProfiles}
                 disabled={!allProfiles.components.pending.resolved && !allProfiles.components.pending.rejected}
+                small
             />
         {/if}
-        <CompactButton
+        <Button
             icon="/icons/btn-filter.svg"
             tooltip={translate("Filter...")}
             onclick={evt => showFilterDlg = true}
+            small
         />
         <FilterDialog
             bind:filter={filter}
