@@ -51,6 +51,20 @@
     }
 </script>
 
+{#snippet itemsList(subitems, label=undefined)}
+    <div 
+        class=items-list
+        role=tablist
+        aria-label={label}
+        aria-orientation=vertical
+        focusgroup="tablist block wrap nomemory"
+    >
+        {#each subitems as item}
+            {@render item.button()}
+        {/each}
+    </div>
+{/snippet}
+
 
 <div class=list-detail-ctrl>
     <div class=list-panel>
@@ -71,16 +85,10 @@
                         label={items.categories[categ].label}
                         bind:open={items.categories[categ].open}
                     >
-                        <div class=items-list>
-                            {#each subitems as item}
-                                {@render item.button()}
-                            {/each}
-                        </div>
+                        {@render itemsList(subitems, items.categories[categ].label)}
                     </PanelButton>
                 {:else}
-                    {#each subitems as item}
-                        {@render item.button()}
-                    {/each}
+                    {@render itemsList(subitems)}
                 {/if}
             {/each}
             <!-- render any other children at the bottom -->

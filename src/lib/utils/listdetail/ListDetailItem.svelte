@@ -66,7 +66,8 @@
         class:selected={siblings.selected === index}
         role="tab"
         aria-selected={siblings.selected === index}
-        tabindex={0}
+        aria-controls={siblings.selected === index ? `${index}-panel` : undefined}
+        focusgroupstart={siblings.selected === index ? "" : undefined}
         onclick={evt => siblings.selected = index}
     >
         {#if typeof label === "function"}
@@ -84,6 +85,7 @@
 {#snippet itemDetails()}
     {#if siblings.selected === index}
         <div
+            id="{index}-panel"
             class=item-details
             role="tabpanel"
             aria-labelledby="{index}-tab"
