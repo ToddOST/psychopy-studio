@@ -1,6 +1,6 @@
 <script>
     import { electron } from "$lib/globals.svelte";
-    import { Button } from "$lib/utils/buttons";
+    import { Button } from "$lib/ui/button";
     import path from "path-browserify";
     import { getContext } from "svelte";
     import { translate } from "$lib/translation";

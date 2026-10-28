@@ -1,7 +1,7 @@
 <script>
     import { LoopInitiator, LoopTerminator, Routine, StandaloneRoutine } from '$lib/experiment';
     import callbacks from "../callbacks.svelte.js";
-    import { Menu, MenuItem } from '$lib/utils/menu';
+    import { Menu, MenuItem } from '$lib/ui/menu';
     import { getContext } from "svelte";
     import { translate } from "$lib/translation";
     

@@ -1,5 +1,5 @@
 <script>
-    import { ParamsNotebook } from "$lib/paramCtrls";
+    import { ParamsNotebook } from "$lib/ui/paramCtrls";
     import { onMount, untrack } from "svelte";
 
     let {

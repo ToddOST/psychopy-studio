@@ -1,7 +1,7 @@
 <script>
-    import { ToggleButton } from "$lib/utils/buttons";
-    import { Dialog } from "$lib/utils/dialog"
-    import { ParamsDialog } from "$lib/paramCtrls";
+    import { ToggleButton } from "$lib/ui/button";
+    import { Dialog } from "$lib/ui/dialog"
+    import { ParamsDialog } from "$lib/ui/paramCtrls";
     import { current } from "../../../routes/builder/globals.svelte";
     import { translate } from "$lib/translation";
 

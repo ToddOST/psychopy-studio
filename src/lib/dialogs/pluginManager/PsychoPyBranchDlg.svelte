@@ -2,7 +2,7 @@
     import { python } from "$lib/globals.svelte";
     import VenvChooser from "./VenvChooser.svelte"
     import ProgressDlg from "./ProgressDlg.svelte";
-    import { Dialog } from "$lib/utils/dialog"
+    import { Dialog } from "$lib/ui/dialog"
 
     let {
         shown=$bindable()

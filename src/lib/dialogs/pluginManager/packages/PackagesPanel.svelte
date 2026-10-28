@@ -1,6 +1,6 @@
 <script>
     import PackageItem from "./PackageItem.svelte";
-    import { ListDetail, ListDetailCategory, ListDetailItem } from "$lib/utils/listdetail";
+    import { ListDetail, ListDetailCategory, ListDetailItem } from "$lib/ui/listdetail";
     import { python } from "$lib/globals.svelte";
     import { translate } from "$lib/translation"
 

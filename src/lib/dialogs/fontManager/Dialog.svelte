@@ -1,7 +1,7 @@
 <script>
-    import { Dialog } from "$lib/utils/dialog";
-    import { Notebook, NotebookPage } from "$lib/utils/notebook";
-    import { Button, RadioButton } from "$lib/utils/buttons";
+    import { Dialog } from "$lib/ui/dialog";
+    import { Notebook, NotebookPage } from "$lib/ui/notebook";
+    import { Button, RadioButton } from "$lib/ui/button";
     import { FontManager } from "./manager.svelte.js";
     import { getContext } from "svelte";
     import { translate } from "$lib/translation";

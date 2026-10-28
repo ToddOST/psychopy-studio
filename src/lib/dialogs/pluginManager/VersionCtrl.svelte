@@ -1,7 +1,7 @@
 <script>
-    import { Button, DropdownButton } from "$lib/utils/buttons";
+    import { Button, DropdownButton } from "$lib/ui/button";
     import { translate } from "$lib/translation";
-    import { MenuItem } from "$lib/utils/menu";
+    import { MenuItem } from "$lib/ui/menu";
     import semver from "semver";
     import ProgressDlg from "./ProgressDlg.svelte";
     import { python } from "$lib/globals.svelte";

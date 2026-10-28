@@ -1,5 +1,5 @@
 <script>
-    import { MessageDialog } from "$lib/utils/dialog";
+    import { MessageDialog } from "$lib/ui/dialog";
     import { getContext } from "svelte";
     import callbacks from "../callbacks.svelte.js";
     import { translate } from "$lib/translation";

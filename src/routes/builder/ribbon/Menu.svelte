@@ -1,9 +1,9 @@
 <script>
     import callbacks from '../callbacks.svelte.js';
     import { getContext } from "svelte";
-    import { Menu, MenuItem, MenuSeparator, SubMenu } from '$lib/utils/menu/frameMenu';
+    import { Menu, MenuItem, MenuSeparator, SubMenu } from '$lib/ui/menu/frameMenu';
     import PrefsDialog from '$lib/dialogs/preferences/PrefsDialog.svelte';
-    import ParamsDialog from "$lib/paramCtrls/ParamsDialog.svelte";
+    import ParamsDialog from "$lib/ui/paramCtrls/ParamsDialog.svelte";
     import { FindDialog } from "$lib/dialogs/find";
     import { BugReportDlg } from "$lib/dialogs/bugReport";
     import { electron, python, git } from "$lib/globals.svelte";

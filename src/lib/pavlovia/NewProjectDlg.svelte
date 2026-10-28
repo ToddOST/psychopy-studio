@@ -1,5 +1,5 @@
 <script>
-    import { Dialog } from "$lib/utils/dialog";
+    import { Dialog } from "$lib/ui/dialog";
     import { git } from "$lib/globals.svelte";
     import { getContext } from "svelte";
     import { translate } from "$lib/translation";

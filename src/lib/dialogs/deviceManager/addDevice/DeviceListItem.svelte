@@ -2,8 +2,8 @@
     import { getContext, onDestroy } from "svelte";
     import DeviceProfile from "../DeviceProfile.svelte";
     import { fade } from "svelte/transition";
-    import { RadioButton } from "$lib/utils/buttons";
-    import { Info } from "$lib/utils/tooltip";
+    import { RadioButton } from "$lib/ui/button";
+    import { Info } from "$lib/ui/tooltip";
 
     let {
         selection=$bindable(),

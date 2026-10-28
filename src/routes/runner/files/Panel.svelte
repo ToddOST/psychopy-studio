@@ -1,7 +1,7 @@
 <script>
-    import { RadioButton, Button } from "$lib/utils/buttons"
+    import { RadioButton, Button } from "$lib/ui/button"
     import { Experiment } from "$lib/experiment";
-    import { Icon } from "$lib/utils/icons";
+    import { Icon } from "$lib/ui/icon";
     import { getContext } from "svelte";
     import callbacks from "../callbacks.svelte.js";
     import { translate } from "$lib/translation";

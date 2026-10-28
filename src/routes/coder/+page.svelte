@@ -6,10 +6,10 @@
     import { Shortcuts } from '$lib/utils/shortcuts';
     import callbacks from "./callbacks.svelte";
     import { CoderNotebook } from "./notebook";
-    import Frame from "$lib/utils/Frame.svelte";
-    import Panel from "$lib/utils/Panel.svelte";
+    import Frame from "$lib/ui/Frame.svelte";
+    import Panel from "$lib/ui/Panel.svelte";
     import { PaneGroup, Pane, PaneResizer } from "paneforge";
-    import { Notebook, NotebookPage } from "$lib/utils/notebook";
+    import { Notebook, NotebookPage } from "$lib/ui/notebook";
     import ShellNotebook from "./shell/ShellNotebook.svelte";
     import FileExplorer from "./files/FileExplorer.svelte";
     import OutlinePanel from "./outline/OutlinePanel.svelte";

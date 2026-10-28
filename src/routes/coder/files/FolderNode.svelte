@@ -1,8 +1,8 @@
 <script>
-    import { Menu, MenuItem } from "$lib/utils/menu";
+    import { Menu, MenuItem } from "$lib/ui/menu";
     import FolderNode from "./FolderNode.svelte";
     import FileNode from "./FileNode.svelte";
-    import { TreeBranch, TreeNode } from "$lib/utils/tree";
+    import { TreeBranch, TreeNode } from "$lib/ui/tree";
     import { parsePath } from "$lib/utils/files";
     import path from "path-browserify";
     import { electron } from "$lib/globals.svelte";

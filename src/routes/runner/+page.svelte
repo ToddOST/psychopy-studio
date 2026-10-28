@@ -1,9 +1,9 @@
 <script>
-    import { Notebook, NotebookPage } from "$lib/utils/notebook";
+    import { Notebook, NotebookPage } from "$lib/ui/notebook";
     import { showWindow } from "$lib/utils/views.svelte";
     import { DeepLink } from "$lib/dialogs/deepLink";
-    import Frame from "$lib/utils/Frame.svelte";
-    import Panel from "$lib/utils/Panel.svelte";
+    import Frame from "$lib/ui/Frame.svelte";
+    import Panel from "$lib/ui/Panel.svelte";
     import { PaneGroup, Pane, PaneResizer } from "paneforge";
     import Theme from "$lib/utils/Theme.svelte";
     import AlertsOutput from "./outputs/AlertsOutput.svelte";

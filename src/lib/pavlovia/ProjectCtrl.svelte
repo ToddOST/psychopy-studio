@@ -1,7 +1,7 @@
 <script>
-    import { DropdownButton } from "$lib/utils/buttons";
+    import { DropdownButton } from "$lib/ui/button";
     import { getContext } from "svelte";
-    import { MenuItem, MenuSeparator } from "$lib/utils/menu";
+    import { MenuItem, MenuSeparator } from "$lib/ui/menu";
     import { git } from "$lib/globals.svelte";
     import ManageProjectsDlg from "$lib/dialogs/projects/manage/ManageProjectsDlg.svelte";
     import NewProjectDlg from "./NewProjectDlg.svelte";

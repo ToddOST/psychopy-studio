@@ -1,14 +1,14 @@
 <script>
     import callbacks from '../callbacks.svelte.js';
     import Menu from "./Menu.svelte";
-    import { Ribbon, RibbonSection, RibbonGap } from '$lib/utils/ribbon';
+    import { Ribbon, RibbonSection, RibbonGap } from '$lib/ui/ribbon';
     import { getContext } from "svelte";
     import { electron, python, git } from "$lib/globals.svelte.js";
     import SavePrompt from "./SavePrompt.svelte";
     import { FindDialog } from "$lib/dialogs/find/index.js";
     import { DeviceManagerDialog } from "$lib/dialogs/deviceManager/index.js"
-    import ParamsDialog from "$lib/paramCtrls/ParamsDialog.svelte";
-    import { Button, SwitchButton } from '$lib/utils/buttons';
+    import ParamsDialog from "$lib/ui/paramCtrls/ParamsDialog.svelte";
+    import { Button, SwitchButton } from '$lib/ui/button';
     import { UserCtrl, ProjectCtrl } from '$lib/pavlovia';
     import MonitorCenterDlg from '$lib/dialogs/monitorCenter/MonitorCenterDlg.svelte';
     import PavloviaSync from "$lib/pavlovia/Sync.svelte";

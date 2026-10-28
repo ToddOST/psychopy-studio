@@ -1,10 +1,10 @@
 <script>
     import EntryPoint from './EntryPoint.svelte'   
-    import { Menu, MenuItem, SubMenu } from '$lib/utils/menu';
-    import Tooltip from '$lib/utils/tooltip/Tooltip.svelte';
+    import { Menu, MenuItem, SubMenu } from '$lib/ui/menu';
+    import Tooltip from '$lib/ui/tooltip/Tooltip.svelte';
     import { getContext } from "svelte";
     import callbacks from "../callbacks.svelte.js";
-    import ParamsDialog from "$lib/paramCtrls/ParamsDialog.svelte";
+    import ParamsDialog from "$lib/ui/paramCtrls/ParamsDialog.svelte";
     import { translate } from "$lib/translation";
     
     let current = getContext("current");

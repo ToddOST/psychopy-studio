@@ -1,7 +1,7 @@
 <script>
     import { python } from "$lib/globals.svelte";
-    import { SubMenu, MenuItem } from "$lib/utils/menu/frameMenu";
-    import { MessageDialog } from "$lib/utils/dialog";
+    import { SubMenu, MenuItem } from "$lib/ui/menu/frameMenu";
+    import { MessageDialog } from "$lib/ui/dialog";
     import { parsePath } from "$lib/utils/files";
     import { Script } from "$lib/experiment";
     import { getContext } from "svelte";

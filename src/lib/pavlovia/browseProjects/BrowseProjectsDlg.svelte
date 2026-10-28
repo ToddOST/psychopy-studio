@@ -1,6 +1,6 @@
 <script>
-    import { Dialog } from "$lib/utils/dialog";
-    import { Notebook, NotebookPage } from "$lib/utils/notebook";
+    import { Dialog } from "$lib/ui/dialog";
+    import { Notebook, NotebookPage } from "$lib/ui/notebook";
     import BrowseDemos from "./BrowseDemos.svelte";
 
     let {

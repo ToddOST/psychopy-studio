@@ -1,0 +1,112 @@
+<script>
+    import SingleLineCtrl from "./SingleLineCtrl.svelte"
+    import { Button, RadioButton } from "$lib/ui/button"
+    import { getContext } from "svelte";
+    import { git } from "$lib/globals.svelte";
+    import Dialog from "$lib/ui/dialog/Dialog.svelte";
+    import { translate } from "$lib/translation";
+
+    let {
+        /** @prop @type {import("$lib/experiment").Param} Param object to which this ctrl pertains */
+        param=$bindable(),
+        /** @prop @type {boolean} Controls whether this control is disabled */
+        disabled=false,
+        /** @interface */
+        ...attachments
+    } = $props()
+
+    let current = getContext("current")
+
+    function validateSurvey(param, valid) {}
+
+    let showSurveysDlg = $state.raw();
+
+    let selected = $state({
+        survey: undefined
+    });
+</script>
+
+<SingleLineCtrl 
+    param={param} 
+    disabled={disabled}
+    {@attach element => param.registerValidator("survey", validateSurvey, -5)}
+    {...attachments}
+/>
+
+<Button
+    icon="/icons/btn-find.svg"
+    tooltip={translate("Browse your projects on Pavlovia")}
+    onclick={(evt) => showSurveysDlg = true}
+    disabled={disabled || current.user === undefined}
+
+    small
+/>
+
+<Dialog
+    id=browse-surveys
+    title={translate("Pavlovia surveys")}
+    buttons={{
+        OK: (evt) => param.val = selected.survey.surveyId,
+        CANCEL: (evt) => {}
+    }}
+    buttonsDisabled={{
+        OK: selected.survey === undefined
+    }}
+    bind:shown={showSurveysDlg}
+>
+    <div class=container>
+        <p>
+            {translate("Below are all of the surveys linked to your Pavlovia account - select the one you want and press OK to add its ID. You can view and manage your Pavlovia surveys ")}
+            <a href="https://pavlovia.org/dashboard?tab=4" target="_blank">here</a>
+        </p>
+        <div class=choice-group>
+            {#await git.listSurveys(
+                $state.snapshot(current.user)
+            )}
+                {translate("Loading surveys...")}
+            {:then resp}
+                {#each resp.surveys as survey}
+                    <RadioButton
+                        bind:selection={selected.survey}
+                        value={survey}
+                        label={survey.surveyName}
+                        tooltip={survey.description}
+                    />
+                {/each}
+            {:catch err}
+                <p class=error>
+                    {err}
+                </p>
+            {/await}
+        </div>
+    </div>
+</Dialog>
+
+<style>
+    .container {
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        width: 45rem;
+        height: 100%;
+        box-sizing: border-box;
+    }
+
+    .choice-group {
+        background: var(--base);
+        border: 1px solid var(--overlay);
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        flex-grow: 1;
+        overflow-y: auto;
+        max-width: 65rem;
+        gap: .5rem;
+        padding: 1rem;
+    }
+
+    p.error {
+        color: var(--red);
+    }
+
+</style>

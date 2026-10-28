@@ -2,10 +2,10 @@
     import RoutineCanvas from './Canvas.svelte';
     import StandaloneRoutineCanvas from './Standalone.svelte'
     import { StandaloneRoutine, Routine } from '$lib/experiment';
-    import { Notebook, NotebookPage, ButtonTab } from '$lib/utils/notebook';
+    import { Notebook, NotebookPage, ButtonTab } from '$lib/ui/notebook';
     import { getContext } from "svelte";
-    import { Dialog } from '$lib/utils/dialog';
-    import { ParamsNotebook } from '$lib/paramCtrls';
+    import { Dialog } from '$lib/ui/dialog';
+    import { ParamsNotebook } from '$lib/ui/paramCtrls';
     import { translate } from "$lib/translation";
     
     let current = getContext("current");

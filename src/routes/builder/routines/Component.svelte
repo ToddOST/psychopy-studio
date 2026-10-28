@@ -1,10 +1,10 @@
 <script>
     import EntryPoint from './EntryPoint.svelte';
-    import { Menu, SubMenu, MenuItem} from '$lib/utils/menu';
+    import { Menu, SubMenu, MenuItem} from '$lib/ui/menu';
     import { getContext } from "svelte"
-    import { ParamsDialog } from "$lib/paramCtrls";
+    import { ParamsDialog } from "$lib/ui/paramCtrls";
     import StaticPeriod from './StaticPeriod.svelte';
-    import { Icon } from "$lib/utils/icons";
+    import { Icon } from "$lib/ui/icon";
     import { prefs } from "$lib/preferences.svelte";
     import { translate } from "$lib/translation";
     import callbacks from "../callbacks.svelte.js";

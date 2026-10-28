@@ -2,10 +2,10 @@
     import callbacks from '../callbacks.svelte.js';
     
     import Menu from "./Menu.svelte";
-    import { Ribbon, RibbonSection, RibbonGap } from '$lib/utils/ribbon';
+    import { Ribbon, RibbonSection, RibbonGap } from '$lib/ui/ribbon';
     import { getContext } from "svelte";
     import { electron, python } from "$lib/globals.svelte.js";
-    import { Button, SwitchButton } from '$lib/utils/buttons';
+    import { Button, SwitchButton } from '$lib/ui/button';
     import { UserCtrl } from '$lib/pavlovia';
     import { translate } from "$lib/translation";
 

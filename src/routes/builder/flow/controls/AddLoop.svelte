@@ -1,10 +1,10 @@
 <script>
     import { LoopInitiator } from '$lib/experiment/flow.svelte.js';
-    import { ParamsNotebook } from '$lib/paramCtrls/index.js';
-    import { Menu, MenuItem } from '$lib/utils/menu';
-    import { Button } from '$lib/utils/buttons';
+    import { ParamsNotebook } from '$lib/ui/paramCtrls/index.js';
+    import { Menu, MenuItem } from '$lib/ui/menu';
+    import { Button } from '$lib/ui/button';
     import { getContext } from "svelte";
-    import Dialog from "$lib/utils/dialog/Dialog.svelte";
+    import Dialog from "$lib/ui/dialog/Dialog.svelte";
     import { profiles } from "$lib/experiment/profiles.svelte";
     import { translate } from "$lib/translation";
     

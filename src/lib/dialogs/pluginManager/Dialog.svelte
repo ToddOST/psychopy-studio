@@ -1,6 +1,6 @@
 <script>
-    import { Notebook, NotebookPage } from "$lib/utils/notebook";
-    import { Dialog } from "$lib/utils/dialog";
+    import { Notebook, NotebookPage } from "$lib/ui/notebook";
+    import { Dialog } from "$lib/ui/dialog";
     import PluginsPanel from "./plugins/PluginsPanel.svelte";
     import PackagesPanel from "./packages/PackagesPanel.svelte";
     import VenvChooser from "./VenvChooser.svelte";

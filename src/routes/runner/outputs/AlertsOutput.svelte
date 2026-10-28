@@ -1,5 +1,5 @@
 <script>
-    import { Button } from "$lib/utils/buttons";
+    import { Button } from "$lib/ui/button";
     import { python } from "$lib/globals.svelte";
     import { getContext } from "svelte";
     import { fly } from "svelte/transition";

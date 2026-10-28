@@ -1,6 +1,6 @@
 <script>
-    import { Button } from "$lib/utils/buttons";
-    import { ParamCtrl } from "$lib/paramCtrls";
+    import { Button } from "$lib/ui/button";
+    import { ParamCtrl } from "$lib/ui/paramCtrls";
     import CalibrationSetupDlg from "./CalibrationSetupDlg.svelte";
     import { translate } from "$lib/translation";
 

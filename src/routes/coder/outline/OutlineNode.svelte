@@ -1,5 +1,5 @@
 <script>
-    import { TreeNode, TreeBranch } from "$lib/utils/tree"
+    import { TreeNode, TreeBranch } from "$lib/ui/tree"
     import OutlineNode from "./OutlineNode.svelte";
     import { parsePython, parseJavaScript, parseMarkdown } from "./parsers.js"
     import { current } from "../globals.svelte";

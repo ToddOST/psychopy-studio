@@ -1,5 +1,5 @@
 <script>
-    import { TreeRoot } from "$lib/utils/tree";
+    import { TreeRoot } from "$lib/ui/tree";
     import { electron } from "$lib/globals.svelte";
     import { getContext } from "svelte";
     import DirCtrl from "./DirCtrl.svelte";

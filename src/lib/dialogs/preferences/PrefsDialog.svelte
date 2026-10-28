@@ -1,6 +1,6 @@
 <script>
     import { prefs } from "$lib/preferences.svelte";
-    import ParamsDialog from "$lib/paramCtrls/ParamsDialog.svelte";
+    import ParamsDialog from "$lib/ui/paramCtrls/ParamsDialog.svelte";
     import { translate } from "$lib/translation";
 
     let {

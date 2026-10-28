@@ -1,9 +1,9 @@
 <script>
-    import { Button } from "$lib/utils/buttons";
-    import { Icon } from "$lib/utils/icons";
-    import { MessageArray, Message } from "$lib/utils/message";
-    import { MessageDialog } from "$lib/utils/dialog";
-    import { CodeOutput } from "$lib/utils/code";
+    import { Button } from "$lib/ui/button";
+    import { Icon } from "$lib/ui/icon";
+    import { MessageArray, Message } from "$lib/ui/message";
+    import { MessageDialog } from "$lib/ui/dialog";
+    import { CodeOutput } from "$lib/ui/code";
     import { marked } from "marked";
     import { status } from "./globals.svelte.js";
     import { setupPython } from "./functions.svelte.js";
