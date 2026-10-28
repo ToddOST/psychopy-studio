@@ -25,8 +25,8 @@
     search={(term, data) => (
         data.name.toLowerCase().includes(term.toLowerCase()) ||
         data.pipname.toLowerCase().includes(term.toLowerCase()) ||
-        data.description.toLowerCase().includes(term.toLowerCase()) ||
-        data.keywords.includes(term) ||
+        data.description?.toLowerCase().includes(term.toLowerCase()) ||
+        data.keywords?.includes(term) ||
         term === ""
     )}
 >
@@ -41,7 +41,7 @@
                 label={isInstalled ? translate("Installed") : translate("Not installed")}
                 open
             >
-                {#each plugins as plugin}
+                {#each plugins as plugin (plugin.pipname)}
                     <ListDetailItem
                         data={plugin}
                     >

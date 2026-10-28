@@ -73,6 +73,7 @@
                 type="search"
                 class=search-ctrl
                 placeholder={translate("Search...")}
+                aria-label={translate("Search")}
                 bind:value={searchTerm}
             />
         {/if}

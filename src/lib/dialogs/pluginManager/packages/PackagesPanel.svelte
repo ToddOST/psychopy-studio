@@ -65,7 +65,7 @@
         {#if searchTerm && !Object.entries(installed).some(
             ([key, val]) => val && key.toLowerCase() === searchTerm.toLowerCase()
         )}
-            {#await checkPyPi(searchTerm).then(resp => resp)}
+            {#await checkPyPi(searchTerm).then(resp => resp).catch(err => undefined)}
                 {translate("Searching PyPi...")}
             {:then profile}
                 {#if profile?.info?.name}
