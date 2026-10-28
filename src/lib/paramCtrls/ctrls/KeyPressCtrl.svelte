@@ -1,6 +1,6 @@
 <script>
     import { prefs } from "$lib/preferences.svelte";
-    import { CompactButton } from "$lib/utils/buttons";
+    import { Button } from "$lib/utils/buttons";
     import { translate } from "$lib/translation";
 
     let {
@@ -76,16 +76,18 @@
             style:color={param.val.length ? "inherit" : "var(--outline)" }
             value={param.val.length ? param.val.join?.(" + ") : "Press keys, then click the tick to accept"}
         />
-        <CompactButton 
+        <Button
             onclick={evt => param.val.length = 0}
             icon="/icons/btn-clear.svg"
             tooltip={translate("Clear keypresses")}
+            small
         />
-        <CompactButton 
+        <Button
             onclick={evt => selected = false}
             icon="/icons/btn-tick.svg"
             tooltip={translate("Done")}
             disabled={!param.valid.value}
+            small
         />
     {:else}
         <input 

@@ -1,5 +1,5 @@
 <script>
-    import { RadioButton, CompactButton, Button } from "$lib/utils/buttons"
+    import { RadioButton, Button } from "$lib/utils/buttons"
     import { Experiment } from "$lib/experiment";
     import { Icon } from "$lib/utils/icons";
     import { getContext } from "svelte";
@@ -23,10 +23,11 @@
                     tooltip={item.file.file}
                     icon="/icons/btn-{item instanceof Experiment ? "builder" : "coder"}.svg"
                 />
-                <CompactButton 
+                <Button
                     icon="/icons/btn-delete.svg"
                     tooltip={translate("Remove item")}
                     onclick={evt => delete current.runlist[parseInt(i)]}
+                    small
                 />
             </div>
         {/each}

@@ -1,5 +1,5 @@
 <script>
-    import { CompactButton } from "$lib/utils/buttons";
+    import { Button } from "$lib/utils/buttons";
     import { python } from "$lib/globals.svelte";
     import { getContext } from "svelte";
     import { fly } from "svelte/transition";
@@ -29,10 +29,11 @@
         {/each}
     </div>
     <div class=alerts-ctrls>
-        <CompactButton
+        <Button
             icon="/icons/btn-clear.svg"
             onclick={evt => current.output.alerts.length = 0}
             tooltip={translate("Clear alerts")}
+            small
         />
     </div>
 </div>

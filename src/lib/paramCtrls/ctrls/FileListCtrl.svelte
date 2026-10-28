@@ -1,6 +1,6 @@
 <script>
     import { Param } from "$lib/experiment";
-    import { CompactButton } from "$lib/utils/buttons";
+    import { Button } from "$lib/utils/buttons";
     import { sanitizeJSON } from "$lib/utils/transpiler"
     import FileCtrl from "./FileCtrl.svelte";
     import { mimeTypesFromParam } from "./utils.svelte";
@@ -73,17 +73,18 @@
             param={item}
             disabled={disabled}
         />
-        <CompactButton
+        <Button
             icon="/icons/btn-delete.svg"
             onclick={(evt) => {
                 param.val.splice(i, 1)
             }}
             disabled={disabled}
             tooltip={translate("Remove item")}
+            small
         />
     {/each}
     <div class=gap></div>
-    <CompactButton 
+    <Button
             icon="/icons/btn-add-many.svg"
             onclick={async (evt) => {
                 // do we have mime types from the param?
@@ -104,8 +105,9 @@
             }}
             tooltip={translate("Add multiple items")}
             disabled={disabled}
+        small
     />
-    <CompactButton
+    <Button
         icon="/icons/btn-add.svg"
         onclick={(evt) => {
             // add item
@@ -113,6 +115,7 @@
         }}
         tooltip={translate("Add item")}
         disabled={disabled}
+        small
     />
 </div>
 

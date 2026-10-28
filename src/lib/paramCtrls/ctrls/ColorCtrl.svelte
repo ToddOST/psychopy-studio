@@ -1,6 +1,6 @@
 <script>
     import SingleLineCtrl from "./SingleLineCtrl.svelte";
-    import { CompactButton } from "$lib/utils/buttons";
+    import { Button } from "$lib/utils/buttons";
     import { ColorPickerDialog } from "$lib/dialogs/colorPicker";
     import { translate } from "$lib/translation";
 
@@ -31,10 +31,11 @@
     {...attachments}
 />
 
-<CompactButton 
+<Button
     icon="/icons/btn-colors.svg"
     tooltip={translate("Open color picker")}
     onclick={evt => show.dialog = true}
+    small
 />
 
 <ColorPickerDialog 

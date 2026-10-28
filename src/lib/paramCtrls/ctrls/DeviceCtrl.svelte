@@ -1,7 +1,7 @@
 <script>
     import { devices, python } from "$lib/globals.svelte";
     import { DeviceManagerDialog } from "$lib/dialogs/deviceManager"
-    import { CompactButton } from "$lib/utils/buttons";
+    import { Button } from "$lib/utils/buttons";
     import { translate } from "$lib/translation";
     import { profiles } from "$lib/experiment";
 
@@ -93,9 +93,10 @@
 </select>
 
 {#if python?.ready}
-    <CompactButton
+    <Button
         icon="/icons/btn-devices.svg"
         onclick={(evt) => showDialog = true}
+        small
     />
 
     <DeviceManagerDialog

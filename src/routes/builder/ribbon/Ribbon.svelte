@@ -8,7 +8,7 @@
     import { FindDialog } from "$lib/dialogs/find/index.js";
     import { DeviceManagerDialog } from "$lib/dialogs/deviceManager/index.js"
     import ParamsDialog from "$lib/paramCtrls/ParamsDialog.svelte";
-    import { IconButton, SwitchButton } from '$lib/utils/buttons';
+    import { Button, SwitchButton } from '$lib/utils/buttons';
     import { UserCtrl, ProjectCtrl } from '$lib/pavlovia';
     import MonitorCenterDlg from '$lib/dialogs/monitorCenter/MonitorCenterDlg.svelte';
     import PavloviaSync from "$lib/pavlovia/Sync.svelte";
@@ -53,62 +53,69 @@
     <Menu />
     
     <RibbonSection label={translate("File")} icon="/icons/rbn-file.svg">
-        <IconButton 
+        <Button
             icon="/icons/btn-new.svg" 
-            label={translate("New file")} 
+            tooltip={translate("New file")} 
             onclick={(evt) => prompts.NEW = true}
-            borderless
+            ghost
+            tight
         />
         <SavePrompt
             bind:shown={prompts.NEW}
             action={callbacks.new.fcn}
         />  
-        <IconButton 
+        <Button
             icon="/icons/btn-open.svg" 
-            label={translate("Open file")} 
+            tooltip={translate("Open file")} 
             onclick={(evt) => prompts.OPEN = true} 
-            borderless
+            ghost
+            tight
         />
         <SavePrompt
             bind:shown={prompts.OPEN}
             action={callbacks.open.fcn}
         />
-        <IconButton 
+        <Button
             icon="/icons/btn-save.svg" 
-            label={translate("Save file")} 
+            tooltip={translate("Save file")} 
             onclick={callbacks.save.fcn}
             disabled={callbacks.save.disabled}
-            borderless
+            ghost
+            tight
         />
-        <IconButton
+        <Button
             icon="/icons/btn-saveas.svg"
-            label={translate("Save file as")}
+            tooltip={translate("Save file as")}
             onclick={callbacks.saveAs.fcn}
             disabled={callbacks.saveAs.disabled}
-            borderless
+            ghost
+            tight
         />
     </RibbonSection>
 
     <RibbonSection label={translate("Edit")} icon="/icons/rbn-edit.svg">
-        <IconButton 
+        <Button
             icon="/icons/btn-undo.svg" 
-            label={translate("Undo")} 
+            tooltip={translate("Undo")} 
             onclick={callbacks.undo.fcn} 
             disabled={callbacks.undo.disabled} 
-            borderless
+            ghost
+            tight
         />
-        <IconButton 
+        <Button
             icon="/icons/btn-redo.svg" 
-            label={translate("Redo")} 
+            tooltip={translate("Redo")} 
             onclick={callbacks.redo.fcn} 
             disabled={callbacks.redo.disabled} 
-            borderless
+            ghost
+            tight
         />
-        <IconButton 
+        <Button
             icon="/icons/btn-find.svg" 
-            label={translate("Find")} 
+            tooltip={translate("Find")} 
             onclick={() => show.findDlg = true}
-            borderless
+            ghost
+            tight
         />
         <FindDialog
             bind:shown={show.findDlg}
@@ -117,32 +124,35 @@
     
     <RibbonSection label={translate("Experiment")} icon="/icons/rbn-experiment.svg">
         {#if python?.ready}
-            <IconButton
+            <Button
                 icon="/icons/btn-monitors.svg"
-                label={translate("Open the monitor center")}
+                tooltip={translate("Open the monitor center")}
                 onclick={(evt) => show.monitorCenterDlg = true}
-                borderless
+                ghost
+                tight
             />
             <MonitorCenterDlg
                 bind:shown={show.monitorCenterDlg}
             />
-            <IconButton
+            <Button
                 icon="/icons/btn-devices.svg"
-                label={translate("Open the device manager")}
+                tooltip={translate("Open the device manager")}
                 onclick={(evt) => show.deviceMgrDlg = true}
-                borderless
+                ghost
+                tight
             />
             <DeviceManagerDialog
                 bind:shown={show.deviceMgrDlg}
             />
         {/if}
 
-        <IconButton 
+        <Button
             icon="/icons/btn-settings.svg" 
-            label={translate("Experiment settings")} 
+            tooltip={translate("Experiment settings")} 
             onclick={(evt) => show.settingsDlg = true}
             disabled={!current.experiment.settings}
-            borderless
+            ghost
+            tight
         />
         {#await current.experiment.ready then}
             <ParamsDialog
@@ -150,6 +160,7 @@
                 bind:shown={show.settingsDlg}
             />
         {:catch}
+            {""}
         {/await}
         <SwitchButton 
             labels={[translate("Pilot"), translate("Run")]} 
@@ -167,79 +178,77 @@
         />  
         
         {#if python?.ready}
-            <IconButton 
+            <Button
                 icon="/icons/btn-send{current.experiment.pilotMode ? "pilot" : "run"}.svg" 
-                label={translate("Send experiment to runner")} 
+                tooltip={translate("Send experiment to runner")} 
                 onclick={callbacks.sendToRunner.fcn}
                 disabled={callbacks.sendToRunner.disabled}
-                borderless
+                ghost
+                tight
             /> 
         {/if}
     </RibbonSection>
 
     {#if python?.ready}
         <RibbonSection label={translate("Desktop")} icon="/icons/rbn-desktop.svg">
-            <IconButton 
+            <Button
                 icon="/icons/btn-compilepy.svg" 
-                label={translate("Write experiment as a .py file")} 
+                tooltip={translate("Write experiment as a .py file")} 
                 onclick={evt => callbacks.compilePython.fcn()}
                 bind:awaiting={awaiting.compilepy}
                 disabled={callbacks.compilePython.disabled}
-                borderless
+                ghost
+                tight
             /> 
-            <IconButton 
+            <Button
                 icon="/icons/btn-{current.experiment.pilotMode ? "pilot" : "run"}py.svg" 
-                label={current.experiment.pilotMode ? translate("Pilot experiment locally") : translate("Run experiment locally")}
+                tooltip={current.experiment.pilotMode ? translate("Pilot experiment locally") : translate("Run experiment locally")}
                 onclick={evt => callbacks.runPython.fcn()}
                 bind:awaiting={awaiting.runpy}
                 cancel={evt => callbacks.stopPython.fcn()}
                 disabled={callbacks.runPython.disabled}
-                borderless
+                ghost
+                tight
             />
         </RibbonSection>
 
         <RibbonSection label={translate("Browser")} icon="/icons/rbn-browser.svg">
-            <IconButton 
+            <Button
                     icon="/icons/btn-compilejs.svg" 
-                    label={translate("Write experiment as a .js file")} 
+                    tooltip={translate("Write experiment as a .js file")} 
                     onclick={(evt) => callbacks.compileJS.fcn()}
                     bind:awaiting={awaiting.compilejs}
                     disabled={callbacks.compileJS.disabled}
-                    borderless
+                    ghost
+                    tight
                 />
-                <IconButton 
+                <Button
                     icon="/icons/btn-{current.experiment.pilotMode ? "pilot" : "run"}js.svg" 
-                    label={current.experiment.pilotMode ? translate("Pilot experiment in browser") : translate("Run experiment in browser")}
+                    tooltip={current.experiment.pilotMode ? translate("Pilot experiment in browser") : translate("Run experiment in browser")}
                     onclick={(evt) => callbacks.runJS.fcn()}
                     disabled={callbacks.runJS.disabled}
                     bind:awaiting={awaiting.runjs}
-                    borderless
+                    ghost
+                    tight
                 />
         </RibbonSection>
     {/if}
-
-    <!-- <RibbonSection id=browser label=Browser icon="/icons/rbn-browser.svg">
-        <IconButton 
-            id="ribbon-btn-sync" 
-            icon="/icons/btn-sync.svg" 
-            label={translate("Sync to Pavlovia")} 
-        />
-    -->
 
     <RibbonSection label={translate("Pavlovia")} icon="/icons/rbn-pavlovia.svg">
         
         <PavloviaSync>
             {#snippet button(sync)}
-                <IconButton 
+                <Button
                     icon="/icons/btn-sync.svg" 
-                    label={translate("Sync experiment")} 
+                    tooltip={translate("Sync experiment")} 
                     onclick={(evt) => sync(
                         $state.snapshot(current.experiment.file.parent), 
                         $state.snapshot(current.user),
                         true
                     )}
                     disabled={!current.user || !current.experiment.file.file}
-                    borderless
+                    ghost
+                    tight
                 />
             {/snippet}
         </PavloviaSync>
@@ -254,25 +263,28 @@
     <RibbonGap></RibbonGap>
 
     <RibbonSection label=Views icon="/icons/rbn-windows.svg">
-        <IconButton 
+        <Button
             icon="/icons/btn-builder.svg" 
-            label={translate("Builder view")} 
+            tooltip={translate("Builder view")} 
             onclick={callbacks.showBuilder.fcn} 
-            borderless
             disabled
+            ghost
+            tight
         />
-        <IconButton 
+        <Button
             icon="/icons/btn-coder.svg" 
-            label={translate("Coder view")} 
+            tooltip={translate("Coder view")} 
             onclick={callbacks.showCoder.fcn} 
-            borderless
+            ghost
+            tight
         />
         {#if electron}
-            <IconButton 
+            <Button
                 icon="/icons/btn-runner.svg" 
-                label={translate("Runner view")} 
+                tooltip={translate("Runner view")} 
                 onclick={callbacks.showRunner.fcn} 
-                borderless
+                ghost
+                tight
             />
         {/if}
     </RibbonSection>

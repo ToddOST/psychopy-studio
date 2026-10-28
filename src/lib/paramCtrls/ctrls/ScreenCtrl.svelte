@@ -1,6 +1,6 @@
 <script>
     import SingleLineCtrl from "./SingleLineCtrl.svelte";
-    import { CompactButton } from "$lib/utils/buttons";
+    import { Button } from "$lib/utils/buttons";
     import { python } from "$lib/globals.svelte";
     import { translate } from "$lib/translation";
 
@@ -42,7 +42,7 @@
     {...attachments}
 />
 
-<CompactButton 
+<Button
     icon="/icons/btn-monitors.svg"
     tooltip={translate("Show screen numbers")}
     onclick={evt => python.liaison.send("app", {
@@ -51,4 +51,5 @@
             "psychopy.hardware:DeviceManager.showScreenNumbers"
         ]
     })}
+    small
 />

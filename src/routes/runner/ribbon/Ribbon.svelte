@@ -5,7 +5,7 @@
     import { Ribbon, RibbonSection, RibbonGap } from '$lib/utils/ribbon';
     import { getContext } from "svelte";
     import { electron, python } from "$lib/globals.svelte.js";
-    import { IconButton, SwitchButton } from '$lib/utils/buttons';
+    import { Button, SwitchButton } from '$lib/utils/buttons';
     import { UserCtrl } from '$lib/pavlovia';
     import { translate } from "$lib/translation";
 
@@ -29,33 +29,37 @@
     />
     
     <RibbonSection label=File icon="/icons/rbn-file.svg">
-        <IconButton 
+        <Button
             icon="/icons/btn-new.svg" 
-            label={translate("New configuration")} 
+            tooltip={translate("New configuration")} 
             onclick={callbacks.new.fcn}
             disabled={callbacks.new.disabled}
-            borderless
+            ghost
+            tight
         />
-        <IconButton 
+        <Button
             icon="/icons/btn-open.svg" 
-            label={translate("Open configuration")} 
+            tooltip={translate("Open configuration")} 
             onclick={callbacks.openConfiguration.fcn}
             disabled={callbacks.open.disabled}
-            borderless
+            ghost
+            tight
         />
-        <IconButton 
+        <Button
             icon="/icons/btn-save.svg" 
-            label={translate("Save configuration")} 
+            tooltip={translate("Save configuration")} 
             onclick={callbacks.save.fcn}
             disabled={callbacks.save.disabled}
-            borderless
+            ghost
+            tight
         />
-        <IconButton 
+        <Button
             icon="/icons/btn-saveas.svg" 
-            label={translate("Save configuration as")}
+            tooltip={translate("Save configuration as")}
             onclick={callbacks.saveAs.fcn} 
             disabled={callbacks.saveAs.disabled}
-            borderless
+            ghost
+            tight
         />
     </RibbonSection>
 
@@ -69,33 +73,36 @@
             } 
             disabled={callbacks.togglePiloting.disabled}
         />
-        <IconButton 
+        <Button
             icon="/icons/btn-send{current.runlist[current.selection]?.file.ext === ".psyexp" ? "builder" : "coder"}.svg" 
-            label={current.runlist[current.selection]?.file.ext === ".psyexp" ? translate("Open selection in Builder") : translate("Open selection in Coder")}
+            tooltip={current.runlist[current.selection]?.file.ext === ".psyexp" ? translate("Open selection in Builder") : translate("Open selection in Coder")}
             onclick={callbacks.openSelection.fcn}
-            borderless
             disabled={callbacks.openSelection.disabled}
+            ghost
+            tight
         />
     </RibbonSection>
 
     {#if python?.ready}
         <RibbonSection label=Run icon="/icons/btn-runpy.svg">
-            <IconButton 
+            <Button
                 icon="/icons/btn-{current.runlist[current.selection]?.pilotMode ? "pilot" : "run"}py.svg" 
-                label={current.runlist[current.selection]?.pilotMode ? translate("Pilot experiment locally") : translate("Run experiment locally")}
+                tooltip={current.runlist[current.selection]?.pilotMode ? translate("Pilot experiment locally") : translate("Run experiment locally")}
                 onclick={callbacks.runPython.fcn}
                 disabled={callbacks.runPython.disabled}
                 bind:awaiting={current.awaiting.runpy}
                 cancel={callbacks.stopPython.fcn}
-                borderless
+                ghost
+                tight
             />
-            <IconButton 
+            <Button
                 icon="/icons/btn-{current.runlist[current.selection]?.pilotMode ? "pilot" : "run"}js.svg" 
-                label={current.runlist[current.selection]?.pilotMode ? translate("Pilot experiment in browser") : translate("Run experiment in browser")} 
+                tooltip={current.runlist[current.selection]?.pilotMode ? translate("Pilot experiment in browser") : translate("Run experiment in browser")} 
                 onclick={callbacks.runJS.fcn}
                 disabled={callbacks.runJS.disabled}
                 bind:awaiting={current.awaiting.runjs}
-                borderless
+                ghost
+                tight
             />
         </RibbonSection>
     {/if}
@@ -109,25 +116,28 @@
     <RibbonGap></RibbonGap>
 
     <RibbonSection label=Views icon="/icons/rbn-windows.svg">
-        <IconButton 
+        <Button
             icon="/icons/btn-builder.svg" 
-            label={translate("Builder view")} 
+            tooltip={translate("Builder view")} 
             onclick={callbacks.showBuilder.fcn} 
-            borderless
+            ghost
+            tight
         />
-        <IconButton 
+        <Button
             icon="/icons/btn-coder.svg" 
-            label={translate("Coder view")} 
+            tooltip={translate("Coder view")} 
             onclick={callbacks.showCoder.fcn} 
-            borderless
+            ghost
+            tight
         />
         {#if electron}
-            <IconButton 
+            <Button
                 icon="/icons/btn-runner.svg" 
-                label={translate("Runner view")} 
+                tooltip={translate("Runner view")} 
                 onclick={callbacks.showRunner.fcn} 
-                borderless
                 disabled
+                ghost
+                tight
             />
         {/if}
     </RibbonSection>

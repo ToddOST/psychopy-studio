@@ -27,7 +27,7 @@
         }}
         disabled={current.inserting}
         horizontal
-    ></Button>
+    />
     
     <!-- menu for adding a Routine -->
     <Menu 

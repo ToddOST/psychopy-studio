@@ -1,6 +1,6 @@
 <script>
     import { python } from "$lib/globals.svelte.js";
-    import { CompactButton } from "$lib/utils/buttons";
+    import { Button } from "$lib/utils/buttons";
     import { CodeOutput, CodeInput } from "$lib/utils/code";
     import { translate } from "$lib/translation";
 
@@ -25,10 +25,11 @@
             bind:value={output.content}
         >
             {#snippet ctrls()}
-                <CompactButton
+                <Button
                     icon="/icons/btn-clear.svg"
                     onclick={evt => output.content = ""}
                     tooltip={translate("Clear output")}
+                    small
                 />
             {/snippet}
         </CodeOutput>

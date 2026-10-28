@@ -1,6 +1,6 @@
 <script>
     import SingleLineCtrl from "./SingleLineCtrl.svelte";
-    import { Button, CompactButton } from "$lib/utils/buttons";
+    import { Button } from "$lib/utils/buttons";
     import { mimeTypesFromParam } from "./utils.svelte";
     import { browseFileOpen } from "$lib/utils/files.js";
     import { getContext } from "svelte";
@@ -56,9 +56,10 @@
     {@attach element => param.registerValidator("file", validateFile, 5)}
     {...attachments}
 />
-<CompactButton 
+<Button
     icon="/icons/btn-open.svg"
     tooltip="Browse for file..."
     onclick={getFile}
     disabled={disabled}
+    small
 />
