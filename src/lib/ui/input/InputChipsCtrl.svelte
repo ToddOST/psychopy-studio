@@ -42,7 +42,10 @@
         list="{id}-options"
         aria-labelledby={labeller}
         onkeypress={evt => {
-            if (evt.key === "Enter") {
+                // don't add empty chips
+                if (!current?.trim()) {
+                    return
+                }
                 // listify value if needed
                 if (value === undefined) {
                     value = []
