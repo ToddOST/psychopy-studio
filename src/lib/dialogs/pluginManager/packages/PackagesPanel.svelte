@@ -18,8 +18,10 @@
         }
     })
 
-    // keep track of search term so we can do some manual searching via url
-    let searchTerm = $state.raw("");
+    // keep track of search term
+    let params = $state({
+        searchTerm: ""
+    });
 
     function checkPyPi(term) {
         let promise = Promise.withResolvers()
@@ -34,6 +36,7 @@
 </script>
 
 <ListDetail
+    bind:params={params}
     filter={(params, data) => data.name.toLowerCase().includes(params.searchTerm.toLowerCase()) || params.searchTerm === ""}
 >
     {#snippet ctrls(params)}
@@ -70,10 +73,10 @@
         label={translate("Not installed")}
         open
     >
-        {#if searchTerm && !Object.entries(installed).some(
-            ([key, val]) => val && key.toLowerCase() === searchTerm.toLowerCase()
+        {#if params.searchTerm && !Object.entries(installed).some(
+            ([key, val]) => val && key.toLowerCase() === params.searchTerm.toLowerCase()
         )}
-            {#await checkPyPi(searchTerm).then(resp => resp).catch(err => undefined)}
+            {#await checkPyPi(params.searchTerm).then(resp => resp).catch(err => undefined)}
                 {translate("Searching PyPi...")}
             {:then profile}
                 {#if profile?.info?.name}
