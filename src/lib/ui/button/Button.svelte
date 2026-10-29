@@ -55,8 +55,8 @@
         error: false
     })
 
-    // name to use when referring to this button, falling back to tooltip if there is no label
-    let name = $derived(label ?? tooltip)
+    // name to use when referring to this button, falling back to tooltip if there is no label (or if label is a snippet, as it can't be used as text)
+    let name = $derived(typeof label === "string" ? label : tooltip)
 
     // resolve aliases for orientation to their full name
     let layout = $derived({
@@ -167,7 +167,7 @@
     <!-- error dialog -->
     <MessageDialog
         bind:shown={show.error}
-        title={translate("Error in '{}'").replace("{}", name)}
+        title={name ? translate("Error in '{}'").replace("{}", name) : translate("Error")}
         buttons={{
             OK: evt => awaiting = Promise.resolve(false)
         }}
