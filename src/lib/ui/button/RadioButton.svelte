@@ -4,6 +4,8 @@
     let {
         selection=$bindable(),
         value,
+        /** @prop @type {boolean} Stretch button to fit its container? */
+        stretch=true,
         ...props
     } = $props();
 </script>
@@ -17,5 +19,6 @@
             }
         }
     }
+    stretch={stretch}
     {...props}
 />
