@@ -259,6 +259,11 @@
     button.stretch {
         width: auto;
     }
+    button.stretch .label {
+        flex-shrink: 1;
+        text-align: left;
+    }
+
 
     /* Ghost */
     button.ghost {
