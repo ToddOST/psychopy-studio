@@ -8,7 +8,7 @@
     let {
         /** @prop @type {string} Label for this button */
         label=undefined,
-        /** @prop @type {string|undefined} Path to icon for this button, if any */
+        /** @prop @type {string|import("svelte").Snippet|undefined} Path to icon for this button, or a snippet to render in its place, if any */
         icon=undefined,
         /** @prop @type {(evt: PointerEvent) => undefined} Function to call when this button is pressed */
         onclick,
@@ -40,6 +40,8 @@
         ghost=false,
         /** @prop @type {boolean} Style this button as though it's pressed in (mostly just for ToggleButton) */
         depressed=false,
+        /** @prop @type {"left"|"right"|"top"|"bottom"|undefined} Side(s) of this button which are flush against another element, to remove the rounded corners on that side */
+        flush=undefined,
         /** @prop @type {boolean} Are we awaiting execution of this button? */
         awaiting=$bindable(),
         /** @prop @type {function|undefined} If action is cancellable, supply a function to cancel it */
@@ -90,6 +92,10 @@
         class:primary
         class:affirmative
         class:negative
+        class:flush-left={flush == "left"}
+        class:flush-right={flush == "right"}
+        class:flush-top={flush == "top"}
+        class:flush-bottom={flush == "bottom"}
         onmouseenter={() => {if (tooltip) {show.tooltip = true}}}
         onmouseleave={() => {if (tooltip) {show.tooltip = false}}}
         onfocusin={() => {if (tooltip) {show.tooltip = true}}}
@@ -108,30 +114,38 @@
                     awaiting: name + (cancel ? ` (${translate("cancel")})` : ""),
                     // if error, error icon
                     error: translate("Failed, click to show error")
-                }[status]}            
+                }[status]}
             </Tooltip>
         {/if}
 
         {#if icon}
             <div class=icon>
-                <Icon 
-                    src={{
-                        // if completed/not started, regular icon
-                        ready: icon,
-                        // if awaiting, ... icon and cancel icon if hovered
-                        awaiting: show.tooltip && cancel ? "/icons/sym-cancel.svg" : "/icons/sym-pending.svg",
-                        // if error, error icon
-                        error: "/icons/sym-error.svg"
-                    }[status]}
-                />
+                {#if typeof icon === "function"}
+                    {@render icon(status)}
+                {:else}
+                    <Icon
+                        src={{
+                            // if completed/not started, regular icon
+                            ready: icon,
+                            // if awaiting, ... icon and cancel icon if hovered
+                            awaiting: show.tooltip && cancel ? "/icons/sym-cancel.svg" : "/icons/sym-pending.svg",
+                            // if error, error icon
+                            error: "/icons/sym-error.svg"
+                        }[status]}
+                    />
+                {/if}
             </div>
         {/if}
         {#if label}
-            <span
+            <div
                 class=label
             >
-                {label}
-            </span>
+                {#if typeof label === "function"}
+                    {@render label()}
+                {:else}
+                    {label}
+                {/if}
+            </div>
         {/if}
     </button>
 {/snippet}
@@ -190,8 +204,12 @@
         box-shadow: 
             inset 1px 1px 10px rgba(0, 0, 0, 0.05)
         ;
+        z-index: 2;
     }
     button .icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         flex-shrink: 0;
     }
     button .label {
@@ -271,6 +289,24 @@
         box-shadow:
             inset 1px 1px 5px rgba(0, 0, 0, 0.15)
         ;
+    }
+
+    /* Flush */
+    button.flush-left {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+    button.flush-right {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    button.flush-top {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+    button.flush-bottom {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
     }
 
     /* Primary */
