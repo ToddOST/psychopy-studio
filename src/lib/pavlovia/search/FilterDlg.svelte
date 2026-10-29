@@ -1,7 +1,7 @@
 <script>
     import { Dialog } from "$lib/ui/dialog";
     import { translate } from "$lib/translation";
-    import { Labeller } from "$lib/ui/input";
+    import { Field } from "$lib/ui/input";
 
     let {
         /** @prop @type {object} Search filters (as used by SearchProjects) to edit */
@@ -29,12 +29,12 @@
 >
     {#if draft}
         <div class=container>
-            <Labeller
+            <Field
                 label={translate("Author")}
                 tooltip={translate("Only include projects by a specific user or group")}
             >
                 <input bind:value={draft.designer} />
-            </Labeller>
+            </Field>
         </div>
     {/if}
 </Dialog>

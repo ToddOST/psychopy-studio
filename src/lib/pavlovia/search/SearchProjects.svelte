@@ -58,7 +58,6 @@
         }
         // limit to n results
         url.searchParams.set("limit", limit)
-        console.log(url.toString())
 
         return url
     })
