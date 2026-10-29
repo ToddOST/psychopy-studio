@@ -1,5 +1,6 @@
 <script>
     import { translate } from "$lib/translation"
+    import { untrack } from "svelte"
 
     let {
         value=$bindable(),
@@ -14,7 +15,7 @@
     // get unique ID from Svelte
     let id = $props.id()
     // this stores the current value of the text control
-    let current = $state.raw("")
+    let current = $state.raw(untrack(() => value) ?? "")
     // apply debounce period
     $effect(() => {
         // get the current value of the control before starting the debounce
