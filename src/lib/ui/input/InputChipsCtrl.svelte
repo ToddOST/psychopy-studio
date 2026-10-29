@@ -9,7 +9,7 @@
 
     let current = $state.raw();
 
-    let labeller = getContext("labeller")
+    let labeller = getContext("field")
 </script>
 
 <div class=container>
