@@ -204,7 +204,7 @@
         box-shadow: 
             inset 1px 1px 10px rgba(0, 0, 0, 0.05)
         ;
-        z-index: 2;
+        z-index: 1;
     }
     button .icon {
         display: flex;
