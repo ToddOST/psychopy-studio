@@ -6,6 +6,8 @@
     let {
         /** @prop @type {string[]|undefined} Array of chips, each chip being one entered string */
         value=$bindable(),
+        /** @prop @type {string} Key which separates items */
+        delimiter="Enter",
         /** @interface <option> elements to suggest in the input's datalist, receives the current value */
         options=undefined
     } = $props()
@@ -42,6 +44,7 @@
         list="{id}-options"
         aria-labelledby={labeller}
         onkeypress={evt => {
+            if (evt.key === delimiter) {
                 // don't add empty chips
                 if (!current?.trim()) {
                     return
