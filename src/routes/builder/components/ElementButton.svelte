@@ -62,16 +62,16 @@
 
 </script>
 
-{#if element instanceof Component}
-    <Button
-        label={titleCase(element.tag)}
-        icon={element.iconSVG}
-        disabled={!(current.routine instanceof Routine)}
-        onclick={newComponent}
-        vertical
-        large
-    />
+<Button
+    label={titleCase(element.tag)}
+    icon={element.iconSVG}
+    disabled={element instanceof Component && !(current.routine instanceof Routine)}
+    onclick={element instanceof Component ? newComponent : newRoutine}
+    vertical
+    large
+/>
 
+{#if element instanceof Component}
     <Dialog
         id=new-component
         title={translate("New {}").replace("{}", titleCase(element.tag))}
@@ -93,12 +93,4 @@
             element={dlgComponent}
         />
     </Dialog>
-{:else if element instanceof StandaloneRoutine}
-    <Button
-        label={titleCase(element.tag)}
-        icon={element.iconSVG}
-        onclick={newRoutine}
-        vertical
-        large
-    />
 {/if}
