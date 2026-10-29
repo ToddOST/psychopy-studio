@@ -4,10 +4,14 @@
     import { getContext } from "svelte";
 
     let {
-        value=$bindable()
+        /** @prop @type {string[]|undefined} Array of chips, each chip being one entered string */
+        value=$bindable(),
+        /** @interface <option> elements to suggest in the input's datalist, receives the current value */
+        options=undefined
     } = $props()
 
     let current = $state.raw();
+    let id = $props.id();
 
     let labeller = getContext("field")
 </script>
@@ -35,6 +39,7 @@
     </div>
     <input 
         bind:value={current}
+        list="{id}-options"
         aria-labelledby={labeller}
         onkeypress={evt => {
             if (evt.key === "Enter") {
@@ -49,6 +54,9 @@
             }
         }}
     >
+    <datalist id="{id}-options">
+        {@render options?.(value)}
+    </datalist>
 </div>
 
 <style>
