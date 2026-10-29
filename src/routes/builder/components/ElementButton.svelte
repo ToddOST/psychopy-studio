@@ -64,6 +64,7 @@
 
 <Button
     label={titleCase(element.tag)}
+    tooltip={element.tooltip}
     icon={element.iconSVG}
     disabled={element instanceof Component && !(current.routine instanceof Routine)}
     onclick={element instanceof Component ? newComponent : newRoutine}

@@ -390,6 +390,8 @@ export class HasParams {
         this.iconSVG = template.iconSVG || template.iconFile;
         // set plugin
         this.plugin = template.plugin;
+        // set tooltip
+        this.tooltip = template.tooltip;
         // set help link
         this.helpLink = template.helpLink;
         // set legacy params
