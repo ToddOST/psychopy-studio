@@ -47,6 +47,23 @@
         }
     })
 
+    // can the dialog be cancelled by the user right now?
+    let cancellable = $derived(
+        closable && !context.buttons.CANCEL?.isDisabled()
+    )
+
+    function cancel(evt) {
+        if (!cancellable) {
+            return
+        }
+        if (context.buttons.CANCEL) {
+            // cancel button closes the dialog itself
+            context.buttons.CANCEL.onclick(evt)
+        } else {
+            shown = false;
+        }
+    }
+
     // update shown state on dialog close
     onMount(
         evt => handle.addEventListener("close", evt => shown = false)
@@ -58,23 +75,23 @@
     id={id} 
     bind:this={handle}
     aria-labelledby={title}
+    onkeydown={evt => {
+        // escape should behave like the close button, rather than closing natively
+        if (evt.key === "Escape") {
+            evt.preventDefault();
+            cancel(evt);
+        }
+    }}
 >
     {#if shown}
         <div class="title">
             <label for={id}>{title}</label>
             <div class=gap></div>
             <div class=title-btns>
-                {#if closable}
-                    <button 
+                {#if cancellable}
+                    <button
                         id=close
-                        onclick={(evt) => {
-                            if (context.buttons.CANCEL) {
-                                // cancel button closes the dialog itself
-                                context.buttons.CANCEL.onclick(evt)
-                            } else {
-                                shown = false;
-                            }
-                        }}
+                        onclick={cancel}
                         aria-label={translate("Close")}
                     >
                         <Icon 
