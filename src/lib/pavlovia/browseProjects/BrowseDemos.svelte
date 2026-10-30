@@ -1,6 +1,7 @@
 <script>
     import ProjectPanel from "../ProjectPanel.svelte";
     import { ListDetail, ListDetailItem, ListDetailCategory } from "$lib/ui/listdetail";
+    import { SearchCtrl } from "$lib/ui/input";
     import { translate } from "$lib/translation";
 
     let {
@@ -33,9 +34,15 @@
 </script>
 
 <ListDetail
-    search={(term, data) => data.name.includes(term || "")}
-    bind:searchTerm={searchTerm}
+    filter={(params, data) => data.name.includes(searchTerm || "")}
 >
+    {#snippet ctrls(params)}
+        <SearchCtrl 
+            bind:value={searchTerm}
+            placeholder={translate("Search demos...")}
+        />
+    {/snippet}
+
     {#await requestDemos}
         {translate(
             "Loading demos..."

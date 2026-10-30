@@ -1,6 +1,7 @@
 <script>
     import PackageItem from "./PackageItem.svelte";
     import { ListDetail, ListDetailCategory, ListDetailItem } from "$lib/ui/listdetail";
+    import { SearchCtrl } from "$lib/ui/input";
     import { python } from "$lib/globals.svelte";
     import { translate } from "$lib/translation"
 
@@ -17,8 +18,10 @@
         }
     })
 
-    // keep track of search term so we can do some manual searching via url
-    let searchTerm = $state.raw("");
+    // keep track of search term
+    let params = $state({
+        searchTerm: ""
+    });
 
     function checkPyPi(term) {
         let promise = Promise.withResolvers()
@@ -33,9 +36,17 @@
 </script>
 
 <ListDetail
-    search={(term, data) => data.name.toLowerCase().includes(term.toLowerCase()) || term === ""}
-    bind:searchTerm={searchTerm}
+    bind:params={params}
+    filter={(params, data) => data.name.toLowerCase().includes(params.searchTerm.toLowerCase()) || params.searchTerm === ""}
 >
+    {#snippet ctrls(params)}
+        <SearchCtrl 
+            bind:value={params.searchTerm}
+            placeholder={translate("Search packages...")}
+            debounce=500
+        />
+    {/snippet}
+
     <ListDetailCategory
         label={translate("Installed")}
         open
@@ -62,10 +73,10 @@
         label={translate("Not installed")}
         open
     >
-        {#if searchTerm && !Object.entries(installed).some(
-            ([key, val]) => val && key.toLowerCase() === searchTerm.toLowerCase()
+        {#if params.searchTerm && !Object.entries(installed).some(
+            ([key, val]) => val && key.toLowerCase() === params.searchTerm.toLowerCase()
         )}
-            {#await checkPyPi(searchTerm).then(resp => resp).catch(err => undefined)}
+            {#await checkPyPi(params.searchTerm).then(resp => resp).catch(err => undefined)}
                 {translate("Searching PyPi...")}
             {:then profile}
                 {#if profile?.info?.name}
