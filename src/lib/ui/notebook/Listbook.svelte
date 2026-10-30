@@ -52,11 +52,12 @@
     .listbook {
         display: grid;
         grid-template-columns: [tabs] min-content [page] auto;
+        grid-template-rows: minmax(0, 1fr);
         gap: 0;
         justify-items: stretch;
         align-items: start;
-        margin: auto;
-        height: 100%;
+        flex-grow: 1;
+        min-height: 0;
     }
 
     .listbook-tabs {
@@ -72,6 +73,8 @@
 
     .listbook-page {
         position: relative;
+        display: flex;
+        flex-direction: column;
         height: auto;
         overflow-y: auto;
         height: 100%;

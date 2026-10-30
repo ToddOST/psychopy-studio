@@ -61,12 +61,12 @@
 <style>
     .notebook {
         display: grid;
-        grid-template-rows: [tabs] min-content [page] auto;
+        grid-template-rows: [tabs] min-content [page] minmax(0, 1fr);
         gap: 0;
         justify-items: start;
         align-items: stretch;
-        margin: auto;
-        height: 100%;
+        flex-grow: 1;
+        min-height: 0;
         width: 100%;
     }
 
@@ -83,6 +83,8 @@
 
     .notebook-page {
         position: relative;
+        display: flex;
+        flex-direction: column;
         height: auto;
         overflow-y: auto;
         width: 100%;

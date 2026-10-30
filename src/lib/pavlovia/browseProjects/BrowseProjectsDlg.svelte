@@ -15,11 +15,21 @@
     bind:shown={shown}
     bind:awaiting={awaiting}
 >
-    <Notebook>
-        <NotebookPage
-            label="Demos"
-        >
-            <BrowseDemos />
-        </NotebookPage>
-    </Notebook>
+    <div class=container>
+        <Notebook>
+            <NotebookPage
+                label="Demos"
+            >
+                <BrowseDemos />
+            </NotebookPage>
+        </Notebook>
+    </div>
 </Dialog>
+
+<style>
+    .container {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+</style>

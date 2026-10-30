@@ -190,7 +190,7 @@
     .buttons {
         display: flex;
         flex-direction: row;
-        gap: 1rem;
+        gap: .5rem;
         padding: 1rem;
         padding-bottom: 2rem;
     }

@@ -167,6 +167,8 @@
 
 <style>
     .content {
+        display: flex;
+        flex-direction: column;
         padding: 1rem;
         min-width: 35rem;
         height: 100%;
