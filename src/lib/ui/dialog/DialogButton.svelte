@@ -18,16 +18,20 @@
     let dialog = getContext("dialog")
 
     // augment onclick according to role
-    let handler = $derived(evt => {
+    function handler(evt) {
         // handle when HELP button supplies onclick as a string
         if (role === "HELP" && typeof onclick === "string") {
             window.open(onclick, '_blank');
             return
         }
-        onclick?.(evt);
-        // close dialog if needed
-        if (["OK", "CANCEL", "YES", "NO"].includes(role)) {
-            dialog.shown = false;
+        try {
+            // return result so Button can handle promises
+            return onclick?.(evt);
+        } finally {
+            // close dialog if needed (even if onclick errored)
+            if (["OK", "CANCEL", "YES", "NO"].includes(role)) {
+                dialog.shown = false;
+            }
         }
     })
 
