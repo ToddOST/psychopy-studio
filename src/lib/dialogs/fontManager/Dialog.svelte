@@ -1,5 +1,5 @@
 <script>
-    import { Dialog } from "$lib/ui/dialog";
+    import { Dialog, DialogButton } from "$lib/ui/dialog";
     import { Notebook, NotebookPage } from "$lib/ui/notebook";
     import { Button, RadioButton } from "$lib/ui/button";
     import { FontManager } from "./manager.svelte.js";
@@ -18,6 +18,9 @@
 
     // restore value for this dialog's value (set on open/apply/ok)
     let restore = $state.snapshot(value);
+    function apply(evt) {
+        restore = $state.snapshot(value);
+    }
     // search term
     let searchTerm = $state.raw("")
     // current tab
@@ -28,13 +31,7 @@
 <Dialog
     id=font-manager
     title={translate("Font Manager")}
-    onopen={evt => restore = $state.snapshot(value)}
-    buttons={{
-        OK: evt => restore = $state.snapshot(value),
-        APPLY: evt => restore = $state.snapshot(value),
-        CANCEL: evt => value = restore
-    }}
-    buttonsDisabled={buttonsDisabled}
+    onopen={apply}
     bind:shown={shown}
 >
     <div class=page>
@@ -81,6 +78,22 @@
             {/each}
         </Notebook>
     </div>
+    {#snippet buttons()}
+        <DialogButton
+            role=OK
+            onclick={apply}
+            disabled={buttonsDisabled.OK}
+        />
+        <DialogButton
+            role=APPLY
+            onclick={apply}
+            disabled={buttonsDisabled.APPLY}
+        />
+        <DialogButton
+            role=CANCEL
+            onclick={evt => value = restore}
+        />
+    {/snippet}
 </Dialog>
 
 <style>

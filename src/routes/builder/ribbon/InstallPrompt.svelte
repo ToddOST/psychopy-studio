@@ -26,9 +26,7 @@
         <MessageDialog
             id=install-prompt
             bind:shown={shown}
-            buttons={{
-                CANCEL: (evt) => {},
-            }}
+            buttons={["CANCEL"]}
         >
             {translate("Installing PsychoPy {}...").replace("{}", current.experiment.settings?.params['Use version']?.val)}
         </MessageDialog>

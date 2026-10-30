@@ -1,5 +1,5 @@
 <script>
-    import { Dialog } from "$lib/ui/dialog";
+    import { Dialog, DialogButton } from "$lib/ui/dialog";
     import { prefs } from "$lib/preferences.svelte.js";
 
     let selected = $state.raw("user")
@@ -7,12 +7,6 @@
 
 <Dialog
     title="Environment location..."
-    buttons={{
-        OK: evt => {
-            prefs.params.environmentsFolder.val = $state.snapshot(selected);
-            prefs.save()
-        }
-    }}
     closable={false}
     shown
 >
@@ -65,6 +59,15 @@
             </button>
         </div>
     </div>
+    {#snippet buttons()}
+        <DialogButton
+            role=OK
+            onclick={evt => {
+                prefs.params.environmentsFolder.val = $state.snapshot(selected);
+                prefs.save()
+            }}
+        />
+    {/snippet}
 </Dialog>
 
 <style>

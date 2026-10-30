@@ -1,25 +1,15 @@
 <script>
-    import { Button } from "$lib/ui/button";
+    import DialogButton from "./DialogButton.svelte";
     import { Icon } from "$lib/ui/icon";
-    import { onMount, untrack } from "svelte";
+    import { onMount, setContext, untrack } from "svelte";
     import { translate } from "$lib/translation";
 
     let {
         id,
         /** @prop @type {string} Text to display in the title bar of this dialog */
         title="",
-        /** @prop @type {OK: function|undefined, APPLY: function|undefined, CANCEL: function|undefined, HELP: string|undefined} Standard dialog buttons to display, with additional callback functions (or navigation link, in the case of HELP) */
-        buttons={
-            OK: undefined,
-            APPLY: undefined,
-            YES: undefined,
-            NO: undefined,
-            CANCEL: undefined,
-            HELP: undefined,
-            EXTRA: [],
-        },
-        /** @bindable State controlling whether each button is disabled */
-        buttonsDisabled={},
+        /** @prop @type {import("svelte").Snippet|Array<"OK"|"APPLY"|"CANCEL"|"YES"|"NO">|undefined} DialogButton components to display (positioned according to their role), or a list of roles to create default buttons for */
+        buttons=undefined,
         /** @bindable @type {Boolean} State dictating whether this dialog is shown */
         shown=$bindable(),
         /** @prop @type {Function} Function to execute when this dialog is opened */
@@ -36,6 +26,17 @@
 
     let handle;
 
+    // pass context to children (namely buttons)
+    let registeredButtons = $state({
+        OTHER: []
+    })
+    let context = {
+        get shown() { return shown },
+        set shown(value) { shown = value },
+        buttons: registeredButtons
+    }
+    setContext("dialog", context)
+
     $effect(() => {
         if (shown) {
             untrack(() => onopen())
@@ -45,6 +46,23 @@
             handle.close()
         }
     })
+
+    // can the dialog be cancelled by the user right now?
+    let cancellable = $derived(
+        closable && !context.buttons.CANCEL?.isDisabled()
+    )
+
+    function cancel(evt) {
+        if (!cancellable) {
+            return
+        }
+        if (context.buttons.CANCEL) {
+            // cancel button closes the dialog itself
+            context.buttons.CANCEL.onclick(evt)
+        } else {
+            shown = false;
+        }
+    }
 
     // update shown state on dialog close
     onMount(
@@ -57,21 +75,23 @@
     id={id} 
     bind:this={handle}
     aria-labelledby={title}
+    onkeydown={evt => {
+        // escape should behave like the close button, unless already handled (e.g. by a nested dialog)
+        if (evt.key === "Escape" && !evt.defaultPrevented && !evt.isComposing) {
+            evt.preventDefault();
+            cancel(evt);
+        }
+    }}
 >
     {#if shown}
         <div class="title">
             <label for={id}>{title}</label>
             <div class=gap></div>
             <div class=title-btns>
-                {#if closable}
-                    <button 
+                {#if cancellable}
+                    <button
                         id=close
-                        onclick={(evt) => {
-                            shown = false;
-                            if (buttons.CANCEL) {
-                                buttons.CANCEL(evt)
-                            }
-                        }}
+                        onclick={cancel}
                         aria-label={translate("Close")}
                     >
                         <Icon 
@@ -89,87 +109,24 @@
             {@render children?.()}
         </div>
         <div class="buttons">
-            <div class="btn-array extra">
-                {#if buttons.HELP}
-                    <Button 
-                        label={translate("Help")}
-                        onclick={() => {
-                            window.open(buttons.HELP, '_blank');
-                        }} 
-                        horizontal
-                    />
-                {/if}
-            </div>
+            {@render context.buttons.HELP?.snippet()}
             <div class=gap></div>
-            <div class="btn-array standard">
-                {#if buttons.YES}
-                <Button 
-                    label={translate("Yes")}
-                    onclick={(evt) => {
-                        buttons['YES'](evt);
-                        shown = false;
-                    }} 
-                    affirmative
-                    horizontal
-                    disabled={buttonsDisabled && buttonsDisabled['YES']}
-                />
-                {/if}
-                {#if buttons.NO}
-                <Button 
-                    label={translate("No")}
-                    onclick={(evt) => {
-                        buttons['NO'](evt);
-                        shown = false;
-                    }} 
-                    horizontal
-                    negative
-                    disabled={buttonsDisabled && buttonsDisabled['NO']}
-                />
-                {/if}
-                {#if buttons.OK}
-                <Button 
-                    label={translate("OK")}
-                    onclick={(evt) => {
-                        buttons['OK'](evt);
-                        shown = false;
-                    }} 
-                    primary
-                    horizontal
-                    disabled={buttonsDisabled && buttonsDisabled['OK']}
-                />
-                {/if}
-                {#if buttons.APPLY}
-                <Button 
-                    label={translate("Apply")}
-                    onclick={(evt) => {
-                        buttons['APPLY'](evt); 
-                    }} 
-                    horizontal
-                    disabled={buttonsDisabled && buttonsDisabled['APPLY']}
-                />
-                {/if}
-                {#if buttons.EXTRA}
-                    {#each Object.entries(buttons['EXTRA']) as [label, onclick]}
-                        <Button
-                            label={label}
-                            onclick={onclick}
-                            horizontal
-                            disabled={buttonsDisabled && buttonsDisabled['EXTRA'] && buttonsDisabled['EXTRA'][label]}
-                        />
-                    {/each}
-                {/if}
-                {#if buttons.CANCEL}
-                <Button 
-                    label={translate("Cancel")}
-                    onclick={(evt) => {
-                        buttons['CANCEL'](evt); 
-                        shown = false;
-                    }} 
-                    horizontal
-                    disabled={buttonsDisabled && buttonsDisabled['CANCEL']}
-                />
-                {/if}
-            </div>
+            {#if Array.isArray(buttons)}
+                <!-- if given an array of roles, create default buttons for those roles -->
+                {#each buttons as role}
+                    <DialogButton role={role} />
+                {/each}
+            {:else}
+                {@render buttons?.()}
+            {/if}
+            {@render context.buttons.YES?.snippet()}
+            {@render context.buttons.NO?.snippet()}
+            {@render context.buttons.OK?.snippet()}
+            {@render context.buttons.APPLY?.snippet()}
+            {#each context.buttons.OTHER as otherButton}
+                {@render otherButton.snippet()}
+            {/each}
+            {@render context.buttons.CANCEL?.snippet()}
         </div>
     {/if}
 </dialog>
@@ -231,14 +188,13 @@
     }
 
     .buttons {
-        display: grid;
-        grid-template-columns: [extra] min-content [gap] auto [standard] min-content;
-        padding: 1rem;
-        padding-bottom: 2rem;
-    }
-    .btn-array {
         display: flex;
         flex-direction: row;
         gap: 1rem;
+        padding: 1rem;
+        padding-bottom: 2rem;
+    }
+    .gap {
+        flex-grow: 1;
     }
 </style>

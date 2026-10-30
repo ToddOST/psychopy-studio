@@ -1,5 +1,5 @@
 <script>
-    import { Dialog } from "$lib/ui/dialog";
+    import { Dialog, DialogButton } from "$lib/ui/dialog";
     import { Notebook, NotebookPage } from "$lib/ui/notebook";
     import NamedColor from "./NamedColor.svelte";
     import HexColor from "./HexColor.svelte";
@@ -27,30 +27,19 @@
         color: $state.snapshot(value),
         space: $state.snapshot(space)
     };
+
+    function apply(evt) {
+        restore = {
+            color: $state.snapshot(value),
+            space: $state.snapshot(space)
+        }
+    }
 </script>
 
 <Dialog
     id=color-picker
     title={translate("Color Picker")}
-    onopen={evt => restore = {
-        color: $state.snapshot(value),
-        space: $state.snapshot(space)
-    }}
-    buttons={{
-        OK: evt => restore = {
-            color: $state.snapshot(value),
-            space: $state.snapshot(space)
-        },
-        APPLY: evt => restore = {
-            color: $state.snapshot(value),
-            space: $state.snapshot(space)
-        },
-        CANCEL: evt => {
-            value = restore.color;
-            space = restore.space;
-        }
-    }}
-    buttonsDisabled={buttonsDisabled}
+    onopen={apply}
     bind:shown={shown}
 >
     <div class=page>
@@ -83,6 +72,25 @@
             {/each}
         </Notebook>
     </div>
+    {#snippet buttons()}
+        <DialogButton
+            role=OK
+            onclick={apply}
+            disabled={buttonsDisabled.OK}
+        />
+        <DialogButton
+            role=APPLY
+            onclick={apply}
+            disabled={buttonsDisabled.APPLY}
+        />
+        <DialogButton
+            role=CANCEL
+            onclick={evt => {
+                value = restore.color;
+                space = restore.space;
+            }}
+        />
+    {/snippet}
 </Dialog>
 
 <style>

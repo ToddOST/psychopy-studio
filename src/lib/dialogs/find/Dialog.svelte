@@ -31,10 +31,8 @@
     id=find-in-experiment
     title={translate("Find in experiment...")}
     onopen={(evt) => searchTerm = ""}
-    buttons={{
-        OK: (evt) => {},
-    }}
     bind:shown={shown}
+    buttons={["OK"]}
 >
     <div class=container>
         <div

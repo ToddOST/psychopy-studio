@@ -15,7 +15,7 @@
         element={prefs}
         onapply={evt => prefs.save()}
         extraButtons={{
-            Reset: evt => prefs.reset()
+            [translate("Reset")]: evt => prefs.reset()
         }}
         bind:shown={shown}
     />

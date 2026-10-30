@@ -1,5 +1,5 @@
 <script>
-    import { Dialog, MessageDialog } from "$lib/ui/dialog";
+    import { Dialog, MessageDialog, DialogButton } from "$lib/ui/dialog";
     import { browseFileSave, writeFile } from "$lib/utils/files.js"
     import { Button } from "$lib/ui/button";
     import { Experiment } from "$lib/experiment";
@@ -82,10 +82,6 @@
 
 <Dialog
     title={translate("Submit bug report")}
-    buttons={{
-        OK: submit,
-        CANCEL: evt => {}
-    }}
     onopen={populate}
     bind:shown={shown}
     shrink
@@ -121,6 +117,13 @@
             </select>
         </div>
     </div>
+    {#snippet buttons()}
+        <DialogButton
+            role=OK
+            onclick={submit}
+        />
+        <DialogButton role=CANCEL />
+    {/snippet}
 </Dialog>
 
 <MessageDialog

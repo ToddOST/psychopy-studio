@@ -1,5 +1,6 @@
 <script>
     import Dialog from '$lib/ui/dialog/Dialog.svelte';
+    import { DialogButton } from '$lib/ui/dialog';
     import { Menu, MenuItem } from "$lib/ui/menu"
     import { ParamsNotebook } from '$lib/ui/paramCtrls/index.js';
     import { FlowLoop } from "$lib/experiment/flow.svelte.js";
@@ -137,12 +138,6 @@
     title={element.name}
     bind:shown={showDialog} 
     onopen={() => element.initiator.restore.set()}
-    buttons={{
-        OK: (evt) => {}, 
-        APPLY: (evt) => element.initiator.restore.set(),
-        CANCEL: (evt) => element.initiator.restore.apply(), 
-    }}
-    buttonsDisabled={btnsDisabled}
 >
     <ParamsNotebook 
         element={
@@ -150,6 +145,21 @@
         } 
         bind:valid={valid}
     />
+    {#snippet buttons()}
+        <DialogButton
+            role=OK
+            disabled={btnsDisabled.OK}
+        />
+        <DialogButton
+            role=APPLY
+            onclick={(evt) => element.initiator.restore.set()}
+            disabled={btnsDisabled.APPLY}
+        />
+        <DialogButton
+            role=CANCEL
+            onclick={(evt) => element.initiator.restore.apply()}
+        />
+    {/snippet}
 </Dialog>
 
 <style>

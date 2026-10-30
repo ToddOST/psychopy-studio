@@ -4,6 +4,7 @@
     import { getContext } from "svelte";
     import { git } from "$lib/globals.svelte";
     import Dialog from "$lib/ui/dialog/Dialog.svelte";
+    import { DialogButton } from "$lib/ui/dialog";
     import { translate } from "$lib/translation";
 
     let {
@@ -45,13 +46,6 @@
 <Dialog
     id=browse-surveys
     title={translate("Pavlovia surveys")}
-    buttons={{
-        OK: (evt) => param.val = selected.survey.surveyId,
-        CANCEL: (evt) => {}
-    }}
-    buttonsDisabled={{
-        OK: selected.survey === undefined
-    }}
     bind:shown={showSurveysDlg}
 >
     <div class=container>
@@ -80,6 +74,14 @@
             {/await}
         </div>
     </div>
+    {#snippet buttons()}
+        <DialogButton
+            role=OK
+            onclick={(evt) => param.val = selected.survey.surveyId}
+            disabled={selected.survey === undefined}
+        />
+        <DialogButton role=CANCEL />
+    {/snippet}
 </Dialog>
 
 <style>

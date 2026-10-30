@@ -1,5 +1,5 @@
 <script>
-    import { Dialog } from "$lib/ui/dialog";
+    import { Dialog, DialogButton } from "$lib/ui/dialog";
     import DeviceDetails from "./DeviceDetails.svelte";
     import { ButtonTab, Listbook, NotebookPage } from "$lib/ui/notebook";
     import { Device } from "$lib/experiment";
@@ -163,32 +163,19 @@
             }
         }
     }
+
+    function apply(evt) {
+        // set restore point
+        restore.set();
+        // save JSON
+        saveDevices();
+    }
 </script>
 
 
 <Dialog
     id="device-manager"
     title={translate("Device manager")}
-    buttons={{
-        OK: evt => {
-            // set restore point
-            restore.set();
-            // save JSON
-            saveDevices();
-        },
-        APPLY: evt => {
-            // set restore point
-            restore.set();
-            // save JSON
-            saveDevices();
-        },
-        EXTRA: {
-            Export: saveDevicesFile
-        },
-        CANCEL: restore.apply,
-        HELP: ""
-    }}
-    buttonsDisabled={btnsDisabled}
     onopen={restore.set}
     bind:shown={shown}
 >
@@ -243,6 +230,26 @@
             />
         </Listbook>
     </div>
+    {#snippet buttons()}
+        <DialogButton
+            role=OK
+            onclick={apply}
+            disabled={btnsDisabled.OK}
+        />
+        <DialogButton
+            role=APPLY
+            onclick={apply}
+            disabled={btnsDisabled.APPLY}
+        />
+        <DialogButton
+            label={translate("Export")}
+            onclick={saveDevicesFile}
+        />
+        <DialogButton
+            role=CANCEL
+            onclick={restore.apply}
+        />
+    {/snippet}
 </Dialog>
 
 <style>

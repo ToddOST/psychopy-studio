@@ -66,10 +66,8 @@
 
     <MessageDialog
         title={translate("Reminder...")}
-        buttons={{
-            OK: evt => {},
-        }}
         bind:shown={showPrompt}
+        buttons={["OK"]}
     >
         <p>{translate("Once you have created and saved your table, please remember to add it.")}</p>
     </MessageDialog>

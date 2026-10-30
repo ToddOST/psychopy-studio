@@ -1,6 +1,6 @@
 <script>
     import { MessageArray, Message } from "$lib/ui/message";
-    import { MessageDialog } from "$lib/ui/dialog";
+    import { MessageDialog, DialogButton } from "$lib/ui/dialog";
     import { CodeOutput } from "$lib/ui/code";
     import { python } from "$lib/globals.svelte.js";
     import { translate } from "$lib/translation";
@@ -39,14 +39,17 @@
             <MessageDialog
                 title={translate("Python error")}
                 bind:shown={errors[i].showDlg}
-                buttons={{
-                    OK: evt => errors[i].dismissed = true,
-                    CANCEL: evt => {}
-                }}
             >
                 <div class=output-container>
                     <CodeOutput value={errors[i].message} />
                 </div>
+                {#snippet buttons()}
+                    <DialogButton
+                        role=OK
+                        onclick={evt => errors[i].dismissed = true}
+                    />
+                    <DialogButton role=CANCEL />
+                {/snippet}
             </MessageDialog>
         {/if}
     {/each}

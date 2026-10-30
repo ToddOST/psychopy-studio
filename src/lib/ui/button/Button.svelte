@@ -2,7 +2,7 @@
     import Icon from "$lib/ui/icon/Icon.svelte";
     import Tooltip from "$lib/ui/tooltip/Tooltip.svelte";
     import { MessageArray, Message } from "$lib/ui/message";
-    import { MessageDialog } from "$lib/ui/dialog";
+    import { MessageDialog, DialogButton } from "$lib/ui/dialog";
     import { translate } from "$lib/translation";
 
     let {
@@ -168,11 +168,14 @@
     <MessageDialog
         bind:shown={show.error}
         title={name ? translate("Error in '{}'").replace("{}", name) : translate("Error")}
-        buttons={{
-            OK: evt => awaiting = Promise.resolve(false)
-        }}
     >
         {err.message}
+        {#snippet buttons()}
+            <DialogButton
+                role=OK
+                onclick={evt => awaiting = Promise.resolve(false)}
+            />
+        {/snippet}
     </MessageDialog>
 
 {/await}

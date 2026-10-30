@@ -2,6 +2,7 @@
     import { Routine } from "$lib/experiment"
     import { Menu, MenuItem } from '$lib/ui/menu';
     import Dialog from '$lib/ui/dialog/Dialog.svelte';
+    import { DialogButton } from '$lib/ui/dialog';
     import { ParamsNotebook } from '$lib/ui/paramCtrls/index.js';
     import { Button } from '$lib/ui/button';
     import { getContext } from "svelte";
@@ -73,31 +74,35 @@
         title={translate("New Routine")}
         bind:shown={showNewRoutineDialog} 
         onopen={() => current.inserting.settings.restore.set()}
-        buttons={{
-            OK: (evt) => {
-                // add to experiment
-                current.inserting.exp = current.experiment
-                current.experiment.routines[current.inserting.name] = current.inserting
-            }, 
-            CANCEL: (evt) => {
-                current.inserting.settings.restore.apply()
-                // stop inserting
-                current.inserting = undefined;
-            },  
-            HELP: "https://www.psychopy.org/builder/routines.html#routines",
-        }}
-        buttonsDisabled={{
-            OK: !Object.values(current.inserting.settings.params).every(
-                param => param.valid?.value
-            ),
-            APPLY: !Object.values(current.inserting.settings.params).every(
-                param => param.valid?.value
-            ),
-        }}
     >
         <ParamsNotebook 
             element={current.inserting.settings}
         />
+        {#snippet buttons()}
+            <DialogButton
+                role=OK
+                onclick={(evt) => {
+                    // add to experiment
+                    current.inserting.exp = current.experiment
+                    current.experiment.routines[current.inserting.name] = current.inserting
+                }}
+                disabled={!Object.values(current.inserting.settings.params).every(
+                    param => param.valid?.value
+                )}
+            />
+            <DialogButton
+                role=CANCEL
+                onclick={(evt) => {
+                    current.inserting.settings.restore.apply()
+                    // stop inserting
+                    current.inserting = undefined;
+                }}
+            />
+            <DialogButton
+                role=HELP
+                onclick="https://www.psychopy.org/builder/routines.html#routines"
+            />
+        {/snippet}
     </Dialog>
 {/if}
 

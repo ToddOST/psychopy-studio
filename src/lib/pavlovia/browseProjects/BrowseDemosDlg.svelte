@@ -14,11 +14,9 @@
 
 <Dialog
     title={translate("Browse demos")}
-    buttons={{
-        OK: evt => {}
-    }}
     bind:shown={shown}
     bind:awaiting={awaiting}
+    buttons={["OK"]}
 >
     <BrowseDemos 
         bind:selection={selection}

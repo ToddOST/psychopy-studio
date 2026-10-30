@@ -2,7 +2,7 @@
     import { Button } from "$lib/ui/button";
     import { Icon } from "$lib/ui/icon";
     import { MessageArray, Message } from "$lib/ui/message";
-    import { MessageDialog } from "$lib/ui/dialog";
+    import { MessageDialog, DialogButton } from "$lib/ui/dialog";
     import { CodeOutput } from "$lib/ui/code";
     import { marked } from "marked";
     import { status } from "./globals.svelte.js";
@@ -63,12 +63,6 @@
 
 <MessageDialog
     bind:shown={status.dlg.shown}
-    buttons={{
-        OK: evt => {}
-    }}
-    buttonsDisabled={{
-        OK: status.dlg.busy
-    }}
 >
     {@html marked(status.dlg.message || "")}
     <p>
@@ -97,6 +91,12 @@
             horizontal
         />
     {/await}
+    {#snippet buttons()}
+        <DialogButton
+            role=OK
+            disabled={status.dlg.busy}
+        />
+    {/snippet}
 </MessageDialog>
 
 <style>

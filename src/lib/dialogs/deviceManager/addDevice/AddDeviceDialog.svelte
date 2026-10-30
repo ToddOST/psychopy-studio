@@ -1,5 +1,5 @@
 <script>
-    import { Dialog } from "$lib/ui/dialog";
+    import { Dialog, DialogButton } from "$lib/ui/dialog";
     
     import { Button, PanelButton } from "$lib/ui/button";
     import { sanitizeImportString } from "$lib/utils/tools/imports.js";
@@ -45,15 +45,6 @@
             panelsOpen[key] = false;
         }
     }}
-    buttons={{
-        OK: (evt) => {
-            // populate
-            devices[param.val] = new Device(selection.backend.__name__, selection.device);
-            devices[param.val].params['name'].val = param.val;
-        },
-        CANCEL: (evt) => {}
-    }}
-    buttonsDisabled={disableBtns}
 >
     <div class=container>
         <ParamCtrl
@@ -135,6 +126,18 @@
             {/await}
         </div>
     </div>
+    {#snippet buttons()}
+        <DialogButton
+            role=OK
+            onclick={(evt) => {
+                // populate
+                devices[param.val] = new Device(selection.backend.__name__, selection.device);
+                devices[param.val].params['name'].val = param.val;
+            }}
+            disabled={disableBtns.OK}
+        />
+        <DialogButton role=CANCEL />
+    {/snippet}
 </Dialog>
 
 <style>
