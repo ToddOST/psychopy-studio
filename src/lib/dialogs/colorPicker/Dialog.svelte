@@ -39,10 +39,7 @@
 <Dialog
     id=color-picker
     title={translate("Color Picker")}
-    onopen={evt => restore = {
-        color: $state.snapshot(value),
-        space: $state.snapshot(space)
-    }}
+    onopen={apply}
     bind:shown={shown}
 >
     <div class=page>
