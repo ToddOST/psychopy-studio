@@ -62,6 +62,10 @@
                             // create blank Loop
                             current.inserting = new LoopInitiator(loopType)
                             current.inserting.exp = current.experiment;
+                            // make name valid
+                            if (current.inserting.params['name']) {
+                                current.inserting.params['name'].val = current.experiment.resolveNameConflict(current.inserting.name)
+                            }
                             // show dialog
                             showDialog = true
                         }}

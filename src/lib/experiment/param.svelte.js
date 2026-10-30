@@ -355,8 +355,10 @@ export class HasParams {
             this.restore.point = this.toJSON();
         },
         apply: () => {
-            // restore backup to clear changes
-            this.fromJSON(this.restore.point);
+            // restore backup to clear changes (if there is one, there won't be if set was called while invalid)
+            if (this.restore.point !== undefined) {
+                this.fromJSON(this.restore.point);
+            }
             // remove last entry from experiment history
             if (this.exp) {
                 this.exp.history.past.pop();
