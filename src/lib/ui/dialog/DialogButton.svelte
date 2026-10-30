@@ -25,8 +25,7 @@
             return
         }
         try {
-            // return result so Button can handle promises
-            return onclick?.(evt);
+            onclick?.(evt);
         } finally {
             // close dialog if needed (even if onclick errored)
             if (["OK", "CANCEL", "YES", "NO"].includes(role)) {
