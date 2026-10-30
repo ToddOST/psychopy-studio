@@ -79,6 +79,18 @@ export class Flow {
         this.flat.splice(index, 1);
     }
 
+    removeLoop(initiator) {
+        // get terminator now while it's still attached to initiator
+        let terminator = initiator.terminator;
+        // remove both initiator and terminator
+        for (let node of [initiator, terminator]) {
+            let index = this.flat.indexOf(node);
+            if (index >= 0) {
+                this.flat.splice(index, 1);
+            }
+        }
+    }
+
     relocateElement(element, toIndex, fromIndex=undefined) {
         // if not given, get element index (only reliable if element appears once in the flow)
         if (fromIndex === undefined) {

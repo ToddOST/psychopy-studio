@@ -28,18 +28,7 @@
         // update history
         current.experiment.history.update(`remove ${element.name}`);
         // remove from flow
-        if (current.experiment.flow.flat.includes(element.initiator)) {
-            current.experiment.flow.flat.splice(
-                current.experiment.flow.flat.indexOf(element.initiator), 
-                1
-            )
-        }
-        if (current.experiment.flow.flat.includes(element.terminator)) {
-            current.experiment.flow.flat.splice(
-                current.experiment.flow.flat.indexOf(element.terminator), 
-                1
-            )
-        }
+        current.experiment.flow.removeLoop(element.initiator);
     }
 
     let edgeHovered = $state({
