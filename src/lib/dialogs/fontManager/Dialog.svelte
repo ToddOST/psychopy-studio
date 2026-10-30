@@ -18,6 +18,9 @@
 
     // restore value for this dialog's value (set on open/apply/ok)
     let restore = $state.snapshot(value);
+    function apply(evt) {
+        restore = $state.snapshot(value);
+    }
     // search term
     let searchTerm = $state.raw("")
     // current tab
@@ -78,12 +81,12 @@
     {#snippet buttons()}
         <DialogButton
             role=OK
-            onclick={evt => restore = $state.snapshot(value)}
+            onclick={apply}
             disabled={buttonsDisabled.OK}
         />
         <DialogButton
             role=APPLY
-            onclick={evt => restore = $state.snapshot(value)}
+            onclick={apply}
             disabled={buttonsDisabled.APPLY}
         />
         <DialogButton

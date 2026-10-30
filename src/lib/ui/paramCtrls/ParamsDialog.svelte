@@ -28,6 +28,12 @@
         APPLY: !valid
     })
 
+    function apply(evt) {
+        element.trim();
+        element.restore.set();
+        onapply(evt);
+    }
+
 </script>
 
 
@@ -44,20 +50,12 @@
     {#snippet buttons()}
         <DialogButton
             role=OK
-            onclick={evt => {
-                element.trim();
-                element.restore.set();
-                onapply(evt);
-            }}
+            onclick={apply}
             disabled={btnsDisabled.OK}
         />
         <DialogButton
             role=APPLY
-            onclick={evt => {
-                element.trim();
-                element.restore.set();
-                onapply(evt);
-            }}
+            onclick={apply}
             disabled={btnsDisabled.APPLY}
         />
         {#each Object.entries(extraButtons) as [label, onclick]}

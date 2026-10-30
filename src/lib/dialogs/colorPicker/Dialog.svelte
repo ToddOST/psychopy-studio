@@ -27,6 +27,13 @@
         color: $state.snapshot(value),
         space: $state.snapshot(space)
     };
+
+    function apply(evt) {
+        restore = {
+            color: $state.snapshot(value),
+            space: $state.snapshot(space)
+        }
+    }
 </script>
 
 <Dialog
@@ -71,18 +78,12 @@
     {#snippet buttons()}
         <DialogButton
             role=OK
-            onclick={evt => restore = {
-                color: $state.snapshot(value),
-                space: $state.snapshot(space)
-            }}
+            onclick={apply}
             disabled={buttonsDisabled.OK}
         />
         <DialogButton
             role=APPLY
-            onclick={evt => restore = {
-                color: $state.snapshot(value),
-                space: $state.snapshot(space)
-            }}
+            onclick={apply}
             disabled={buttonsDisabled.APPLY}
         />
         <DialogButton

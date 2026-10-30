@@ -163,6 +163,13 @@
             }
         }
     }
+
+    function apply(evt) {
+        // set restore point
+        restore.set();
+        // save JSON
+        saveDevices();
+    }
 </script>
 
 
@@ -226,22 +233,12 @@
     {#snippet buttons()}
         <DialogButton
             role=OK
-            onclick={evt => {
-                // set restore point
-                restore.set();
-                // save JSON
-                saveDevices();
-            }}
+            onclick={apply}
             disabled={btnsDisabled.OK}
         />
         <DialogButton
             role=APPLY
-            onclick={evt => {
-                // set restore point
-                restore.set();
-                // save JSON
-                saveDevices();
-            }}
+            onclick={apply}
             disabled={btnsDisabled.APPLY}
         />
         <DialogButton
