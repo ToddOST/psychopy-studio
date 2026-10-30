@@ -33,12 +33,27 @@
     )
 
     let restore = {
-        set: () => Object.values(devices).forEach(
-            (value) => value.restore.set()
-        ),
-        apply: () => Object.values(devices).forEach(
-            (value) => value.restore.apply()
-        ),
+        devices: {},
+        set: () => {
+            // remember which devices exist, so removed ones can be put back
+            restore.devices = {...devices}
+            Object.values(devices).forEach(
+                (value) => value.restore.set()
+            )
+        },
+        apply: () => {
+            // remove any devices added since the restore point
+            for (let key of Object.keys(devices)) {
+                if (!(key in restore.devices)) {
+                    delete devices[key]
+                }
+            }
+            // put back any devices removed since the restore point
+            Object.assign(devices, restore.devices)
+            Object.values(devices).forEach(
+                (value) => value.restore.apply()
+            )
+        },
     }
 
     let btnsDisabled = $derived({
@@ -181,7 +196,7 @@
     bind:shown={shown}
 >
     <ListDetail>
-        {#each Object.entries(devices) as [key, device]}
+        {#each Object.entries(devices) as [key, device] (key)}
             <ListDetailItem
                 bind:selected={
                     () => currentDevice === device,
