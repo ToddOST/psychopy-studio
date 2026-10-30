@@ -76,8 +76,8 @@
     bind:this={handle}
     aria-labelledby={title}
     onkeydown={evt => {
-        // escape should behave like the close button, rather than closing natively
-        if (evt.key === "Escape") {
+        // escape should behave like the close button, unless already handled (e.g. by a nested dialog)
+        if (evt.key === "Escape" && !evt.defaultPrevented && !evt.isComposing) {
             evt.preventDefault();
             cancel(evt);
         }
@@ -113,7 +113,7 @@
             <div class=gap></div>
             {#if Array.isArray(buttons)}
                 <!-- if given an array of roles, create default buttons for those roles -->
-                {#each ["YES", "NO", "OK", "APPLY", "CANCEL"].filter(role => buttons.includes(role)) as role}
+                {#each buttons as role}
                     <DialogButton role={role} />
                 {/each}
             {:else}
