@@ -1,6 +1,6 @@
 <script>
     import { Button } from "$lib/ui/button";
-    import { getContext, onMount } from "svelte";
+    import { getContext, untrack } from "svelte";
     import { translate } from "$lib/translation";
 
     let {
@@ -33,26 +33,30 @@
                 dialog.shown = false;
             }
         }
-    })
+    }
 
-    // store own snippet and handler in parent's context
-    onMount(() => {
+    // store own snippet and handler in parent's context (re-registering if role changes)
+    $effect(() => {
+        let registeredRole = role;
         let entry = {
             snippet: button,
-            onclick: evt => handler(evt)
+            onclick: handler,
+            isDisabled: () => Boolean(props.disabled)
         }
-        if (role) {
-            // if button has a role, store it against that role
-            dialog.buttons[role] = entry
-        } else {
-            // otherwise, store it against OTHER
-            dialog.buttons.OTHER.push(entry)
-        }
+        untrack(() => {
+            if (registeredRole) {
+                // if button has a role, store it against that role
+                dialog.buttons[registeredRole] = entry
+            } else {
+                // otherwise, store it against OTHER
+                dialog.buttons.OTHER.push(entry)
+            }
+        })
         // remove from parent's context when unmounted (compare by snippet, as entry gets proxied)
         return () => {
-            if (role) {
-                if (dialog.buttons[role]?.snippet === button) {
-                    delete dialog.buttons[role]
+            if (registeredRole) {
+                if (dialog.buttons[registeredRole]?.snippet === button) {
+                    delete dialog.buttons[registeredRole]
                 }
             } else {
                 let i = dialog.buttons.OTHER.findIndex(other => other.snippet === button)
