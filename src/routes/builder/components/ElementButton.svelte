@@ -32,6 +32,10 @@
     function newComponent() {
         // create a new Component for the dialog
         dlgComponent = new Component(element.tag)
+        // make name valid
+        if (dlgComponent.params['name']) {
+            dlgComponent.params['name'].val = current.experiment.resolveNameConflict(dlgComponent.name)
+        }
         // show dialog
         showDialog = true
     }
