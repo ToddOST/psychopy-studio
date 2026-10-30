@@ -31,7 +31,7 @@
 <Dialog
     id=font-manager
     title={translate("Font Manager")}
-    onopen={evt => restore = $state.snapshot(value)}
+    onopen={apply}
     bind:shown={shown}
 >
     <div class=page>
