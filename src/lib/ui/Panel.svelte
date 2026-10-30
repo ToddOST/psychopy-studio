@@ -72,6 +72,8 @@
     }
     .panel .pnl-content {
         position: relative;
+        display: flex;
+        flex-direction: column;
         height: stretch;
         width: stretch;
         overflow-y: auto;
