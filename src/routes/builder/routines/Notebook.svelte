@@ -4,7 +4,7 @@
     import { StandaloneRoutine, Routine } from '$lib/experiment';
     import { Notebook, NotebookPage, ButtonTab } from '$lib/ui/notebook';
     import { getContext } from "svelte";
-    import { Dialog } from '$lib/ui/dialog';
+    import { Dialog, DialogButton } from '$lib/ui/dialog';
     import { ParamsNotebook } from '$lib/ui/paramCtrls';
     import { translate } from "$lib/translation";
     
@@ -78,25 +78,34 @@
         title="New Routine" 
         bind:shown={showNewRoutineDialog} 
         onopen={() => current.inserting.settings.restore.set()}
-        buttons={{
-            OK: (evt) => {
-                // add to experiment
-                current.inserting.exp = current.experiment
-                current.experiment.routines[current.inserting.name] = current.inserting
-            }, 
-            CANCEL: (evt) => {
-                current.inserting.settings.restore.apply()
-                // stop inserting
-                current.inserting = undefined;
-            },  
-            HELP: "https://www.psychopy.org/builder/routines.html#routines",
-        }}
-        buttonsDisabled={btnsDisabled}
     >
         <ParamsNotebook 
             bind:valid={valid}
             element={current.inserting.settings}
         ></ParamsNotebook>
+        {#snippet buttons()}
+            <DialogButton
+                role=OK
+                onclick={(evt) => {
+                    // add to experiment
+                    current.inserting.exp = current.experiment
+                    current.experiment.routines[current.inserting.name] = current.inserting
+                }}
+                disabled={btnsDisabled.OK}
+            />
+            <DialogButton
+                role=CANCEL
+                onclick={(evt) => {
+                    current.inserting.settings.restore.apply()
+                    // stop inserting
+                    current.inserting = undefined;
+                }}
+            />
+            <DialogButton
+                role=HELP
+                onclick="https://www.psychopy.org/builder/routines.html#routines"
+            />
+        {/snippet}
     </Dialog>
 {/if}
 <style>

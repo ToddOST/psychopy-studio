@@ -1,6 +1,6 @@
 <script>
     import { electron, git } from "$lib/globals.svelte";
-    import { MessageDialog } from "$lib/ui/dialog";
+    import { MessageDialog, DialogButton } from "$lib/ui/dialog";
     import { projectsLoaded, openProject, cloneProject, forkProject, downloadProject } from "./utils.svelte"
     import { Button } from "$lib/ui/button";
     import { parsePath } from "$lib/utils/files";
@@ -50,21 +50,27 @@
         />
         <MessageDialog
             title={translate("Fork project?")}
-            buttons={{
-                YES: evt => forkProject(
-                    project,
-                    $state.snapshot(current.user)
-                ),
-                NO: evt => cloneProject(
-                    project, 
-                    $state.snapshot(current.user)
-                )
-            }}
             bind:shown={show.forkPrompt}
         >
             {translate(
                 "This project belongs to {}, would you like to create a fork (copy) of it on your Pavlovia account?"
             ).replaceAll("{}", info.namespace.name)}
+            {#snippet buttons()}
+                <DialogButton
+                    role=YES
+                    onclick={evt => forkProject(
+                        project,
+                        $state.snapshot(current.user)
+                    )}
+                />
+                <DialogButton
+                    role=NO
+                    onclick={evt => cloneProject(
+                        project,
+                        $state.snapshot(current.user)
+                    )}
+                />
+            {/snippet}
         </MessageDialog>
         <Button
             label="Find"

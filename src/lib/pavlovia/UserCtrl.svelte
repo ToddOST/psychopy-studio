@@ -109,10 +109,8 @@
 
     <MessageDialog
         title={translate("User warning")}
-        buttons={{
-            OK: evt => {},
-        }}
         bind:shown={warnings.show}
+        buttons={["OK"]}
     >
         {@html marked(warnings.text)}
     </MessageDialog>

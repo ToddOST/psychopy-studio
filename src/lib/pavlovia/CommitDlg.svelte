@@ -1,5 +1,5 @@
 <script>
-    import { Dialog } from "$lib/ui/dialog";
+    import { Dialog, DialogButton } from "$lib/ui/dialog";
     import { git } from "$lib/globals.svelte";
     import { getContext } from "svelte";
     import { translate } from "$lib/translation";
@@ -16,26 +16,6 @@
 
 <Dialog 
     title={translate("Commit changes")}
-    buttons={{
-        OK: evt => git.commit(
-            $state.snapshot(message), 
-            current.experiment.file.parent, 
-            $state.snapshot(current.user)
-        ).then(
-            resp => {
-                // resolve promise
-                awaiting.resolve(resp);
-                // make new promise to await next time
-                awaiting = Promise.withResolvers();
-            }
-        ),
-        CANCEL: evt => {
-            // resolve promise
-            awaiting.reject(false);
-            // make new promise to await next time
-            awaiting = Promise.withResolvers();
-        }
-    }}
     onopen={evt => {
         message = "";
     }}
@@ -46,6 +26,32 @@
         {translate("Briefly describe the changes made since last sync.")}
         <input bind:value={message} />
     </div>
+    {#snippet buttons()}
+        <DialogButton
+            role=OK
+            onclick={evt => git.commit(
+                $state.snapshot(message),
+                current.experiment.file.parent,
+                $state.snapshot(current.user)
+            ).then(
+                resp => {
+                    // resolve promise
+                    awaiting.resolve(resp);
+                    // make new promise to await next time
+                    awaiting = Promise.withResolvers();
+                }
+            )}
+        />
+        <DialogButton
+            role=CANCEL
+            onclick={evt => {
+                // resolve promise
+                awaiting.reject(false);
+                // make new promise to await next time
+                awaiting = Promise.withResolvers();
+            }}
+        />
+    {/snippet}
 </Dialog>
 
 <style>

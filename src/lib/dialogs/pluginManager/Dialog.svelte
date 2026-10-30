@@ -22,10 +22,8 @@
 <Dialog
     id=plugin-mgr
     title={translate("Plugins & packages")}
-    buttons={{
-        OK: evt => {}
-    }}
     bind:shown={shown}
+    buttons={["OK"]}
 >
     <div class=container>
         <div class=environment-ctrl>

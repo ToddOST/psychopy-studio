@@ -1,5 +1,5 @@
 <script>
-    import { Dialog } from "$lib/ui/dialog";
+    import { Dialog, DialogButton } from "$lib/ui/dialog";
     import { Listbook, Notebook, NotebookPage, ButtonTab } from "$lib/ui/notebook";
     import { python } from "$lib/globals.svelte";
     import { MonitorConfiguration } from "./configuration.svelte";
@@ -118,11 +118,6 @@
 
 <Dialog
     title={translate("Monitor Center")}
-    buttons={{
-        OK: monitors.save,
-        APPLY: monitors.save,
-        CANCEL: monitors.refresh
-    }}
     bind:shown={shown}
 >
     <div class=content>
@@ -154,6 +149,20 @@
             />
         </Notebook>
     </div>
+    {#snippet buttons()}
+        <DialogButton
+            role=OK
+            onclick={monitors.save}
+        />
+        <DialogButton
+            role=APPLY
+            onclick={monitors.save}
+        />
+        <DialogButton
+            role=CANCEL
+            onclick={monitors.refresh}
+        />
+    {/snippet}
 </Dialog>
 
 <style>

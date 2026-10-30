@@ -1,5 +1,6 @@
 <script>
     import Dialog from "$lib/ui/dialog/Dialog.svelte";
+    import { DialogButton } from "$lib/ui/dialog";
     import { ParamsNotebook } from "$lib/ui/paramCtrls/index.js";
     import { translate } from "$lib/translation";
 
@@ -36,26 +37,46 @@
     bind:shown={shown} 
     onclose={onclose}
     onopen={() => element.restore.set()}
-    buttons={{
-        OK: evt => {
-            element.trim();
-            element.restore.set();
-            onapply(evt);
-        }, 
-        APPLY: evt => {
-            element.trim();
-            element.restore.set();
-            onapply(evt);
-        }, 
-        EXTRA: extraButtons,
-        CANCEL: evt => {
-            element.restore.apply()
-        }, 
-        HELP: element.helpLink,
-    }}
-    buttonsDisabled={btnsDisabled}
 >
     <ParamsNotebook 
         element={element}
     />
+    {#snippet buttons()}
+        <DialogButton
+            role=OK
+            onclick={evt => {
+                element.trim();
+                element.restore.set();
+                onapply(evt);
+            }}
+            disabled={btnsDisabled.OK}
+        />
+        <DialogButton
+            role=APPLY
+            onclick={evt => {
+                element.trim();
+                element.restore.set();
+                onapply(evt);
+            }}
+            disabled={btnsDisabled.APPLY}
+        />
+        {#each Object.entries(extraButtons) as [label, onclick]}
+            <DialogButton
+                label={label}
+                onclick={onclick}
+            />
+        {/each}
+        <DialogButton
+            role=CANCEL
+            onclick={evt => {
+                element.restore.apply()
+            }}
+        />
+        {#if element.helpLink}
+            <DialogButton
+                role=HELP
+                onclick={element.helpLink}
+            />
+        {/if}
+    {/snippet}
 </Dialog>

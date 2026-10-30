@@ -5,6 +5,7 @@
     import { Button } from '$lib/ui/button';
     import { getContext } from "svelte";
     import Dialog from "$lib/ui/dialog/Dialog.svelte";
+    import { DialogButton } from "$lib/ui/dialog";
     import { profiles } from "$lib/experiment/profiles.svelte";
     import { translate } from "$lib/translation";
     
@@ -81,21 +82,29 @@
         title={translate("New loop")}
         bind:shown={showDialog} 
         onopen={() => current.inserting.restore.set()}
-        buttons={{
-            OK: (evt) => {}, 
-            CANCEL: (evt) => {
-                current.inserting.restore.apply()
-                // stop inserting
-                current.inserting = undefined;
-            }, 
-            HELP: "https://www.psychopy.org/builder/flow.html#loops",
-        }}
-        buttonsDisabled={btnsDisabled}
     >
         <ParamsNotebook 
             bind:valid={valid}
             element={current.inserting}
         />
+        {#snippet buttons()}
+            <DialogButton
+                role=OK
+                disabled={btnsDisabled.OK}
+            />
+            <DialogButton
+                role=CANCEL
+                onclick={(evt) => {
+                    current.inserting.restore.apply()
+                    // stop inserting
+                    current.inserting = undefined;
+                }}
+            />
+            <DialogButton
+                role=HELP
+                onclick="https://www.psychopy.org/builder/flow.html#loops"
+            />
+        {/snippet}
     </Dialog>
     {/if}
 </div>

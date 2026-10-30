@@ -1,5 +1,5 @@
 <script>
-    import { MessageDialog } from "$lib/ui/dialog";
+    import { MessageDialog, DialogButton } from "$lib/ui/dialog";
     import { getContext } from "svelte";
     import callbacks from "../callbacks.svelte.js";
     import { translate } from "$lib/translation";
@@ -26,19 +26,25 @@
 <MessageDialog
     id=save-prompt
     bind:shown={shown}
-    buttons={{
-        YES: (evt) => {
-            // if yes, save and do action
-            callbacks.save.fcn()
-            action(evt)
-        },
-        NO: (evt) => {
-            // if no, just do action
-            action(evt)
-        },
-        CANCEL: (evt) => {},
-    }}
 >
     {translate("{}' has unsaved changes, save now?").replace("{}", current.experiment.file.name)}
+    {#snippet buttons()}
+        <DialogButton
+            role=YES
+            onclick={(evt) => {
+                // if yes, save and do action
+                callbacks.save.fcn()
+                action(evt)
+            }}
+        />
+        <DialogButton
+            role=NO
+            onclick={(evt) => {
+                // if no, just do action
+                action(evt)
+            }}
+        />
+        <DialogButton role=CANCEL />
+    {/snippet}
 </MessageDialog>
 {/if}

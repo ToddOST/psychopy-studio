@@ -67,10 +67,8 @@
 
 <MessageDialog
     title={translate("Reminder")}
-    buttons={{
-        OK: evt => {}
-    }}
     bind:shown={reminder}
+    buttons={["OK"]}
 >
     {translate(
         "Click 'Save as...' to save this demo before running"

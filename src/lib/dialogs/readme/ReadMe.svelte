@@ -1,7 +1,8 @@
 <script>
     import { marked } from "marked";
-    import { Dialog } from "$lib/ui/dialog";
+    import { Dialog, DialogButton } from "$lib/ui/dialog";
     import { openIn } from "$lib/utils/views.svelte";
+    import { translate } from "$lib/translation";
 
     let {
         script,
@@ -13,23 +14,23 @@
 <Dialog
     title={script.file.name}
     bind:shown={shown}
-    buttons={{
-        OK: evt => {},
-        EXTRA: {
-            Edit: evt => openIn(script.file, "coder"),
-            Refresh: evt => script.fromFile(script.file)
-        }
-    }}
-    buttonsDisabled={{
-        EXTRA: {
-            Edit: !script.file?.parent,
-            Refresh: !script.file?.parent
-        }
-    }}
 >
     <div class=readme-preview>
         {@html marked(script.content || "")}
     </div>
+    {#snippet buttons()}
+        <DialogButton role=OK />
+        <DialogButton
+            label={translate("Edit")}
+            onclick={evt => openIn(script.file, "coder")}
+            disabled={!script.file?.parent}
+        />
+        <DialogButton
+            label={translate("Refresh")}
+            onclick={evt => script.fromFile(script.file)}
+            disabled={!script.file?.parent}
+        />
+    {/snippet}
 </Dialog>
 
 <style>

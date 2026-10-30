@@ -1,5 +1,5 @@
 <script>
-    import { MessageDialog } from "$lib/ui/dialog";
+    import { MessageDialog, DialogButton } from "$lib/ui/dialog";
     import { electron } from "$lib/globals.svelte";
     import tips from "./tips.svelte.js";
     import { Icon } from "$lib/ui/icon";
@@ -37,17 +37,6 @@
 
 <MessageDialog
     title={translate("PsychoPy Tips")}
-    buttons={{
-        OK: evt => {
-            if (hide) {
-                prefs.params.showStartupTips.val = false;
-                prefs.save()
-            }
-        },
-        EXTRA: {
-            Refresh: chooseTip
-        }
-    }}
     bind:shown={shown}
 >
     <div class=tip>
@@ -63,6 +52,21 @@
         <input type=checkbox bind:checked={hide}/>
         {translate("Don't show startup tips")}
     </div>
+    {#snippet buttons()}
+        <DialogButton
+            role=OK
+            onclick={evt => {
+                if (hide) {
+                    prefs.params.showStartupTips.val = false;
+                    prefs.save()
+                }
+            }}
+        />
+        <DialogButton
+            label={translate("Refresh")}
+            onclick={chooseTip}
+        />
+    {/snippet}
 </MessageDialog>
 
 <style>

@@ -1,6 +1,6 @@
 <script>
     import { CodeOutput } from "$lib/ui/code";
-    import { MessageDialog } from "$lib/ui/dialog";
+    import { MessageDialog, DialogButton } from "$lib/ui/dialog";
     import { python, electron } from "$lib/globals.svelte";
     import { translate } from "$lib/translation";
     import { untrack } from "svelte";
@@ -16,15 +16,18 @@
 <MessageDialog
     bind:shown={shown}
     title={translate("Progress")}
-    buttons={{
-        OK: evt => output = ""
-    }}
 >
     <div class=output-container>
         <CodeOutput
             bind:value={output}
         />
     </div>
+    {#snippet buttons()}
+        <DialogButton
+            role=OK
+            onclick={evt => output = ""}
+        />
+    {/snippet}
 </MessageDialog>
 
 <style>

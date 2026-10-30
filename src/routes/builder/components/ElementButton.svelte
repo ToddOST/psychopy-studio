@@ -3,6 +3,7 @@
     import { Button } from '$lib/ui/button';
     import { getContext, untrack } from "svelte";
     import Dialog from "$lib/ui/dialog/Dialog.svelte";
+    import { DialogButton } from "$lib/ui/dialog";
     import { ParamsNotebook } from "$lib/ui/paramCtrls";
     import { translate } from "$lib/translation";
 
@@ -78,20 +79,31 @@
         title={translate("New {}").replace("{}", titleCase(element.tag))}
         bind:shown={showDialog}
         onopen={() => dlgComponent.restore.set()}
-        buttons={{
-            OK: (evt) => {
-                // add to experiment
-                current.routine.addComponent(dlgComponent);
-                // set restore point
-                dlgComponent.restore.set()
-            },
-            CANCEL: () => dlgComponent.restore.apply(),
-            HELP: dlgComponent.helpLink
-        }}
-        buttonsDisabled={btnsDisabled}
     >
         <ParamsNotebook
             element={dlgComponent}
         />
+        {#snippet buttons()}
+            <DialogButton
+                role=OK
+                onclick={(evt) => {
+                    // add to experiment
+                    current.routine.addComponent(dlgComponent);
+                    // set restore point
+                    dlgComponent.restore.set()
+                }}
+                disabled={btnsDisabled.OK}
+            />
+            <DialogButton
+                role=CANCEL
+                onclick={() => dlgComponent.restore.apply()}
+            />
+            {#if dlgComponent.helpLink}
+                <DialogButton
+                    role=HELP
+                    onclick={dlgComponent.helpLink}
+                />
+            {/if}
+        {/snippet}
     </Dialog>
 {/if}

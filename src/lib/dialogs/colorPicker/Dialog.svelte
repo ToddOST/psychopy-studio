@@ -1,5 +1,5 @@
 <script>
-    import { Dialog } from "$lib/ui/dialog";
+    import { Dialog, DialogButton } from "$lib/ui/dialog";
     import { Notebook, NotebookPage } from "$lib/ui/notebook";
     import NamedColor from "./NamedColor.svelte";
     import HexColor from "./HexColor.svelte";
@@ -36,21 +36,6 @@
         color: $state.snapshot(value),
         space: $state.snapshot(space)
     }}
-    buttons={{
-        OK: evt => restore = {
-            color: $state.snapshot(value),
-            space: $state.snapshot(space)
-        },
-        APPLY: evt => restore = {
-            color: $state.snapshot(value),
-            space: $state.snapshot(space)
-        },
-        CANCEL: evt => {
-            value = restore.color;
-            space = restore.space;
-        }
-    }}
-    buttonsDisabled={buttonsDisabled}
     bind:shown={shown}
 >
     <div class=page>
@@ -83,6 +68,31 @@
             {/each}
         </Notebook>
     </div>
+    {#snippet buttons()}
+        <DialogButton
+            role=OK
+            onclick={evt => restore = {
+                color: $state.snapshot(value),
+                space: $state.snapshot(space)
+            }}
+            disabled={buttonsDisabled.OK}
+        />
+        <DialogButton
+            role=APPLY
+            onclick={evt => restore = {
+                color: $state.snapshot(value),
+                space: $state.snapshot(space)
+            }}
+            disabled={buttonsDisabled.APPLY}
+        />
+        <DialogButton
+            role=CANCEL
+            onclick={evt => {
+                value = restore.color;
+                space = restore.space;
+            }}
+        />
+    {/snippet}
 </Dialog>
 
 <style>

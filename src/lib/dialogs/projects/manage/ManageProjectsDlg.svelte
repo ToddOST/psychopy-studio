@@ -48,9 +48,7 @@
     id=manageProjects
     title={translate("Local projects")}
     bind:shown={shown}
-    buttons={{
-        OK: (evt) => {}
-    }}
+    buttons={["OK"]}
 >
     <div
         class=projects-list

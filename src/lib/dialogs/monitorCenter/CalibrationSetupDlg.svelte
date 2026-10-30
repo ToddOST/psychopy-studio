@@ -1,6 +1,6 @@
 <script>
     import { ParamCtrl } from "$lib/ui/paramCtrls"
-    import { Dialog } from "$lib/ui/dialog";
+    import { Dialog, DialogButton } from "$lib/ui/dialog";
     import { CalibrationSetup } from "./configuration.svelte";
     import { python } from "$lib/globals.svelte";
     import { translate } from "$lib/translation";
@@ -69,10 +69,6 @@
 
 <Dialog
     title={translate("Monitor calibration setup")}
-    buttons={{
-        OK: calibrate,
-        CANCEL: reset
-    }}
     bind:shown={shown}
     shrink
 >
@@ -88,6 +84,16 @@
             {/each}
         {/await}
     </div>
+    {#snippet buttons()}
+        <DialogButton
+            role=OK
+            onclick={calibrate}
+        />
+        <DialogButton
+            role=CANCEL
+            onclick={reset}
+        />
+    {/snippet}
 </Dialog>
 
 <style>

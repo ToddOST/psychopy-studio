@@ -1,5 +1,5 @@
 <script>
-    import { Dialog } from "$lib/ui/dialog";
+    import { Dialog, DialogButton } from "$lib/ui/dialog";
     import { git } from "$lib/globals.svelte";
     import { getContext } from "svelte";
     import { translate } from "$lib/translation";
@@ -19,24 +19,6 @@
 
 <Dialog 
     title={translate("New project")}
-    buttons={{
-        OK: async evt => {
-            // create a new project
-            await git.newProject(
-                $state.snapshot(details), 
-                current.experiment.file.parent, 
-                $state.snapshot(current.user)
-            )
-            // set current project to this new one
-            current.project = await git.getProjectInfo(
-                { folder: current.experiment.file.parent }, 
-                $state.snapshot(current.user)
-            )
-            // mark finished
-            awaiting.resolve(true)
-        },
-        CANCEL: evt => awaiting.resolve(false)
-    }}
     onopen={evt => {
         details.name = current.experiment.file.stem
         details.group = $state.snapshot(current.user)
@@ -63,6 +45,30 @@
             <input bind:value={details.name} />
         </div>
     </div>
+    {#snippet buttons()}
+        <DialogButton
+            role=OK
+            onclick={async evt => {
+                // create a new project
+                await git.newProject(
+                    $state.snapshot(details),
+                    current.experiment.file.parent,
+                    $state.snapshot(current.user)
+                )
+                // set current project to this new one
+                current.project = await git.getProjectInfo(
+                    { folder: current.experiment.file.parent },
+                    $state.snapshot(current.user)
+                )
+                // mark finished
+                awaiting.resolve(true)
+            }}
+        />
+        <DialogButton
+            role=CANCEL
+            onclick={evt => awaiting.resolve(false)}
+        />
+    {/snippet}
 </Dialog>
 
 <style>

@@ -2,7 +2,7 @@
     import { python } from "$lib/globals.svelte";
     import VenvChooser from "./VenvChooser.svelte"
     import ProgressDlg from "./ProgressDlg.svelte";
-    import { Dialog } from "$lib/ui/dialog"
+    import { Dialog, DialogButton } from "$lib/ui/dialog"
 
     let {
         shown=$bindable()
@@ -20,17 +20,6 @@
 <Dialog
     id=plugin-mgr
     title="Install PsychoPy from Git"
-    buttons={{
-        OK: evt => {
-            showProgress = true
-            shown = false
-            python.venv.installPackage(
-                details.venv,
-                `git+${details.repo}@${details.branch}`
-            )
-        },
-        CANCEL: evt => {}
-    }}
     bind:shown={shown}
     shrink
 >
@@ -65,6 +54,20 @@
         <hr />
         
     </div>
+    {#snippet buttons()}
+        <DialogButton
+            role=OK
+            onclick={evt => {
+                showProgress = true
+                shown = false
+                python.venv.installPackage(
+                    details.venv,
+                    `git+${details.repo}@${details.branch}`
+                )
+            }}
+        />
+        <DialogButton role=CANCEL />
+    {/snippet}
 </Dialog>
 
 <ProgressDlg 
