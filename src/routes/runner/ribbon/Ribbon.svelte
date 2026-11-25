@@ -2,7 +2,9 @@
     import callbacks from '../callbacks.svelte.js';
     
     import Menu from "./Menu.svelte";
+    import { MenuItem, MenuSeparator } from "$lib/ui/menu";
     import { Ribbon, RibbonSection, RibbonGap } from '$lib/ui/ribbon';
+    import { PluginManagerDlg } from "$lib/dialogs/environmentManager";
     import { getContext } from "svelte";
     import { electron, python } from "$lib/globals.svelte.js";
     import { Button, SwitchButton } from '$lib/ui/button';
@@ -20,7 +22,10 @@
         settingsDlg: false,
         findDlg: false,
         deviceMgrDlg: false,
+        pluginMgr: false
     })
+
+    let piloting = $derived(current.runlist[current.selection]?.pilotMode)
 </script>
 
 <Ribbon>
@@ -63,9 +68,9 @@
     <RibbonSection label={translate("Selection")} icon="/icons/rbn-experiment.svg">
         <SwitchButton 
             labels={["Pilot", "Run"]} 
-            tooltip={current.runlist[current.selection]?.pilotMode ? translate("Experiment will run in pilot mode") : translate("Experiment will run in run mode")}
+            tooltip={piloting ? translate("Experiment will run in pilot mode") : translate("Experiment will run in run mode")}
             bind:value={
-                () => !current.runlist[current.selection]?.pilotMode,
+                () => !piloting,
                 (value) => current.runlist[current.selection]?.setPilotMode(!value)
             } 
             disabled={callbacks.togglePiloting.disabled}
@@ -81,20 +86,57 @@
 
     {#if python?.ready}
         <RibbonSection label={translate("Run")} icon="/icons/btn-runpy.svg">
+            {#if current.runlist[current.selection]?.file.ext === ".py"}
+                <Button
+                    icon="/icons/btn-{current.runlist[current.selection]?.pilotMode ? "pilot" : "run"}py.svg" 
+                    tooltip={current.runlist[current.selection]?.pilotMode ? translate("Pilot experiment locally") : translate("Run experiment locally")}
+                    action="runPython"
+                    bind:awaiting={current.awaiting.runpy}
+                    cancel={callbacks.stopPython.fcn}
+                    ghost
+                    tight
+                >
+                    {#snippet menu()}
+                        {#await python.uv.getEnvironments() then environments}
+                            {#each environments.toReversed() as env}
+                                <MenuItem 
+                                    label={
+                                        "{run/pilot} in {version} {isApp}"
+                                        .replaceAll("{run/pilot}", piloting ? translate("Pilot") : translate("Run"))
+                                        .replaceAll("{version}", env.name)
+                                        .replaceAll("{isApp}", env.isApp ? translate("(app)") : "")
+                                    }
+                                    onclick={evt => callbacks.runPython.fcn(env.name)}
+                                    bind:awaiting={current.awaiting.runpy}
+                                    cancel={callbacks.stopPython.fcn}
+                                    disabled={callbacks.runPython.disabled}
+                                />
+                            {/each}
+                            <MenuSeparator />
+                            <MenuItem 
+                                label={translate("Manage environments...")}
+                                onclick={evt => show.pluginMgr = true}
+                            />
+                        {/await}
+                    {/snippet}
+                </Button>
+            {:else}
+                <Button
+                    icon="/icons/btn-{piloting ? "pilot" : "run"}py.svg" 
+                    tooltip={piloting ? translate("Pilot experiment locally") : translate("Run experiment locally")}
+                    action="runPython"
+                    bind:awaiting={current.awaiting.runpy}
+                    cancel={callbacks.stopPython.fcn}
+                    ghost
+                    tight
+                />
+            {/if}
             <Button
                 icon="/icons/btn-{current.runlist[current.selection]?.pilotMode ? "pilot" : "run"}py.svg" 
                 tooltip={current.runlist[current.selection]?.pilotMode ? translate("Pilot experiment locally") : translate("Run experiment locally")}
                 action="runPython"
                 bind:awaiting={current.awaiting.runpy}
                 cancel={callbacks.stopPython.fcn}
-                ghost
-                tight
-            />
-            <Button
-                icon="/icons/btn-{current.runlist[current.selection]?.pilotMode ? "pilot" : "run"}js.svg" 
-                tooltip={current.runlist[current.selection]?.pilotMode ? translate("Pilot experiment in browser") : translate("Run experiment in browser")} 
-                action="runJS"
-                bind:awaiting={current.awaiting.runjs}
                 ghost
                 tight
             />
@@ -136,6 +178,12 @@
         {/if}
     </RibbonSection>
 </Ribbon>
+
+{#if python}
+    <PluginManagerDlg 
+        bind:shown={show.pluginMgr}
+    />
+{/if}
 
 <style>
     .padded {
